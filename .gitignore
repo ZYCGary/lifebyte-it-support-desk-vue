@@ -261,3 +261,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# ESLint
+.eslintcache
