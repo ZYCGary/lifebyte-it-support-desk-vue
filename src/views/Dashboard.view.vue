@@ -1,6 +1,7 @@
 <template>
   <div>Dashboard</div>
   <div>Active menu: {{ activeMenu }}</div>
+  <div>Env: {{ env }}</div>
 </template>
 
 <script lang="ts">
@@ -13,8 +14,9 @@ export default defineComponent({
   setup() {
     const store = useStore()
     const activeMenu = computed(() => store.state.app.active_menu)
+    const env = computed(() => store.state.app.env)
 
-    return { activeMenu }
+    return { activeMenu, env }
   }
 })
 </script>
