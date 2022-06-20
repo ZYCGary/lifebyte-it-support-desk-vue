@@ -1,0 +1,82 @@
+<template>
+  <el-container>
+    <el-header>Header</el-header>
+
+    <el-container>
+      <el-aside>
+        <el-menu
+          :collapse="false"
+          :router="true"
+        >
+          <el-menu-item
+            index="dashboard"
+            :route="{ name: 'dashboard' }"
+            :class="{ 'is-active': activeMenu === 'dashboard' }"
+          >
+            <template #title>
+              <el-icon><i class="fa-solid fa-gauge"></i></el-icon>
+              <span>Dashboard</span>
+            </template>
+          </el-menu-item>
+          <el-menu-item
+            index="employees"
+            :route="{ name: 'employees' }"
+            :class="{ 'is-active': activeMenu === 'employees' }"
+          >
+            <template #title>
+              <el-icon><i class="fa-solid fa-users"></i></el-icon>
+              <span>Employees</span>
+            </template>
+          </el-menu-item>
+          <el-menu-item
+            index="software"
+            :route="{ name: 'software' }"
+            :class="{ 'is-active': activeMenu === 'software' }"
+          >
+            <template #title>
+              <el-icon><i class="fa-brands fa-uncharted"></i></el-icon>
+              <span>Software</span>
+            </template>
+          </el-menu-item>
+          <el-menu-item
+            index="hardware"
+            :route="{ name: 'hardware' }"
+            :class="{ 'is-active': activeMenu === 'hardware' }"
+          >
+            <template #title>
+              <el-icon><i class="fa-solid fa-computer"></i></el-icon>
+              <span>Hardware</span>
+            </template>
+          </el-menu-item>
+        </el-menu>
+      </el-aside>
+      <el-main>
+        <slot name="main"></slot>
+      </el-main>
+    </el-container>
+
+    <el-footer>Footer</el-footer>
+  </el-container>
+</template>
+
+<script lang="ts">
+import { defineComponent } from 'vue'
+
+export default defineComponent({
+  name: 'the-app',
+  props: {
+    activeMenu: {
+      required: true,
+      type: String,
+      default: 'dashboard'
+    }
+  },
+  setup() {}
+})
+</script>
+
+<style scoped>
+.el-menu {
+  height: 100%;
+}
+</style>

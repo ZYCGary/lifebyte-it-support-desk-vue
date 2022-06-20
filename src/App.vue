@@ -4,4 +4,11 @@
   <router-view></router-view>
 </template>
 
-<style></style>
+<style>
+html,
+body,
+#app {
+  width: 100%;
+  height: 100%;
+}
+</style>
