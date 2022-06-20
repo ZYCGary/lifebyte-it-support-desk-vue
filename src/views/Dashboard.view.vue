@@ -1,14 +1,21 @@
 <template>
   <div>Dashboard</div>
+  <div>Active menu: {{ activeMenu }}</div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { computed, defineComponent } from 'vue'
+import { useStore } from '@/store'
 
 export default defineComponent({
   name: 'DashboardView',
   props: {},
-  setup() {}
+  setup() {
+    const store = useStore()
+    const activeMenu = computed(() => store.state.app.active_menu)
+
+    return { activeMenu }
+  }
 })
 </script>
 
