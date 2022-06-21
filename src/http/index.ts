@@ -14,7 +14,7 @@ const instance = axios.create({
   },
   timeout: 1000 * 30,
   baseURL: '',
-  withCredentials: false
+  withCredentials: true
 })
 
 /** Use request interceptor. */
