@@ -1,7 +1,9 @@
 <template>
   <the-app active-menu="dashboard">
     <template #main>
-      <h1>Dashboard</h1>
+      <el-main>
+        <h1>Dashboard</h1>
+      </el-main>
     </template>
   </the-app>
 </template>
@@ -12,6 +14,7 @@ import TheApp from '@/components/base/the-app.vue'
 
 export default defineComponent({
   name: 'DashboardView',
+  // eslint-disable-next-line vue/no-unused-components
   components: { TheApp },
   props: {},
   setup() {

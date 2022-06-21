@@ -1,6 +1,6 @@
 <template>
   <el-container>
-    <el-header>Header</el-header>
+    <el-header class="border-b"> Header </el-header>
 
     <el-container>
       <el-aside>
@@ -50,12 +50,12 @@
           </el-menu-item>
         </el-menu>
       </el-aside>
-      <el-main>
+      <el-container>
         <slot name="main"></slot>
-      </el-main>
+      </el-container>
     </el-container>
 
-    <el-footer>Footer</el-footer>
+    <el-footer class="border-t">Footer</el-footer>
   </el-container>
 </template>
 
@@ -75,7 +75,7 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
+<style scoped lang="postcss">
 .el-menu {
   height: 100%;
 }
