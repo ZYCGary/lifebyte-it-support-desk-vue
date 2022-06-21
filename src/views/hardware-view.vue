@@ -1,9 +1,13 @@
 <template>
   <the-app active-menu="hardware">
-    <template #main>
+    <template #heading>
+      <h1>Hardware</h1>
+    </template>
+
+    <template #content>
       <el-container>
         <el-main>
-          <h1>Hardware</h1>
+          <h1>Hardware List</h1>
         </el-main>
         <the-right-aside>
           <h1>Filter</h1>

@@ -1,14 +1,19 @@
 <template>
   <the-app active-menu="employees">
-    <template #main>
+    <template #heading>
+      <h1>Employees</h1>
+    </template>
+    <template #content>
       <el-container>
-        <el-main>
-          <h1>Employees</h1>
-        </el-main>
+        <el-container>
+          <el-main>
+            <h1>Employees List</h1>
+          </el-main>
+        </el-container>
+        <the-right-aside>
+          <h1>Filter</h1>
+        </the-right-aside>
       </el-container>
-      <the-right-aside>
-        <h1>Filter</h1>
-      </the-right-aside>
     </template>
   </the-app>
 </template>
@@ -28,9 +33,4 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
-.el-container,
-.el-menu {
-  height: 100%;
-}
-</style>
+<style scoped></style>

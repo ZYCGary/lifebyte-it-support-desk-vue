@@ -1,8 +1,11 @@
 <template>
   <the-app active-menu="dashboard">
-    <template #main>
+    <template #heading>
+      <h1>Dashboard</h1>
+    </template>
+    <template #content>
       <el-main>
-        <h1>Dashboard</h1>
+        <h1>Dashboard Charts</h1>
       </el-main>
     </template>
   </the-app>

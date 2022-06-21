@@ -1,9 +1,12 @@
 <template>
   <the-app active-menu="software">
-    <template #main>
+    <template #heading>
+      <h1>Software</h1>
+    </template>
+    <template #content>
       <el-container>
         <el-main>
-          <h1>Software</h1>
+          <h1>Software List</h1>
         </el-main>
         <the-right-aside>
           <h1>Filter</h1>

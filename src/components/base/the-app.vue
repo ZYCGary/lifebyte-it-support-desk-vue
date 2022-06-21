@@ -50,8 +50,11 @@
           </el-menu-item>
         </el-menu>
       </el-aside>
-      <el-container>
-        <slot name="main"></slot>
+      <el-container direction="vertical">
+        <div class="border-b px-5 py-3">
+          <slot name="heading"></slot>
+        </div>
+        <slot name="content"></slot>
       </el-container>
     </el-container>
 
@@ -76,6 +79,7 @@ export default defineComponent({
 </script>
 
 <style scoped lang="postcss">
+.el-container,
 .el-menu {
   height: 100%;
 }
