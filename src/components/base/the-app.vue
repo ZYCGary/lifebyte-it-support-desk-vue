@@ -57,8 +57,6 @@
         <slot name="content"></slot>
       </el-container>
     </el-container>
-
-    <el-footer class="border-t">Footer</el-footer>
   </el-container>
 </template>
 

@@ -4,10 +4,12 @@
       <h1>Employees</h1>
     </template>
     <template #content>
-      <el-container>
+      <el-container class="overflow-y-auto">
         <el-container>
           <el-main>
-            <h1>Employees List</h1>
+            <div class="relative h-[690px]">
+              <employee-table></employee-table>
+            </div>
           </el-main>
         </el-container>
         <the-right-aside>
@@ -22,10 +24,11 @@
 import { defineComponent } from 'vue'
 import TheApp from '@/components/base/the-app.vue'
 import TheRightAside from '@/components/base/the-right-aside.vue'
+import EmployeeTable from '@/components/modules/employee/employee-table.vue'
 
 export default defineComponent({
   name: 'DashboardView',
-  components: { TheRightAside, TheApp },
+  components: { EmployeeTable, TheRightAside, TheApp },
   props: {},
   setup() {
     return {}
