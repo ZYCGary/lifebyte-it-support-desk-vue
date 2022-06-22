@@ -26,6 +26,7 @@ declare module '@vue/runtime-core' {
     RouterView: typeof import('vue-router')['RouterView']
     TheApp: typeof import('./src/components/base/the-app.vue')['default']
     TheRightAside: typeof import('./src/components/base/the-right-aside.vue')['default']
+    TheRoot: typeof import('./src/components/base/the-root.vue')['default']
     UserTable: typeof import('./src/components/modules/user/user-table.vue')['default']
   }
 }

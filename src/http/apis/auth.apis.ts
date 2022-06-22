@@ -11,7 +11,7 @@ const authApis = {
     return response?.data
   },
 
-  getAuthenticatedUser: async () => {
+  getCurrentUser: async () => {
     const response = await http.get('api/v1/user')
 
     return response?.data

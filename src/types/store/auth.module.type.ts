@@ -7,7 +7,9 @@ export interface AuthState {
   authenticated: boolean
 }
 
-export interface AuthGetterTree extends GetterTree<AuthState, RootState> {}
+export interface AuthGetterTree extends GetterTree<AuthState, RootState> {
+  isAdmin: () => boolean
+}
 
 export interface AuthMutationTree extends MutationTree<AuthState> {
   setUser: (authState: AuthState, payload: User) => void
@@ -16,5 +18,5 @@ export interface AuthMutationTree extends MutationTree<AuthState> {
 
 export interface AuthActionTree extends ActionTree<AuthState, RootState> {
   login: ({ dispatch }: ActionContext<AuthState, RootState>, payload: { email: string; password: string }) => void
-  getAuthenticatedUser: ({ commit }: ActionContext<AuthState, RootState>) => void
+  getCurrentUser: ({ commit }: ActionContext<AuthState, RootState>) => void
 }

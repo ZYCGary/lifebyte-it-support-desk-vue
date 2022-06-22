@@ -42,9 +42,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from 'vue'
+import { computed, defineComponent, reactive, ref } from 'vue'
 import BaseImage from '@/components/base/base-image.vue'
-import { ElMessage, FormInstance } from 'element-plus'
+import { ElMessage, ElNotification, FormInstance } from 'element-plus'
 import { useStore } from '@/store'
 import { useRouter } from 'vue-router'
 
@@ -91,6 +91,13 @@ export default defineComponent({
             })
             .then(() => {
               router.push({ name: 'dashboard' })
+
+              const user = computed(() => store.state.auth.user)
+              ElNotification({
+                type: 'success',
+                title: `G'day ${user.value?.name}!`,
+                message: 'Have a nice working day ^-^'
+              })
             })
             .catch(() => {
               form.loading = false

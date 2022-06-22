@@ -9,7 +9,11 @@ const state: AuthState = {
   authenticated: false
 }
 
-const getters: AuthGetterTree = {}
+const getters: AuthGetterTree = {
+  isAdmin: () => {
+    return !!(state.authenticated && state.user && state.user?.is_admin)
+  }
+}
 
 const mutations: AuthMutationTree = {
   setUser: (authState, payload) => {
@@ -26,16 +30,17 @@ const actions: AuthActionTree = {
     try {
       await apis.app.getCsrfToken()
       await apis.auth.login(payload)
-      await dispatch('getAuthenticatedUser')
+      await dispatch('getCurrentUser')
     } catch (error) {
       throw error
     }
   },
 
-  getAuthenticatedUser: async ({ commit }) => {
+  getCurrentUser: async ({ commit }) => {
     try {
-      const user = (await apis.auth.getAuthenticatedUser()) as User
+      const user = (await apis.auth.getCurrentUser()) as User
       commit('setUser', user)
+      commit('setAuthenticated', true)
     } catch (error) {
       throw error
     }
