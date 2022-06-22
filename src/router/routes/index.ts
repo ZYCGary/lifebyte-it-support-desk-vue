@@ -1,5 +1,10 @@
 const routes = [
   {
+    path: '/login',
+    name: 'auth.login',
+    component: () => import('@/views/auth/log-in.view.vue')
+  },
+  {
     path: '/',
     name: 'dashboard',
     component: () => import('@/views/dashboard.view.vue')

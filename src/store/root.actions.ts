@@ -6,9 +6,9 @@ import http from '@/http'
 import requests from '@/http/requests'
 
 const isValidPublicConfigs: (publicConfig: PublicConfigs) => boolean = (publicConfig) => {
-  const { APP_ENV, API_URL } = publicConfig
+  const { APP_ENV, API_HOST } = publicConfig
 
-  return APP_ENV !== undefined && Object.values(Environment).includes(APP_ENV) && API_URL !== undefined
+  return APP_ENV !== undefined && Object.values(Environment).includes(APP_ENV) && API_HOST !== undefined
 }
 
 const rootActions: RootActionTree = {
@@ -18,7 +18,7 @@ const rootActions: RootActionTree = {
       const publicConfigs = response.data
 
       if (isValidPublicConfigs(publicConfigs)) {
-        const { APP_ENV, API_URL } = publicConfigs
+        const { APP_ENV, API_HOST } = publicConfigs
 
         // Get URL protocol.
         const urlScheme = window.location.origin.split('://')[0]
@@ -33,7 +33,7 @@ const rootActions: RootActionTree = {
         commit('app/setEnv', APP_ENV)
 
         // Set request base URL.
-        http.defaults.baseURL = API_URL
+        http.defaults.baseURL = API_HOST
 
         return
       } else {

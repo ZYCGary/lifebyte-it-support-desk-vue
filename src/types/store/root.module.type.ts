@@ -1,8 +1,10 @@
 import { ActionContext, ActionTree, GetterTree, MutationTree } from 'vuex'
 import { AppState } from '@/types/store/app.module.type'
+import { AuthState } from '@/types/store/auth.module.type'
 
 export interface RootState {
   app: AppState
+  auth: AuthState
 }
 
 export interface RootGetterTree extends GetterTree<RootState, RootState> {}
