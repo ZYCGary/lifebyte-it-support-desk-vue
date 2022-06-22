@@ -1,14 +1,14 @@
 <template>
-  <the-app active-menu="employees">
+  <the-app active-menu="users">
     <template #heading>
-      <h1>Employees</h1>
+      <h1>User List</h1>
     </template>
     <template #content>
-      <el-container class="overflow-y-auto">
-        <el-container>
+      <el-container class="relative">
+        <el-container class="h-full overflow-y-auto">
           <el-main>
-            <div class="relative h-[690px]">
-              <employee-table></employee-table>
+            <div class="relative flex">
+              <user-table></user-table>
             </div>
           </el-main>
         </el-container>
@@ -24,11 +24,10 @@
 import { defineComponent } from 'vue'
 import TheApp from '@/components/base/the-app.vue'
 import TheRightAside from '@/components/base/the-right-aside.vue'
-import EmployeeTable from '@/components/modules/employee/employee-table.vue'
+import UserTable from '@/components/modules/user/user-table.vue'
 
 export default defineComponent({
-  name: 'DashboardView',
-  components: { EmployeeTable, TheRightAside, TheApp },
+  components: { UserTable, TheRightAside, TheApp },
   props: {},
   setup() {
     return {}

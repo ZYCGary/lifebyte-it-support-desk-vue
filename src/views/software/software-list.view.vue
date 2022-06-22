@@ -22,7 +22,6 @@ import TheApp from '@/components/base/the-app.vue'
 import TheRightAside from '@/components/base/the-right-aside.vue'
 
 export default defineComponent({
-  name: 'DashboardView',
   components: { TheRightAside, TheApp },
   props: {},
   setup() {

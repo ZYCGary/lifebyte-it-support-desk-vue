@@ -1,12 +1,13 @@
 <template>
-  <el-container>
+  <el-container class="h-full">
     <el-header class="border-b"> Header </el-header>
 
-    <el-container>
+    <el-container class="relative">
       <el-aside>
         <el-menu
           :collapse="false"
           :router="true"
+          class="h-full"
         >
           <el-menu-item
             index="dashboard"
@@ -19,18 +20,18 @@
             </template>
           </el-menu-item>
           <el-menu-item
-            index="employees"
-            :route="{ name: 'employees' }"
-            :class="{ 'is-active': activeMenu === 'employees' }"
+            index="users"
+            :route="{ name: 'user-list' }"
+            :class="{ 'is-active': activeMenu === 'users' }"
           >
             <template #title>
               <el-icon><i class="fa-solid fa-users"></i></el-icon>
-              <span>Employees</span>
+              <span>Users</span>
             </template>
           </el-menu-item>
           <el-menu-item
             index="software"
-            :route="{ name: 'software' }"
+            :route="{ name: 'software-list' }"
             :class="{ 'is-active': activeMenu === 'software' }"
           >
             <template #title>
@@ -40,7 +41,7 @@
           </el-menu-item>
           <el-menu-item
             index="hardware"
-            :route="{ name: 'hardware' }"
+            :route="{ name: 'hardware-list' }"
             :class="{ 'is-active': activeMenu === 'hardware' }"
           >
             <template #title>
@@ -76,9 +77,4 @@ export default defineComponent({
 })
 </script>
 
-<style scoped lang="postcss">
-.el-container,
-.el-menu {
-  height: 100%;
-}
-</style>
+<style scoped lang="postcss"></style>

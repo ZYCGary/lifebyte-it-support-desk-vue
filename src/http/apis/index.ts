@@ -1,9 +1,9 @@
 import appApis from '@/http/apis/app.apis'
-import employeeApis from '@/http/apis/employee.apis'
+import userApis from '@/http/apis/user.apis'
 import authApis from '@/http/apis/auth.apis'
 
 export default {
   app: appApis,
-  employee: employeeApis,
+  user: userApis,
   auth: authApis
 }

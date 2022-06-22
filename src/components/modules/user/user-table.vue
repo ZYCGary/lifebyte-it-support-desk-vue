@@ -1,13 +1,13 @@
 <template>
   <el-table
     ref="multipleTableRef"
-    :data="list.data"
-    height="100%"
+    :data="table.data"
+    height="776px"
     border
     flexible
     fit
-    style="width: 100%"
-    class="overflow-auto max-h-full"
+    lazy
+    class="overflow-auto w-auto max-h-full"
   >
     <el-table-column
       type="selection"
@@ -16,7 +16,7 @@
     <el-table-column
       property="name"
       label="Name"
-      width="200"
+      width="250"
       fixed
     ></el-table-column>
     <el-table-column
@@ -27,11 +27,6 @@
     <el-table-column
       property="department"
       label="Department"
-      width="200"
-    ></el-table-column>
-    <el-table-column
-      property="job_title"
-      label="Job Title"
       width="200"
     ></el-table-column>
     <el-table-column
@@ -55,15 +50,20 @@
       width="100"
     ></el-table-column>
     <el-table-column
-      property="created_at"
-      label="Created At"
-      width="150"
-    ></el-table-column>
-    <el-table-column
-      property="updated_at"
-      label="Updated At"
-      width="150"
-    ></el-table-column>
+      fixed="right"
+      label="Operations"
+      width="120"
+    >
+      <template #default>
+        <router-link :to="{ name: 'dashboard' }">
+          <el-button type="primary"> View </el-button>
+        </router-link>
+      </template>
+    </el-table-column>
+
+    <template #empty>
+      {{ table.loading ? 'Loading Data' : 'No Data' }}
+    </template>
   </el-table>
 </template>
 
@@ -72,9 +72,9 @@ import apis from '@/http/apis'
 import { reactive } from 'vue'
 
 export default {
-  name: 'employee-table',
+  name: 'user-table',
   setup: () => {
-    const list = reactive({
+    const table = reactive({
       loading: true,
       data: [],
       links: {},
@@ -82,24 +82,24 @@ export default {
       error: false
     })
 
-    apis.employee
-      .getEmployeeList()
+    apis.user
+      .getUserTable()
       .then((response) => {
-        list.loading = false
-        list.data = response.data
-        list.links = response.links
-        list.meta = response.meta
-        list.error = false
+        table.loading = false
+        table.data = response.data
+        table.links = response.links
+        table.meta = response.meta
+        table.error = false
       })
       .catch(() => {
-        list.loading = false
-        list.data = []
-        list.links = {}
-        list.meta = {}
-        list.error = true
+        table.loading = false
+        table.data = []
+        table.links = {}
+        table.meta = {}
+        table.error = true
       })
 
-    return { list }
+    return { table }
   }
 }
 </script>

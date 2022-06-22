@@ -2,27 +2,27 @@ const routes = [
   {
     path: '/',
     name: 'dashboard',
-    component: () => import('@/views/dashboard-view.vue')
+    component: () => import('@/views/dashboard.view.vue')
   },
   {
-    path: '/employees',
-    name: 'employees',
-    component: () => import('@/views/employees-view.vue')
+    path: '/users',
+    name: 'user-list',
+    component: () => import('@/views/users/user-list.view.vue')
   },
   {
     path: '/software',
-    name: 'software',
-    component: () => import('@/views/software-view.vue')
+    name: 'software-list',
+    component: () => import('@/views/software/software-list.view.vue')
   },
   {
     path: '/hardware',
-    name: 'hardware',
-    component: () => import('@/views/hardware-view.vue')
+    name: 'hardware-list',
+    component: () => import('@/views/hardware/hardware-list.view.vue')
   },
   {
     path: '/:pathMatch(.*)*',
-    name: 'not-found',
-    component: () => import('@/views/not-found-view.vue')
+    name: 'error-not-found',
+    component: () => import('@/views/error.view.vue')
   }
 ]
 
