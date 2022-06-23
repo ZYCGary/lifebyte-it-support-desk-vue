@@ -1,6 +1,17 @@
 <template>
   <div>
     <div class="flex w-full mb-4">
+      <div class="flex items-center">
+        <el-input
+          v-model="searchValue"
+          placeholder="Search by name"
+          @change="search"
+        >
+          <template #prefix>
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </template>
+        </el-input>
+      </div>
       <div class="flex flex-1 flex-nowrap justify-end items-center">
         <el-pagination
           layout="prev, pager, next"
@@ -82,7 +93,7 @@
 
 <script lang="ts">
 import apis from '@/http/apis'
-import { computed, reactive } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { BaseTableProps } from '@/types/components.type'
 
 export default {
@@ -116,7 +127,7 @@ export default {
       page_size: computed(() => table.collection.meta.per_page)
     })
 
-    const loadTable = (param?: { page: number }) => {
+    const loadTable = (param?: { page?: number; name?: string }) => {
       table.loading = true
       table.error = false
       table.collection.data = []
@@ -144,7 +155,14 @@ export default {
       loadTable({ page: page })
     }
 
-    return { table, pagination, handlePageChange }
+    const searchValue = ref('')
+    const search = (value: string) => {
+      if (searchValue.value && searchValue.value !== '') {
+        loadTable({ name: value })
+      }
+    }
+
+    return { table, pagination, handlePageChange, searchValue, search }
   }
 }
 </script>
