@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import TheApp from '@/components/base/the-app.vue'
+import TheApp from '@/components/layouts/the-app.vue'
 
 export default defineComponent({
   name: 'DashboardView',

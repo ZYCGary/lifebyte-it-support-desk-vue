@@ -68,7 +68,7 @@
         width="120"
       >
         <template #default>
-          <el-button type="primary"> View </el-button>
+          <el-button type="primary">View</el-button>
         </template>
       </el-table-column>
 

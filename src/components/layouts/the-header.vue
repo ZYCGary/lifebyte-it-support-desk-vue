@@ -5,9 +5,9 @@
     </div>
     <div class="flex flex-1 justify-end">
       <el-dropdown trigger="click">
-        <span class="w-9 h-9 rounded-full bg-green-600/70 leading-9 font-bold text-center text-xl text-white">{{
-          initial
-        }}</span>
+        <span class="w-9 h-9 rounded-full bg-green-600/70 leading-9 font-bold text-center text-xl text-white">
+          {{ initial }}
+        </span>
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item>Profile</el-dropdown-item>
@@ -30,12 +30,12 @@
 <script>
 import BaseImage from '@/components/base/base-image.vue'
 import { useStore } from '@/store'
-import { computed, reactive } from 'vue'
+import { computed, defineComponent, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 
-export default {
-  name: 'base-header',
+export default defineComponent({
+  name: 'the-header',
   components: { BaseImage },
   setup: () => {
     const store = useStore()
@@ -71,7 +71,7 @@ export default {
 
     return { initial, status, logout }
   }
-}
+})
 </script>
 
 <style scoped></style>

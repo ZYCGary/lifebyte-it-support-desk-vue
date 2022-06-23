@@ -3,7 +3,7 @@
     direction="vertical"
     class="h-full"
   >
-    <base-header></base-header>
+    <the-header></the-header>
 
     <el-container class="relative">
       <el-aside>
@@ -66,11 +66,11 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import BaseHeader from '@/components/base/base-header.vue'
+import TheHeader from '@/components/layouts/the-header.vue'
 
 export default defineComponent({
   name: 'the-app',
-  components: { BaseHeader },
+  components: { TheHeader },
   props: {
     activeMenu: {
       required: true,

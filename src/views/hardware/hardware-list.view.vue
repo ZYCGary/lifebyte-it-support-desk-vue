@@ -19,8 +19,8 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import TheApp from '@/components/base/the-app.vue'
-import TheRightAside from '@/components/base/the-right-aside.vue'
+import TheApp from '@/components/layouts/the-app.vue'
+import TheRightAside from '@/components/layouts/the-right-aside.vue'
 
 export default defineComponent({
   components: { TheRightAside, TheApp },
