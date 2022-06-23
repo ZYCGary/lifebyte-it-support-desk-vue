@@ -2,19 +2,13 @@
   <div>
     <div class="flex w-full mb-4">
       <div class="flex items-center">
-        <el-input
-          v-model="searchValue"
-          placeholder="Search by name"
-          @change="search"
-        >
-          <template #prefix>
-            <i class="fa-solid fa-magnifying-glass"></i>
-          </template>
-        </el-input>
+        <base-search-bar
+          placeholder="Type a name to search"
+          @search="search"
+        ></base-search-bar>
       </div>
       <div class="flex flex-1 flex-nowrap justify-end items-center">
-        <el-pagination
-          layout="prev, pager, next"
+        <base-pagination
           :total="pagination.total"
           :page-size="pagination.page_size"
           @current-change="handlePageChange"
@@ -81,11 +75,14 @@
 
 <script lang="ts">
 import apis from '@/http/apis'
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive } from 'vue'
 import { BaseTableProps } from '@/types/components.type'
+import BasePagination from '@/components/base/base-pagination.vue'
+import BaseSearchBar from '@/components/base/base-search-bar.vue'
 
 export default {
   name: 'user-table',
+  components: { BaseSearchBar, BasePagination },
   setup: () => {
     const table: BaseTableProps = reactive({
       loading: true,
@@ -143,16 +140,15 @@ export default {
       loadTable({ page: page })
     }
 
-    const searchValue = ref('')
     const search = (value: string) => {
-      if (searchValue.value && searchValue.value !== '') {
+      if (value && value !== '') {
         loadTable({ name: value })
       } else {
         loadTable()
       }
     }
 
-    return { table, pagination, handlePageChange, searchValue, search }
+    return { table, pagination, handlePageChange, search }
   }
 }
 </script>

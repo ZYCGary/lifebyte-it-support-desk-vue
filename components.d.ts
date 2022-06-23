@@ -8,6 +8,7 @@ declare module '@vue/runtime-core' {
     BaseHeader: typeof import('./src/components/base/base-header.vue')['default']
     BaseImage: typeof import('./src/components/base/base-image.vue')['default']
     BasePagination: typeof import('./src/components/base/base-pagination.vue')['default']
+    BaseSearchBar: typeof import('./src/components/base/base-search-bar.vue')['default']
     ElAside: typeof import('element-plus/es')['ElAside']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCalendar: typeof import('element-plus/es')['ElCalendar']
