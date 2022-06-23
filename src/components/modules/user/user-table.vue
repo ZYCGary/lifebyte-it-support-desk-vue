@@ -61,8 +61,12 @@
         label="Operations"
         width="120"
       >
-        <template #default>
-          <el-button type="primary">View</el-button>
+        <template #default="scope">
+          <el-button
+            type="primary"
+            @click="viewUser(scope.row)"
+            >View</el-button
+          >
         </template>
       </el-table-column>
 
@@ -71,6 +75,11 @@
       </template>
     </el-table>
   </div>
+
+  <user-drawer
+    v-model:show="drawer.show"
+    v-model:user="drawer.user"
+  ></user-drawer>
 </template>
 
 <script lang="ts">
@@ -79,10 +88,12 @@ import { computed, reactive } from 'vue'
 import { BaseTableProps } from '@/types/components.type'
 import BasePagination from '@/components/base/base-pagination.vue'
 import BaseSearchBar from '@/components/base/base-search-bar.vue'
+import UserDrawer from '@/components/modules/user/user-drawer.vue'
+import { User } from '@/types/store/user.module.type'
 
 export default {
   name: 'user-table',
-  components: { BaseSearchBar, BasePagination },
+  components: { UserDrawer, BaseSearchBar, BasePagination },
   setup: () => {
     const table: BaseTableProps = reactive({
       loading: true,
@@ -148,7 +159,17 @@ export default {
       }
     }
 
-    return { table, pagination, handlePageChange, search }
+    const drawer = reactive({
+      show: false,
+      user: {}
+    })
+
+    const viewUser = (row: User) => {
+      drawer.show = true
+      drawer.user = row
+    }
+
+    return { table, pagination, handlePageChange, search, drawer, viewUser }
   }
 }
 </script>

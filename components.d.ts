@@ -13,6 +13,7 @@ declare module '@vue/runtime-core' {
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCalendar: typeof import('element-plus/es')['ElCalendar']
     ElContainer: typeof import('element-plus/es')['ElContainer']
+    ElDrawer: typeof import('element-plus/es')['ElDrawer']
     ElDropdown: typeof import('element-plus/es')['ElDropdown']
     ElDropdownItem: typeof import('element-plus/es')['ElDropdownItem']
     ElDropdownMenu: typeof import('element-plus/es')['ElDropdownMenu']
@@ -35,6 +36,7 @@ declare module '@vue/runtime-core' {
     TheHeader: typeof import('./src/components/layouts/the-header.vue')['default']
     TheRightAside: typeof import('./src/components/layouts/the-right-aside.vue')['default']
     TheRoot: typeof import('./src/components/base/the-root.vue')['default']
+    UserDrawer: typeof import('./src/components/modules/user/user-drawer.vue')['default']
     UserTable: typeof import('./src/components/modules/user/user-table.vue')['default']
   }
 }
