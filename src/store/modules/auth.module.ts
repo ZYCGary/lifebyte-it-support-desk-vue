@@ -47,6 +47,16 @@ const actions: AuthActionTree = {
     } catch (error) {
       throw error
     }
+  },
+
+  logout: async ({ commit }) => {
+    try {
+      await apis.auth.logout()
+      commit('setUser', null)
+      commit('setAuthenticated', false)
+    } catch (error) {
+      throw error
+    }
   }
 }
 

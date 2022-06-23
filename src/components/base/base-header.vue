@@ -11,7 +11,15 @@
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item>Profile</el-dropdown-item>
-            <el-dropdown-item divided>Logout</el-dropdown-item>
+            <el-dropdown-item divided>
+              <el-button
+                type="danger"
+                :loading="status.logging_out"
+                @click="logout"
+              >
+                {{ status.logging_out ? 'Logging Out' : 'Logout' }}
+              </el-button>
+            </el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -22,18 +30,46 @@
 <script>
 import BaseImage from '@/components/base/base-image.vue'
 import { useStore } from '@/store'
-import { computed } from 'vue'
+import { computed, reactive } from 'vue'
+import { useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
 
 export default {
   name: 'base-header',
   components: { BaseImage },
   setup: () => {
     const store = useStore()
+    const router = useRouter()
+
     const user = computed(() => store.state.auth.user)
 
     const initial = user.value.name[0].toUpperCase()
 
-    return { initial }
+    const status = reactive({
+      logging_out: false
+    })
+
+    const logout = () => {
+      status.logging_out = true
+
+      store
+        .dispatch('auth/logout')
+        .then(() => {
+          status.logging_out = false
+
+          router.push({ name: 'auth.login' })
+        })
+        .catch(() => {
+          ElMessage({
+            type: 'error',
+            message: 'Failed to logout.'
+          })
+
+          status.logging_out = false
+        })
+    }
+
+    return { initial, status, logout }
   }
 }
 </script>

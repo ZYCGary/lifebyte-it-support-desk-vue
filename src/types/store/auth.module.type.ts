@@ -19,4 +19,5 @@ export interface AuthMutationTree extends MutationTree<AuthState> {
 export interface AuthActionTree extends ActionTree<AuthState, RootState> {
   login: ({ dispatch }: ActionContext<AuthState, RootState>, payload: { email: string; password: string }) => void
   getCurrentUser: ({ commit }: ActionContext<AuthState, RootState>) => void
+  logout: ({ commit }: ActionContext<AuthState, RootState>) => void
 }
