@@ -1,8 +1,8 @@
 import requests from '@/http/requests'
 
 const userApis = {
-  getUserTable: async () => {
-    const response = await requests.get('api/v1/users')
+  getUserCollection: async (params?: { page?: number }) => {
+    const response = await requests.get('api/v1/users', params)
 
     return response?.data
   }

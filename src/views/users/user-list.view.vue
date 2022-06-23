@@ -7,7 +7,7 @@
       <el-container class="relative">
         <el-container class="h-full overflow-y-auto">
           <el-main>
-            <div class="relative flex">
+            <div class="relative flex flex-row flex-wrap">
               <user-table></user-table>
             </div>
           </el-main>
