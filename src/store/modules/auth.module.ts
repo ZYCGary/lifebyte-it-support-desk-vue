@@ -11,7 +11,7 @@ const state: AuthState = {
 
 const getters: AuthGetterTree = {
   isAdmin: () => {
-    return !!(state.authenticated && state.user && state.user?.is_admin)
+    return !!(state.user && state.user?.is_admin)
   }
 }
 
@@ -40,7 +40,10 @@ const actions: AuthActionTree = {
     try {
       const user = (await apis.auth.getCurrentUser()) as User
       commit('setUser', user)
-      commit('setAuthenticated', true)
+
+      if (getters.isAdmin()) {
+        commit('setAuthenticated', true)
+      }
     } catch (error) {
       throw error
     }
