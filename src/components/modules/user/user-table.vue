@@ -63,24 +63,12 @@
         width="150"
       ></el-table-column>
       <el-table-column
-        property="state"
-        label="State"
-        width="100"
-      ></el-table-column>
-      <el-table-column
-        property="is_admin"
-        label="Is Admin"
-        width="100"
-      ></el-table-column>
-      <el-table-column
         fixed="right"
         label="Operations"
         width="120"
       >
         <template #default>
-          <router-link :to="{ name: 'dashboard' }">
-            <el-button type="primary"> View </el-button>
-          </router-link>
+          <el-button type="primary"> View </el-button>
         </template>
       </el-table-column>
 
@@ -159,6 +147,8 @@ export default {
     const search = (value: string) => {
       if (searchValue.value && searchValue.value !== '') {
         loadTable({ name: value })
+      } else {
+        loadTable()
       }
     }
 
