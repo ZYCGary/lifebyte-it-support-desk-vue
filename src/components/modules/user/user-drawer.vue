@@ -2,32 +2,24 @@
   <div>
     <el-drawer
       v-model="drawer.show"
-      @closed="closeDrawer"
+      @closed="handleClosed"
       destroy-on-close
       :size="800"
     >
-      <template #header>
+      <template
+        #header
+        v-if="!drawer.editable"
+      >
         <h1 class="font-bold text-2xl text-black">{{ user.name }}</h1>
       </template>
 
-      <div>
-        <el-descriptions
-          border
-          :title="user.email"
-          :column="2"
-        >
-          <el-descriptions-item label="Department">{{ user.department }}</el-descriptions-item>
-          <el-descriptions-item label="Job Title">{{ user.job_title }}</el-descriptions-item>
-          <el-descriptions-item label="Office">{{ user.location_office }}</el-descriptions-item>
-          <el-descriptions-item label="Position">{{ user.location_position }}</el-descriptions-item>
-          <el-descriptions-item label="State">{{ user.state === 1 ? 'On Job' : 'Left' }}</el-descriptions-item>
-          <el-descriptions-item label="Is Admin">{{ user.is_admin ? 'True' : 'False' }}</el-descriptions-item>
-        </el-descriptions>
+      <user-drawer-profile
+        v-model:editable="drawer.editable"
+        :user="user"
+      ></user-drawer-profile>
 
-        <div class="flex flex-row flex-nowrap justify-end mt-4">
-          <el-button type="success"><i class="fa-solid fa-pen-to-square"></i></el-button>
-          <el-button type="danger"><i class="fa-solid fa-trash-can"></i></el-button>
-        </div>
+      <div v-if="drawer.editable">
+        <el-form> </el-form>
       </div>
 
       <el-divider></el-divider>
@@ -38,9 +30,11 @@
 <script lang="ts">
 import { defineComponent, PropType, reactive, watchEffect } from 'vue'
 import { User } from '@/types/store/user.module.type'
+import UserDrawerProfile from '@/components/modules/user/user-drawer-profile.vue'
 
 export default defineComponent({
   name: 'user-drawer',
+  components: { UserDrawerProfile },
   props: {
     show: {
       required: true,
@@ -56,7 +50,8 @@ export default defineComponent({
   setup: (props, { emit }) => {
     const drawer = reactive({
       show: props.show,
-      user: props.user
+      user: props.user,
+      editable: false
     })
 
     watchEffect(() => {
@@ -64,13 +59,13 @@ export default defineComponent({
       drawer.user = props.user
     })
 
-    const closeDrawer = () => {
-      console.log('close')
+    const handleClosed = () => {
+      drawer.editable = false
       emit('update:show', false)
       emit('update:user', {})
     }
 
-    return { drawer, closeDrawer }
+    return { drawer, handleClosed }
   }
 })
 </script>
