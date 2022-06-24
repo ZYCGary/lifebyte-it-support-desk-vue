@@ -12,6 +12,7 @@
         <base-pagination
           :total="pagination.total"
           :page-size="pagination.page_size"
+          :current-page="pagination.current_page"
           @current-change="handlePageChange"
         />
       </div>
@@ -121,7 +122,8 @@ export default {
 
     const pagination = reactive({
       total: computed(() => table.collection.meta.total),
-      page_size: computed(() => table.collection.meta.per_page)
+      page_size: computed(() => table.collection.meta.per_page),
+      current_page: computed(() => table.collection.meta.current_page)
     })
 
     const searchValue = ref('')

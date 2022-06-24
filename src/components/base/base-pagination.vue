@@ -3,6 +3,7 @@
     layout="prev, pager, next"
     :total="total"
     :page-size="pageSize"
+    :current-page="currentPage"
     @current-change="handleCurrentChange"
   />
 </template>
@@ -15,13 +16,15 @@ export default defineComponent({
   props: {
     total: {
       required: true,
-      type: Number,
-      default: 0
+      type: Number
     },
     pageSize: {
       required: true,
-      type: Number,
-      default: 15
+      type: Number
+    },
+    currentPage: {
+      required: true,
+      type: Number
     }
   },
   emits: ['currentChange'],
