@@ -4,6 +4,7 @@
       <div class="flex items-center">
         <base-search-bar
           placeholder="Type a name to search"
+          v-model:searchValue="searchValue"
           @search="search"
         ></base-search-bar>
       </div>
@@ -84,7 +85,7 @@
 
 <script lang="ts">
 import apis from '@/http/apis'
-import { computed, reactive } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { BaseTableProps } from '@/types/components.type'
 import BasePagination from '@/components/base/base-pagination.vue'
 import BaseSearchBar from '@/components/base/base-search-bar.vue'
@@ -123,6 +124,8 @@ export default {
       page_size: computed(() => table.collection.meta.per_page)
     })
 
+    const searchValue = ref('')
+
     const loadTable = (param?: { page?: number; name?: string }) => {
       table.loading = true
       table.error = false
@@ -148,15 +151,11 @@ export default {
     loadTable()
 
     const handlePageChange = (page: number) => {
-      loadTable({ page: page })
+      loadTable({ page: page, name: searchValue.value || '' })
     }
 
-    const search = (value: string) => {
-      if (value && value !== '') {
-        loadTable({ name: value })
-      } else {
-        loadTable()
-      }
+    const search = () => {
+      loadTable({ page: 1, name: searchValue.value || '' })
     }
 
     const drawer = reactive({
@@ -169,7 +168,7 @@ export default {
       drawer.user = row
     }
 
-    return { table, pagination, handlePageChange, search, drawer, viewUser }
+    return { table, pagination, handlePageChange, search, drawer, viewUser, searchValue }
   }
 }
 </script>

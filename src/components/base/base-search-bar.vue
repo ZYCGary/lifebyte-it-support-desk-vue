@@ -1,6 +1,6 @@
 <template>
   <el-input
-    v-model="searchValue"
+    v-model="searchKey"
     :placeholder="placeholder"
     @change="search"
   >
@@ -20,16 +20,22 @@ export default defineComponent({
       required: false,
       type: String,
       default: 'Type to search'
+    },
+    searchValue: {
+      required: true,
+      type: String,
+      default: ''
     }
   },
-  emits: ['search'],
+  emits: ['update:searchValue', 'search'],
   setup: (props, { emit }) => {
-    const searchValue = ref('')
+    const searchKey = ref('')
 
     const search = () => {
-      emit('search', searchValue.value)
+      emit('update:searchValue', searchKey.value)
+      emit('search', searchKey.value)
     }
-    return { searchValue, search }
+    return { searchKey, search }
   }
 })
 </script>
