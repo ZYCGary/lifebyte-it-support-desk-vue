@@ -130,8 +130,8 @@ export default defineComponent({
     ]
 
     const isAdminOptions = [
-      { label: 'True', value: 1 },
-      { label: 'False', value: 0 }
+      { label: 'True', value: true },
+      { label: 'False', value: false }
     ]
 
     const rules = {

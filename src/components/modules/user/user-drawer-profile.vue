@@ -5,12 +5,36 @@
       :title="user.email"
       :column="2"
     >
-      <el-descriptions-item label="Department">{{ user.department }}</el-descriptions-item>
-      <el-descriptions-item label="Job Title">{{ user.job_title }}</el-descriptions-item>
-      <el-descriptions-item label="Office">{{ user.location_office }}</el-descriptions-item>
-      <el-descriptions-item label="Position">{{ user.location_position }}</el-descriptions-item>
-      <el-descriptions-item label="State">{{ user.state === 1 ? 'On Job' : 'Left' }}</el-descriptions-item>
-      <el-descriptions-item label="Is Admin">{{ user.is_admin ? 'True' : 'False' }}</el-descriptions-item>
+      <el-descriptions-item
+        label="Department"
+        width="25%"
+        >{{ user.department }}</el-descriptions-item
+      >
+      <el-descriptions-item
+        label="Job Title"
+        width="25%"
+        >{{ user.job_title }}</el-descriptions-item
+      >
+      <el-descriptions-item
+        label="Office"
+        width="25%"
+        >{{ user.location_office }}</el-descriptions-item
+      >
+      <el-descriptions-item
+        label="Position"
+        width="25%"
+        >{{ user.location_position }}</el-descriptions-item
+      >
+      <el-descriptions-item
+        label="State"
+        width="25%"
+        >{{ user.state === 1 ? 'On Job' : 'Left' }}</el-descriptions-item
+      >
+      <el-descriptions-item
+        label="Is Admin"
+        width="25%"
+        >{{ user.is_admin ? 'True' : 'False' }}</el-descriptions-item
+      >
     </el-descriptions>
 
     <div class="flex flex-row flex-nowrap justify-end mt-4">
