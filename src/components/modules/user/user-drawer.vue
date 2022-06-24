@@ -1,21 +1,38 @@
 <template>
-  <el-drawer
-    v-model="drawer.show"
-    @closed="closeDrawer"
-    destroy-on-close
-  >
-    <el-descriptions
-      :title="user.name"
-      :extra="user.email"
-      column="2"
+  <div>
+    <el-drawer
+      v-model="drawer.show"
+      @closed="closeDrawer"
+      destroy-on-close
+      :size="800"
     >
-      <el-descriptions-item label="Department">{{ user.department }}</el-descriptions-item>
-      <el-descriptions-item label="Job Title">{{ user.job_title }}</el-descriptions-item>
-      <el-descriptions-item label="Office">{{ user.location_office }}</el-descriptions-item>
-      <el-descriptions-item label="Position">{{ user.location_position }}</el-descriptions-item>
-    </el-descriptions>
-    {{ user }}
-  </el-drawer>
+      <template #header>
+        <h1 class="font-bold text-2xl text-black">{{ user.name }}</h1>
+      </template>
+
+      <div>
+        <el-descriptions
+          border
+          :title="user.email"
+          :column="2"
+        >
+          <el-descriptions-item label="Department">{{ user.department }}</el-descriptions-item>
+          <el-descriptions-item label="Job Title">{{ user.job_title }}</el-descriptions-item>
+          <el-descriptions-item label="Office">{{ user.location_office }}</el-descriptions-item>
+          <el-descriptions-item label="Position">{{ user.location_position }}</el-descriptions-item>
+          <el-descriptions-item label="State">{{ user.state === 1 ? 'On Job' : 'Left' }}</el-descriptions-item>
+          <el-descriptions-item label="Is Admin">{{ user.is_admin ? 'True' : 'False' }}</el-descriptions-item>
+        </el-descriptions>
+
+        <div class="flex flex-row flex-nowrap justify-end mt-4">
+          <el-button type="success"><i class="fa-solid fa-pen-to-square"></i></el-button>
+          <el-button type="danger"><i class="fa-solid fa-trash-can"></i></el-button>
+        </div>
+      </div>
+
+      <el-divider></el-divider>
+    </el-drawer>
+  </div>
 </template>
 
 <script lang="ts">
