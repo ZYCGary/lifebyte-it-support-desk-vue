@@ -1,4 +1,5 @@
 <template>
+  <template v-if="isAdmin"></template>
   <el-container
     direction="vertical"
     class="h-full"
@@ -65,8 +66,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { computed, defineComponent } from 'vue'
 import TheHeader from '@/components/layouts/the-header.vue'
+import { useStore } from '@/store'
 
 export default defineComponent({
   name: 'the-app',
@@ -78,7 +80,13 @@ export default defineComponent({
       default: 'dashboard'
     }
   },
-  setup() {}
+  setup() {
+    const store = useStore()
+
+    const isAdmin = computed(() => store.getters['auth/isAdmin'])
+
+    return { isAdmin }
+  }
 })
 </script>
 
