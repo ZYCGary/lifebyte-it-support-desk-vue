@@ -9,18 +9,16 @@
     >
       <template
         #header
-        v-if="drawer.type === 'show'"
+        v-if="drawer.type === 'show' && drawer.user"
       >
-        <h1 class="font-bold text-2xl text-black">{{ drawer.user?.name }}</h1>
+        <h1 class="font-bold text-2xl text-black">{{ drawer.user.name }}</h1>
       </template>
 
-      <user-drawer-profile></user-drawer-profile>
+      <template v-if="drawer.user">
+        <user-drawer-profile></user-drawer-profile>
 
-      <div v-if="drawer.type !== 'show'">
-        <el-form> </el-form>
-      </div>
-
-      <el-divider></el-divider>
+        <el-divider></el-divider>
+      </template>
     </el-drawer>
   </div>
 </template>
@@ -30,6 +28,7 @@ import { computed, defineComponent, ref, watch } from 'vue'
 import UserDrawerProfile from '@/components/modules/user/user-drawer-profile.vue'
 import { useStore } from '@/store'
 import { ModuleDrawerType } from '@/types/enums/components.enum'
+import _ from 'lodash'
 
 export default defineComponent({
   name: 'user-drawer',
@@ -49,9 +48,9 @@ export default defineComponent({
     const key = ref(0)
 
     watch(
-      drawer.value,
+      () => _.cloneDeep(drawer.value),
       (newValue, oldValue) => {
-        if (newValue.open === oldValue.open) key.value += 1
+        if (newValue.open !== oldValue.open) key.value += 1
       },
       { deep: true }
     )

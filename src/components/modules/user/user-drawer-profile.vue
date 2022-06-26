@@ -60,7 +60,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue'
+import { computed, defineComponent, toRefs } from 'vue'
 import UserDrawerProfileForm from '@/components/modules/user/user-drawer-profile-form.vue'
 import { ModuleDrawerType } from '@/types/enums/components.enum'
 import { useStore } from '@/store'
@@ -73,7 +73,8 @@ export default defineComponent({
     const store = useStore()
     const drawer = computed(() => store.state.user.drawer)
 
-    const { user, open, type } = drawer.value
+    const { user, open, type } = toRefs(drawer.value)
+
     const handleEditButtonClick = () => {
       store.commit('user/setDrawerType', ModuleDrawerType.EDIT)
     }
