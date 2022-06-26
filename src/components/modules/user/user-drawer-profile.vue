@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!editable">
+  <div v-if="type === 'show'">
     <el-descriptions
       border
       :title="user.email"
@@ -40,7 +40,7 @@
     <div class="flex flex-row flex-nowrap justify-end mt-4">
       <el-button
         type="success"
-        @click="$emit('update:editable', true)"
+        @click="handleEditButtonClick"
       >
         <i class="fa-solid fa-pen-to-square"></i>
         <span class="ml-2">Edit</span>
@@ -55,7 +55,7 @@
   <div v-else>
     <user-drawer-profile-form
       :user="user"
-      @close="$emit('update:editable', false)"
+      @close="handleFormClose"
     ></user-drawer-profile-form>
   </div>
 </template>
@@ -64,23 +64,33 @@
 import { defineComponent, PropType } from 'vue'
 import { User } from '@/types/store/user.module.type'
 import UserDrawerProfileForm from '@/components/modules/user/user-drawer-profile-form.vue'
+import { ModuleDrawerType } from '@/types/enums/components.enum'
 
 export default defineComponent({
   name: 'user-drawer-profile',
   components: { UserDrawerProfileForm },
   props: {
-    editable: {
+    type: {
       required: true,
-      type: Boolean
+      type: String as PropType<ModuleDrawerType>,
+      default: ModuleDrawerType.SHOW
     },
     user: {
       required: true,
       type: Object as PropType<User>
     }
   },
-  emits: ['update:editable'],
-  setup: () => {
-    return {}
+  emits: ['update:type'],
+  setup: (props, { emit }) => {
+    const handleEditButtonClick = () => {
+      emit('update:type', ModuleDrawerType.EDIT)
+    }
+
+    const handleFormClose = () => {
+      emit('update:type', ModuleDrawerType.SHOW)
+    }
+
+    return { handleEditButtonClick, handleFormClose }
   }
 })
 </script>

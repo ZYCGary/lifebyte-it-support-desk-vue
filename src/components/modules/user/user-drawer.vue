@@ -1,24 +1,25 @@
 <template>
   <div>
     <el-drawer
-      v-model="drawer.show"
+      v-model="drawer.open"
       @closed="handleClosed"
       destroy-on-close
       :size="800"
+      :key="key"
     >
       <template
         #header
-        v-if="!drawer.editable"
+        v-if="drawer.type === 'show'"
       >
-        <h1 class="font-bold text-2xl text-black">{{ user.name }}</h1>
+        <h1 class="font-bold text-2xl text-black">{{ drawer.user?.name }}</h1>
       </template>
 
       <user-drawer-profile
-        v-model:editable="drawer.editable"
-        :user="user"
+        v-model:type="drawer.type"
+        :user="drawer.user"
       ></user-drawer-profile>
 
-      <div v-if="drawer.editable">
+      <div v-if="drawer.type !== 'show'">
         <el-form> </el-form>
       </div>
 
@@ -28,44 +29,38 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, reactive, watchEffect } from 'vue'
-import { User } from '@/types/store/user.module.type'
+import { defineComponent, reactive, ref, watchEffect } from 'vue'
 import UserDrawerProfile from '@/components/modules/user/user-drawer-profile.vue'
 
 export default defineComponent({
   name: 'user-drawer',
   components: { UserDrawerProfile },
-  props: {
-    show: {
-      required: true,
-      type: Boolean,
-      default: false
-    },
-    user: {
-      required: true,
-      type: Object as PropType<User>
-    }
-  },
-  emits: ['update:show', 'update:user'],
+  props: ['modelValue'],
+  emits: ['update:modelValue'],
   setup: (props, { emit }) => {
     const drawer = reactive({
-      show: props.show,
-      user: props.user,
-      editable: false
+      user: props.modelValue.user,
+      open: props.modelValue.open,
+      type: props.modelValue.type
     })
 
+    // Key used to force update drawer.
+    const key = ref(0)
+
     watchEffect(() => {
-      drawer.show = props.show
-      drawer.user = props.user
+      key.value += 1
+      drawer.open = props.modelValue.open
+      drawer.user = props.modelValue.user
+      drawer.type = props.modelValue.type
     })
 
     const handleClosed = () => {
-      drawer.editable = false
-      emit('update:show', false)
-      emit('update:user', {})
+      drawer.open = false
+      drawer.user = null
+      emit('update:modelValue', drawer)
     }
 
-    return { drawer, handleClosed }
+    return { drawer, handleClosed, key }
   }
 })
 </script>
