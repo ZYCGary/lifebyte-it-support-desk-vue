@@ -1,71 +1,67 @@
 <template>
   <div>
     <el-drawer
-      v-model="drawer.show"
+      v-model="drawer.open"
       @closed="handleClosed"
       destroy-on-close
       :size="800"
+      :key="key"
     >
       <template
         #header
-        v-if="!drawer.editable"
+        v-if="drawer.type === 'show' && drawer.user"
       >
-        <h1 class="font-bold text-2xl text-black">{{ user.name }}</h1>
+        <h1 class="font-bold text-2xl text-black">{{ drawer.user.name }}</h1>
       </template>
 
-      <user-drawer-profile
-        v-model:editable="drawer.editable"
-        :user="user"
-      ></user-drawer-profile>
+      <template v-if="drawer.user">
+        <user-drawer-profile></user-drawer-profile>
 
-      <div v-if="drawer.editable">
-        <el-form> </el-form>
-      </div>
-
-      <el-divider></el-divider>
+        <el-divider></el-divider>
+      </template>
     </el-drawer>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, reactive, watchEffect } from 'vue'
-import { User } from '@/types/store/user.module.type'
+import { computed, defineComponent, ref, watch } from 'vue'
 import UserDrawerProfile from '@/components/modules/user/user-drawer-profile.vue'
+import { useStore } from '@/store'
+import { ModuleDrawerType } from '@/types/enums/components.enum'
+import _ from 'lodash'
 
 export default defineComponent({
   name: 'user-drawer',
   components: { UserDrawerProfile },
-  props: {
-    show: {
-      required: true,
-      type: Boolean,
-      default: false
-    },
-    user: {
-      required: true,
-      type: Object as PropType<User>
-    }
-  },
-  emits: ['update:show', 'update:user'],
-  setup: (props, { emit }) => {
-    const drawer = reactive({
-      show: props.show,
-      user: props.user,
-      editable: false
+  setup: () => {
+    const store = useStore()
+
+    const drawer = computed({
+      get: () => store.state.user.drawer,
+      set: (value) => {
+        console.log('set drawer', value)
+        store.commit('user/setDrawer', value)
+      }
     })
 
-    watchEffect(() => {
-      drawer.show = props.show
-      drawer.user = props.user
-    })
+    // Key used to force update drawer.
+    const key = ref(0)
+
+    watch(
+      () => _.cloneDeep(drawer.value),
+      (newValue, oldValue) => {
+        if (newValue.open !== oldValue.open) key.value += 1
+      },
+      { deep: true }
+    )
 
     const handleClosed = () => {
-      drawer.editable = false
-      emit('update:show', false)
-      emit('update:user', {})
+      store.commit('user/closeDrawer')
+      store.commit('user/setDrawerType', ModuleDrawerType.SHOW)
+      store.commit('user/setDrawerUser', null)
     }
 
-    return { drawer, handleClosed }
+    return { drawer, key, handleClosed }
   }
 })
 </script>

@@ -78,10 +78,7 @@
     </el-table>
   </div>
 
-  <user-drawer
-    v-model:show="drawer.show"
-    v-model:user="drawer.user"
-  ></user-drawer>
+  <user-drawer></user-drawer>
 </template>
 
 <script lang="ts">
@@ -92,6 +89,8 @@ import BasePagination from '@/components/base/base-pagination.vue'
 import BaseSearchBar from '@/components/base/base-search-bar.vue'
 import UserDrawer from '@/components/modules/user/user-drawer.vue'
 import { User } from '@/types/store/user.module.type'
+import { useStore } from '@/store'
+import { ModuleDrawerType } from '@/types/enums/components.enum'
 
 export default {
   name: 'user-table',
@@ -160,17 +159,15 @@ export default {
       loadTable({ page: 1, name: searchValue.value || '' })
     }
 
-    const drawer = reactive({
-      show: false,
-      user: {}
-    })
+    const store = useStore()
 
     const viewUser = (row: User) => {
-      drawer.show = true
-      drawer.user = row
+      store.commit('user/setDrawerUser', row)
+      store.commit('user/setDrawerType', ModuleDrawerType.SHOW)
+      store.commit('user/openDrawer')
     }
 
-    return { table, pagination, handlePageChange, search, drawer, viewUser, searchValue }
+    return { table, pagination, handlePageChange, search, viewUser, searchValue }
   }
 }
 </script>

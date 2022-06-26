@@ -6,11 +6,16 @@ import appModule from '@/store/modules/app.module'
 import rootMutations from '@/store/root.mutations'
 import rootActions from '@/store/root.actions'
 import authModule from '@/store/modules/auth.module'
+import userModule from '@/store/modules/user.module'
 
 export const key: InjectionKey<Store<RootState>> = Symbol('injection key')
 
 export const store = createStore({
-  modules: { app: appModule, auth: authModule },
+  modules: {
+    app: appModule,
+    auth: authModule,
+    user: userModule
+  },
   mutations: rootMutations,
   actions: rootActions,
   strict: import.meta.env.DEV

@@ -81,7 +81,7 @@
       <el-form-item>
         <el-button
           type="success"
-          @click="$emit('close')"
+          @click="handleSave"
           class="justify-self-end"
         >
           <base-icon-text
@@ -91,7 +91,7 @@
         </el-button>
         <el-button
           type="info"
-          @click="$emit('close')"
+          @click="handleCancel"
           class="justify-self-end"
         >
           <base-icon-text
@@ -108,6 +108,8 @@
 import { defineComponent, PropType, reactive, ref } from 'vue'
 import { User } from '@/types/store/user.module.type'
 import BaseIconText from '@/components/base/base-icon-text.vue'
+import { useStore } from '@/store'
+import { ModuleDrawerType } from '@/types/enums/components.enum'
 
 export default defineComponent({
   name: 'user-drawer-profile-form',
@@ -115,11 +117,13 @@ export default defineComponent({
   props: {
     user: {
       required: true,
-      type: Object as PropType<User>
+      type: Object as PropType<User | null>
     }
   },
   emits: ['close'],
   setup: (props) => {
+    const store = useStore()
+
     const formRef = ref()
 
     const profile = reactive({ ...props.user } as User)
@@ -154,7 +158,15 @@ export default defineComponent({
       ]
     }
 
-    return { formRef, profile, stateOptions, isAdminOptions, rules }
+    const handleSave = () => {
+      store.commit('user/setDrawerType', ModuleDrawerType.SHOW)
+    }
+
+    const handleCancel = () => {
+      store.commit('user/setDrawerType', ModuleDrawerType.SHOW)
+    }
+
+    return { formRef, profile, stateOptions, isAdminOptions, rules, handleSave, handleCancel }
   }
 })
 </script>
