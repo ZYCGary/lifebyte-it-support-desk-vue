@@ -14,10 +14,7 @@
         <h1 class="font-bold text-2xl text-black">{{ drawer.user?.name }}</h1>
       </template>
 
-      <user-drawer-profile
-        v-model:type="drawer.type"
-        :user="drawer.user"
-      ></user-drawer-profile>
+      <user-drawer-profile></user-drawer-profile>
 
       <div v-if="drawer.type !== 'show'">
         <el-form> </el-form>
@@ -29,38 +26,43 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, watchEffect } from 'vue'
+import { computed, defineComponent, ref, watch } from 'vue'
 import UserDrawerProfile from '@/components/modules/user/user-drawer-profile.vue'
+import { useStore } from '@/store'
+import { ModuleDrawerType } from '@/types/enums/components.enum'
 
 export default defineComponent({
   name: 'user-drawer',
   components: { UserDrawerProfile },
-  props: ['modelValue'],
-  emits: ['update:modelValue'],
-  setup: (props, { emit }) => {
-    const drawer = reactive({
-      user: props.modelValue.user,
-      open: props.modelValue.open,
-      type: props.modelValue.type
+  setup: () => {
+    const store = useStore()
+
+    const drawer = computed({
+      get: () => store.state.user.drawer,
+      set: (value) => {
+        console.log('set drawer', value)
+        store.commit('user/setDrawer', value)
+      }
     })
 
     // Key used to force update drawer.
     const key = ref(0)
 
-    watchEffect(() => {
-      key.value += 1
-      drawer.open = props.modelValue.open
-      drawer.user = props.modelValue.user
-      drawer.type = props.modelValue.type
-    })
+    watch(
+      drawer.value,
+      (newValue, oldValue) => {
+        if (newValue.open === oldValue.open) key.value += 1
+      },
+      { deep: true }
+    )
 
     const handleClosed = () => {
-      drawer.open = false
-      drawer.user = null
-      emit('update:modelValue', drawer)
+      store.commit('user/closeDrawer')
+      store.commit('user/setDrawerType', ModuleDrawerType.SHOW)
+      store.commit('user/setDrawerUser', null)
     }
 
-    return { drawer, handleClosed, key }
+    return { drawer, key, handleClosed }
   }
 })
 </script>

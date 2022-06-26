@@ -78,7 +78,7 @@
     </el-table>
   </div>
 
-  <user-drawer v-model="drawer"></user-drawer>
+  <user-drawer></user-drawer>
 </template>
 
 <script lang="ts">
@@ -160,12 +160,6 @@ export default {
     }
 
     const store = useStore()
-    const drawer = computed({
-      get: () => store.state.user.drawer,
-      set: (value) => {
-        store.commit('user/setDrawer', value)
-      }
-    })
 
     const viewUser = (row: User) => {
       store.commit('user/setDrawerUser', row)
@@ -173,7 +167,7 @@ export default {
       store.commit('user/openDrawer')
     }
 
-    return { table, pagination, handlePageChange, search, drawer, viewUser, searchValue }
+    return { table, pagination, handlePageChange, search, viewUser, searchValue }
   }
 }
 </script>
