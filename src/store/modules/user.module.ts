@@ -22,12 +22,11 @@ const mutations: UserMutationTree = {
   },
   closeDrawer: () => {
     state.drawer.open = false
+    state.drawer.type = ModuleDrawerType.SHOW
+    state.drawer.user = null
   },
   setDrawerType: (userState, type) => {
     userState.drawer.type = type
-  },
-  setDrawer: (userState, drawer) => {
-    userState.drawer = drawer
   }
 }
 

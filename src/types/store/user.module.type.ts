@@ -29,14 +29,6 @@ export interface UserMutationTree extends MutationTree<UserState> {
   openDrawer: () => void
   closeDrawer: () => void
   setDrawerType: (userState: UserState, type: ModuleDrawerType) => void
-  setDrawer: (
-    userState: UserState,
-    drawer: {
-      user: User | null
-      open: boolean
-      type: ModuleDrawerType
-    }
-  ) => void
 }
 
 export interface UserActionTree extends ActionTree<UserState, RootState> {}
