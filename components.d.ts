@@ -13,6 +13,7 @@ declare module '@vue/runtime-core' {
     BaseSearchBar: typeof import('./src/components/base/base-search-bar.vue')['default']
     ElAside: typeof import('element-plus/es')['ElAside']
     ElButton: typeof import('element-plus/es')['ElButton']
+    ElButtonGroup: typeof import('element-plus/es')['ElButtonGroup']
     ElCalendar: typeof import('element-plus/es')['ElCalendar']
     ElContainer: typeof import('element-plus/es')['ElContainer']
     ElDescriptions: typeof import('element-plus/es')['ElDescriptions']
@@ -47,6 +48,7 @@ declare module '@vue/runtime-core' {
     UserDrawer: typeof import('./src/components/modules/user/user-drawer.vue')['default']
     UserDrawerProfile: typeof import('./src/components/modules/user/user-drawer-profile.vue')['default']
     UserDrawerProfileForm: typeof import('./src/components/modules/user/user-drawer-profile-form.vue')['default']
+    UserListHeader: typeof import('./src/components/modules/user/user-list-header.vue')['default']
     UserTable: typeof import('./src/components/modules/user/user-table.vue')['default']
   }
 }

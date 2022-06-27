@@ -1,7 +1,7 @@
 <template>
   <the-app active-menu="users">
     <template #heading>
-      <h1>User List</h1>
+      <user-list-header></user-list-header>
     </template>
     <template #content>
       <el-container class="relative">
@@ -25,9 +25,10 @@ import { defineComponent } from 'vue'
 import TheApp from '@/components/layouts/the-app.vue'
 import TheRightAside from '@/components/layouts/the-right-aside.vue'
 import UserTable from '@/components/modules/user/user-table.vue'
+import UserListHeader from '@/components/modules/user/user-list-header.vue'
 
 export default defineComponent({
-  components: { UserTable, TheRightAside, TheApp },
+  components: { UserListHeader, UserTable, TheRightAside, TheApp },
   props: {},
   setup() {
     return {}

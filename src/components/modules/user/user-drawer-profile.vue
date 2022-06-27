@@ -43,12 +43,16 @@
           type="success"
           @click="handleEditButtonClick"
         >
-          <i class="fa-solid fa-pen-to-square"></i>
-          <span class="ml-2">Edit</span>
+          <base-icon-text
+            text="Edit"
+            icon-class="fa-solid fa-pen-to-square"
+          ></base-icon-text>
         </el-button>
         <el-button type="danger">
-          <i class="fa-solid fa-trash-can"></i>
-          <span class="ml-2">Dismiss</span>
+          <base-icon-text
+            text="Dismiss"
+            icon-class="fa-solid fa-trash-can"
+          ></base-icon-text>
         </el-button>
       </div>
     </div>
@@ -64,10 +68,11 @@ import { computed, defineComponent, toRefs } from 'vue'
 import UserDrawerProfileForm from '@/components/modules/user/user-drawer-profile-form.vue'
 import { ModuleDrawerType } from '@/types/enums/components.enum'
 import { useStore } from '@/store'
+import BaseIconText from '@/components/base/base-icon-text.vue'
 
 export default defineComponent({
   name: 'user-drawer-profile',
-  components: { UserDrawerProfileForm },
+  components: { BaseIconText, UserDrawerProfileForm },
   props: {},
   setup: () => {
     const store = useStore()

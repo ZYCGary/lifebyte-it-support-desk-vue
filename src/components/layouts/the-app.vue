@@ -19,8 +19,10 @@
             :class="{ 'is-active': activeMenu === 'dashboard' }"
           >
             <template #title>
-              <el-icon><i class="fa-solid fa-gauge"></i></el-icon>
-              <span>Dashboard</span>
+              <base-icon-text
+                text="Dashboard"
+                icon-class="fa-solid fa-gauge"
+              ></base-icon-text>
             </template>
           </el-menu-item>
           <el-menu-item
@@ -29,8 +31,10 @@
             :class="{ 'is-active': activeMenu === 'users' }"
           >
             <template #title>
-              <el-icon><i class="fa-solid fa-users"></i></el-icon>
-              <span>Users</span>
+              <base-icon-text
+                text="Users"
+                icon-class="fa-solid fa-users"
+              ></base-icon-text>
             </template>
           </el-menu-item>
           <el-menu-item
@@ -39,8 +43,10 @@
             :class="{ 'is-active': activeMenu === 'software' }"
           >
             <template #title>
-              <el-icon><i class="fa-brands fa-uncharted"></i></el-icon>
-              <span>Software</span>
+              <base-icon-text
+                text="Software"
+                icon-class="fa-brands fa-uncharted"
+              ></base-icon-text>
             </template>
           </el-menu-item>
           <el-menu-item
@@ -49,8 +55,10 @@
             :class="{ 'is-active': activeMenu === 'hardware' }"
           >
             <template #title>
-              <el-icon><i class="fa-solid fa-computer"></i></el-icon>
-              <span>Hardware</span>
+              <base-icon-text
+                text="Hardware"
+                icon-class="fa-solid fa-computer"
+              ></base-icon-text>
             </template>
           </el-menu-item>
         </el-menu>
@@ -69,10 +77,11 @@
 import { computed, defineComponent } from 'vue'
 import TheHeader from '@/components/layouts/the-header.vue'
 import { useStore } from '@/store'
+import BaseIconText from '@/components/base/base-icon-text.vue'
 
 export default defineComponent({
   name: 'the-app',
-  components: { TheHeader },
+  components: { BaseIconText, TheHeader },
   props: {
     activeMenu: {
       required: true,

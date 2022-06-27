@@ -1,6 +1,6 @@
 <template>
-  <i :class="iconClass"></i>
-  <span class="ml-2">{{ text }}</span>
+  <el-icon><i :class="iconClass"></i></el-icon>
+  <span>{{ text }}</span>
 </template>
 
 <script lang="ts">
