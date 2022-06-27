@@ -89,8 +89,9 @@ import BasePagination from '@/components/base/base-pagination.vue'
 import BaseSearchBar from '@/components/base/base-search-bar.vue'
 import UserDrawer from '@/components/modules/user/user-drawer.vue'
 import { User } from '@/types/store/user.module.type'
-import { useStore } from '@/store'
 import { ModuleDrawerType } from '@/types/enums/components.enum'
+import useModuleDrawer from '@/hooks/useModuleDrawer'
+import { Module } from '@/types/enums/app.enum'
 
 export default {
   name: 'user-table',
@@ -159,12 +160,10 @@ export default {
       loadTable({ page: 1, name: searchValue.value || '' })
     }
 
-    const store = useStore()
+    const { openDrawer } = useModuleDrawer(Module.USER)
 
     const viewUser = (row: User) => {
-      store.commit('user/setDrawerUser', row)
-      store.commit('user/setDrawerType', ModuleDrawerType.SHOW)
-      store.commit('user/openDrawer')
+      openDrawer(ModuleDrawerType.SHOW, row)
     }
 
     return { table, pagination, handlePageChange, search, viewUser, searchValue }

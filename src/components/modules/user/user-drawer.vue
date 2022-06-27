@@ -24,24 +24,23 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from 'vue'
+import { defineComponent, ref } from 'vue'
 import UserDrawerProfile from '@/components/modules/user/user-drawer-profile.vue'
-import { useStore } from '@/store'
+import useModuleDrawer from '@/hooks/useModuleDrawer'
+import { Module } from '@/types/enums/app.enum'
 
 export default defineComponent({
   name: 'user-drawer',
   components: { UserDrawerProfile },
   setup: () => {
-    const store = useStore()
-
-    const drawer = computed(() => store.state.user.drawer)
+    const { drawer, closeDrawer } = useModuleDrawer(Module.USER)
 
     // Key used to force update drawer.
     const key = ref(0)
 
     const handleClosed = () => {
       key.value += 1
-      store.commit('user/closeDrawer')
+      closeDrawer()
     }
 
     return { drawer, key, handleClosed }

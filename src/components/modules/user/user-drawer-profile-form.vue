@@ -109,8 +109,9 @@
 import { defineComponent, PropType, reactive, ref } from 'vue'
 import { User } from '@/types/store/user.module.type'
 import BaseIconText from '@/components/base/base-icon-text.vue'
-import { useStore } from '@/store'
 import { ModuleDrawerType } from '@/types/enums/components.enum'
+import useModuleDrawer from '@/hooks/useModuleDrawer'
+import { Module } from '@/types/enums/app.enum'
 
 export default defineComponent({
   name: 'user-drawer-profile-form',
@@ -123,8 +124,6 @@ export default defineComponent({
   },
   emits: ['close'],
   setup: (props) => {
-    const store = useStore()
-
     const formRef = ref()
 
     const profile = reactive({
@@ -168,12 +167,14 @@ export default defineComponent({
       ]
     }
 
+    const { openDrawer } = useModuleDrawer(Module.USER)
+
     const handleSave = () => {
-      store.commit('user/setDrawerType', ModuleDrawerType.SHOW)
+      openDrawer(ModuleDrawerType.SHOW)
     }
 
     const handleCancel = () => {
-      store.commit('user/setDrawerType', ModuleDrawerType.SHOW)
+      openDrawer(ModuleDrawerType.SHOW)
     }
 
     return { formRef, profile, stateOptions, isAdminOptions, rules, handleSave, handleCancel }

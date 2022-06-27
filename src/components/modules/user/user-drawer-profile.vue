@@ -41,7 +41,7 @@
       <div class="flex flex-row flex-nowrap justify-end mt-4">
         <el-button
           type="success"
-          @click="handleEditButtonClick"
+          @click="handleEditClick"
         >
           <base-icon-text
             text="Edit"
@@ -64,27 +64,27 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, toRefs } from 'vue'
+import { defineComponent, toRefs } from 'vue'
 import UserDrawerProfileForm from '@/components/modules/user/user-drawer-profile-form.vue'
 import { ModuleDrawerType } from '@/types/enums/components.enum'
-import { useStore } from '@/store'
 import BaseIconText from '@/components/base/base-icon-text.vue'
+import useModuleDrawer from '@/hooks/useModuleDrawer'
+import { Module } from '@/types/enums/app.enum'
 
 export default defineComponent({
   name: 'user-drawer-profile',
   components: { BaseIconText, UserDrawerProfileForm },
   props: {},
   setup: () => {
-    const store = useStore()
-    const drawer = computed(() => store.state.user.drawer)
+    const { drawer, openDrawer } = useModuleDrawer(Module.USER)
 
     const { user, open, type } = toRefs(drawer.value)
 
-    const handleEditButtonClick = () => {
-      store.commit('user/setDrawerType', ModuleDrawerType.EDIT)
+    const handleEditClick = () => {
+      openDrawer(ModuleDrawerType.EDIT)
     }
 
-    return { user, open, type, handleEditButtonClick }
+    return { user, open, type, handleEditClick }
   }
 })
 </script>

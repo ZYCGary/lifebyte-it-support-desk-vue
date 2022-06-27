@@ -34,20 +34,19 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import BaseIconText from '@/components/base/base-icon-text.vue'
-import { useStore } from '@/store'
 import { ModuleDrawerType } from '@/types/enums/components.enum'
+import useModuleDrawer from '@/hooks/useModuleDrawer'
+import { Module } from '@/types/enums/app.enum'
 
 export default defineComponent({
   name: 'user-list-header',
   components: { BaseIconText },
   props: {},
   setup: () => {
-    const store = useStore()
+    const { openDrawer } = useModuleDrawer(Module.USER)
 
     const handleNewClick = () => {
-      store.commit('user/setDrawerUser', {})
-      store.commit('user/setDrawerType', ModuleDrawerType.CREATE)
-      store.commit('user/openDrawer')
+      openDrawer(ModuleDrawerType.CREATE, {})
     }
 
     const handleImportClick = () => {
