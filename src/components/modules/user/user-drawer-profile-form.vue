@@ -89,6 +89,7 @@
             text="Save"
           ></base-icon-text>
         </el-button>
+
         <el-button
           type="info"
           @click="handleCancel"
@@ -126,7 +127,16 @@ export default defineComponent({
 
     const formRef = ref()
 
-    const profile = reactive({ ...props.user } as User)
+    const profile = reactive({
+      name: props.user?.name || '',
+      email: props.user?.email || '',
+      department: props.user?.department || '',
+      job_title: props.user?.job_title || '',
+      location_office: props.user?.location_office || '',
+      location_position: props.user?.location_position || '',
+      state: props.user?.state || 1,
+      is_admin: props.user?.is_admin || false
+    })
 
     const stateOptions = [
       { label: 'Left', value: 0 },

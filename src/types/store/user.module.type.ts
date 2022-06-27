@@ -22,7 +22,11 @@ export interface UserState {
   }
 }
 
-export interface UserGetterTree extends GetterTree<UserState, RootState> {}
+export interface UserGetterTree extends GetterTree<UserState, RootState> {
+  isShowDrawer: () => boolean
+  isCreateDrawer: () => boolean
+  isEditDrawer: () => boolean
+}
 
 export interface UserMutationTree extends MutationTree<UserState> {
   setDrawerUser: (userState: UserState, user: User | null) => void

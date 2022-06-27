@@ -11,7 +11,17 @@ const state: UserState = {
   }
 }
 
-const getters: UserGetterTree = {}
+const getters: UserGetterTree = {
+  isShowDrawer: () => {
+    return state.drawer.type === ModuleDrawerType.SHOW
+  },
+  isCreateDrawer: () => {
+    return state.drawer.type === ModuleDrawerType.CREATE
+  },
+  isEditDrawer: () => {
+    return state.drawer.type === ModuleDrawerType.EDIT
+  }
+}
 
 const mutations: UserMutationTree = {
   setDrawerUser: (userState, user) => {
