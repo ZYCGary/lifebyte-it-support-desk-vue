@@ -68,23 +68,22 @@ import { defineComponent, toRefs } from 'vue'
 import UserDrawerProfileForm from '@/components/modules/user/user-drawer-profile-form.vue'
 import { ModuleDrawerType } from '@/types/enums/components.enum'
 import BaseIconText from '@/components/base/base-icon-text.vue'
-import useModuleDrawer from '@/hooks/useModuleDrawer'
-import { Module } from '@/types/enums/app.enum'
+import useUserDrawer from '@/hooks/useUserDrawer'
 
 export default defineComponent({
   name: 'user-drawer-profile',
   components: { BaseIconText, UserDrawerProfileForm },
   props: {},
   setup: () => {
-    const { drawer, openDrawer } = useModuleDrawer(Module.USER)
+    const { drawer, openDrawer } = useUserDrawer()
 
-    const { user, open, type } = toRefs(drawer.value)
+    const { user, type } = toRefs(drawer.value)
 
     const handleEditClick = () => {
       openDrawer(ModuleDrawerType.EDIT)
     }
 
-    return { user, open, type, handleEditClick }
+    return { user, type, handleEditClick }
   }
 })
 </script>

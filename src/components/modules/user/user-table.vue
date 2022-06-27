@@ -90,8 +90,7 @@ import BaseSearchBar from '@/components/base/base-search-bar.vue'
 import UserDrawer from '@/components/modules/user/user-drawer.vue'
 import { User } from '@/types/store/user.module.type'
 import { ModuleDrawerType } from '@/types/enums/components.enum'
-import useModuleDrawer from '@/hooks/useModuleDrawer'
-import { Module } from '@/types/enums/app.enum'
+import useUserDrawer from '@/hooks/useUserDrawer'
 
 export default {
   name: 'user-table',
@@ -160,7 +159,7 @@ export default {
       loadTable({ page: 1, name: searchValue.value || '' })
     }
 
-    const { openDrawer } = useModuleDrawer(Module.USER)
+    const { openDrawer } = useUserDrawer()
 
     const viewUser = (row: User) => {
       openDrawer(ModuleDrawerType.SHOW, row)

@@ -35,15 +35,14 @@
 import { defineComponent } from 'vue'
 import BaseIconText from '@/components/base/base-icon-text.vue'
 import { ModuleDrawerType } from '@/types/enums/components.enum'
-import useModuleDrawer from '@/hooks/useModuleDrawer'
-import { Module } from '@/types/enums/app.enum'
+import useUserDrawer from '@/hooks/useUserDrawer'
 
 export default defineComponent({
   name: 'user-list-header',
   components: { BaseIconText },
   props: {},
   setup: () => {
-    const { openDrawer } = useModuleDrawer(Module.USER)
+    const { openDrawer } = useUserDrawer()
 
     const handleNewClick = () => {
       openDrawer(ModuleDrawerType.CREATE, {})

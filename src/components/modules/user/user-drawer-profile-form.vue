@@ -80,6 +80,7 @@
     <div class="col-span-2 flex flex-row flex-nowrap justify-end mt-4">
       <el-form-item>
         <el-button
+          v-if="drawer.type === 'edit'"
           type="success"
           @click="handleSave"
           class="justify-self-end"
@@ -87,6 +88,18 @@
           <base-icon-text
             icon-class="fa-solid fa-check"
             text="Save"
+          ></base-icon-text>
+        </el-button>
+
+        <el-button
+          v-if="drawer.type === 'create'"
+          type="success"
+          @click="handleSave"
+          class="justify-self-end"
+        >
+          <base-icon-text
+            icon-class="fa-solid fa-plus"
+            text="Add"
           ></base-icon-text>
         </el-button>
 
@@ -110,8 +123,7 @@ import { defineComponent, PropType, reactive, ref } from 'vue'
 import { User } from '@/types/store/user.module.type'
 import BaseIconText from '@/components/base/base-icon-text.vue'
 import { ModuleDrawerType } from '@/types/enums/components.enum'
-import useModuleDrawer from '@/hooks/useModuleDrawer'
-import { Module } from '@/types/enums/app.enum'
+import useUserDrawer from '@/hooks/useUserDrawer'
 
 export default defineComponent({
   name: 'user-drawer-profile-form',
@@ -167,7 +179,7 @@ export default defineComponent({
       ]
     }
 
-    const { openDrawer } = useModuleDrawer(Module.USER)
+    const { drawer, openDrawer } = useUserDrawer()
 
     const handleSave = () => {
       openDrawer(ModuleDrawerType.SHOW)
@@ -177,7 +189,7 @@ export default defineComponent({
       openDrawer(ModuleDrawerType.SHOW)
     }
 
-    return { formRef, profile, stateOptions, isAdminOptions, rules, handleSave, handleCancel }
+    return { formRef, profile, stateOptions, isAdminOptions, rules, handleSave, handleCancel, drawer }
   }
 })
 </script>
