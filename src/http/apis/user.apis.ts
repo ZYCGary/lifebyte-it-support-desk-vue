@@ -5,6 +5,11 @@ const userApis = {
     const response = await requests.get('api/v1/users', params)
 
     return response?.data
+  },
+  createUser: async (payload: any) => {
+    const response = await requests.post('api/v1/user', payload)
+
+    return response?.data
   }
 }
 
