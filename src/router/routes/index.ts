@@ -1,73 +1,15 @@
-import TheApp from '@/components/layouts/the-app.vue'
+import userRoutes from '@/router/routes/user.routes'
+import hardwareRoutes from '@/router/routes/hardware.routes'
+import softwareRoutes from '@/router/routes/software.routes'
+import dashboardRoutes from '@/router/routes/dashboard.routes'
+import authRoutes from '@/router/routes/auth.routes'
 
 const routes = [
-  {
-    path: '/login',
-    name: 'auth.login',
-    component: () => import('@/views/auth/log-in.view.vue'),
-    meta: { adminOnly: false }
-  },
-
-  // Dashboard
-  {
-    path: '/',
-    component: TheApp,
-    meta: { adminOnly: true },
-    children: [
-      {
-        path: '',
-        name: 'dashboard',
-        component: () => import('@/views/dashboard-view.vue'),
-        meta: { adminOnly: true }
-      }
-    ]
-  },
-
-  // User routes
-  {
-    path: '/users',
-    component: TheApp,
-    meta: { adminOnly: true },
-    children: [
-      {
-        path: '',
-        name: 'user-index',
-        component: () => import('@/views/users/user-index-view.vue'),
-        meta: { adminOnly: true }
-      }
-    ]
-  },
-
-  // Hardware routes
-  {
-    path: '/hardware',
-    component: TheApp,
-    meta: { adminOnly: true },
-    children: [
-      {
-        path: '',
-        name: 'hardware-index',
-        component: () => import('@/views/hardware/hardware-index-view.vue'),
-        meta: { adminOnly: true }
-      }
-    ]
-  },
-
-  // Software routes
-  {
-    path: '/software',
-    component: TheApp,
-    meta: { adminOnly: true },
-    children: [
-      {
-        path: '',
-        name: 'software-index',
-        component: () => import('@/views/software/software-index-view.vue'),
-        meta: { adminOnly: true }
-      }
-    ]
-  },
-
+  authRoutes,
+  dashboardRoutes,
+  userRoutes,
+  hardwareRoutes,
+  softwareRoutes,
   {
     path: '/:pathMatch(.*)*',
     name: 'error-not-found',
