@@ -1,5 +1,5 @@
 <template>
-  <el-button>
+  <el-button v-if="text">
     <template
       #icon
       v-if="iconClass"
@@ -7,6 +7,14 @@
       <el-icon><i :class="iconClass"></i></el-icon>
     </template>
     <slot></slot>
+  </el-button>
+  <el-button v-else>
+    <template
+      #icon
+      v-if="iconClass"
+    >
+      <el-icon><i :class="iconClass"></i></el-icon>
+    </template>
   </el-button>
 </template>
 
@@ -19,6 +27,11 @@ export default defineComponent({
     iconClass: {
       required: false,
       type: String
+    },
+    text: {
+      required: false,
+      type: Boolean,
+      default: true
     }
   },
   setup: () => {

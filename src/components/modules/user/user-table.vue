@@ -21,7 +21,6 @@
     <el-table
       ref="multipleTableRef"
       :data="table.collection.data"
-      height="776px"
       border
       flexible
       fit
@@ -65,7 +64,18 @@
       >
         <template #default="scope">
           <router-link :to="{ name: 'user-show', params: { id: scope.row.id } }">
-            <el-button type="primary"> Detail </el-button>
+            <el-tooltip
+              content="View detail"
+              placement="top"
+              :show-after="500"
+            >
+              <base-button
+                icon-class="fa-solid fa-id-card"
+                type="primary"
+                :text="false"
+              >
+              </base-button>
+            </el-tooltip>
           </router-link>
         </template>
       </el-table-column>
@@ -83,10 +93,11 @@ import { computed, reactive, ref } from 'vue'
 import { BaseTableProps } from '@/types/components.type'
 import BasePagination from '@/components/base/base-pagination.vue'
 import BaseSearchBar from '@/components/base/base-search-bar.vue'
+import BaseButton from '@/components/base/base-button.vue'
 
 export default {
   name: 'user-table',
-  components: { BaseSearchBar, BasePagination },
+  components: { BaseButton, BaseSearchBar, BasePagination },
   setup: () => {
     const table: BaseTableProps = reactive({
       loading: true,
