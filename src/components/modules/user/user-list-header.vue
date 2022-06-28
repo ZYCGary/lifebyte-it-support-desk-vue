@@ -5,7 +5,7 @@
       <el-button
         type="success"
         class="mr-4"
-        @click="handleNewClick"
+        @click="dialogVisible = true"
       >
         <base-icon-text
           icon-class="fa-solid fa-plus"
@@ -29,18 +29,63 @@
       </el-button-group>
     </div>
   </div>
+
+  <el-dialog
+    v-model="dialogVisible"
+    title="Tips"
+    width="30%"
+    :before-close="handleClose"
+  >
+    <template #header>
+      <h1>New User</h1>
+    </template>
+    <user-profile-form
+      type="create"
+      :user="newUser"
+      @success="handleUserAdded"
+      @cancel="dialogVisible = false"
+    ></user-profile-form>
+  </el-dialog>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
 import BaseIconText from '@/components/base/base-icon-text.vue'
+import { User } from '@/types/store/user.module.type'
+import { ElMessageBox } from 'element-plus/es'
+import UserProfileForm from '@/components/modules/user/user-profile-form.vue'
+import { useRouter } from 'vue-router'
 
 export default defineComponent({
   name: 'user-list-header',
-  components: { BaseIconText },
+  components: { UserProfileForm, BaseIconText },
   props: {},
   setup: () => {
-    const handleNewClick = () => {}
+    const newUser: User = {
+      id: -1,
+      name: '',
+      email: '',
+      department: '',
+      job_title: '',
+      location_office: '',
+      location_position: '',
+      state: 1,
+      is_admin: false
+    }
+
+    const dialogVisible = ref(false)
+
+    const handleClose = (done: () => void) => {
+      ElMessageBox.confirm('User is not saved, are you sure to close this dialog?')
+        .then(() => done())
+        .catch()
+    }
+
+    const router = useRouter()
+
+    const handleUserAdded = (user: User) => {
+      router.push({ name: 'user-show', params: { id: user.id } })
+    }
 
     const handleImportClick = () => {
       console.log('import user')
@@ -50,7 +95,7 @@ export default defineComponent({
       console.log('export user')
     }
 
-    return { handleNewClick, handleImportClick, handleExportClick }
+    return { newUser, dialogVisible, handleClose, handleUserAdded, handleImportClick, handleExportClick }
   }
 })
 </script>

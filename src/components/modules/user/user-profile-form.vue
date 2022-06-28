@@ -169,7 +169,7 @@ export default defineComponent({
 
           ElMessage({
             type: 'success',
-            message: 'User added successfully.'
+            message: 'Add user successfully.'
           })
 
           emit('success', newUser)
