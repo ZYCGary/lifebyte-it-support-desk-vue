@@ -5,9 +5,7 @@
     </div>
     <div class="flex flex-1 justify-end">
       <el-dropdown trigger="click">
-        <span class="w-9 h-9 rounded-full bg-green-600/70 leading-9 font-bold text-center text-xl text-white">
-          {{ initial }}
-        </span>
+        <base-avatar :name="user.name"></base-avatar>
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item>Profile</el-dropdown-item>
@@ -29,6 +27,7 @@
 
 <script>
 import BaseImage from '@/components/base/base-image.vue'
+import BaseAvatar from '@/components/base/base-avatar.vue'
 import { useStore } from '@/store'
 import { computed, defineComponent, reactive } from 'vue'
 import { useRouter } from 'vue-router'
@@ -36,14 +35,12 @@ import { ElMessage } from 'element-plus'
 
 export default defineComponent({
   name: 'the-header',
-  components: { BaseImage },
+  components: { BaseAvatar, BaseImage },
   setup: () => {
     const store = useStore()
     const router = useRouter()
 
     const user = computed(() => store.state.auth.user)
-
-    const initial = user.value.name[0].toUpperCase()
 
     const status = reactive({
       logging_out: false
@@ -69,7 +66,7 @@ export default defineComponent({
         })
     }
 
-    return { initial, status, logout }
+    return { user, status, logout }
   }
 })
 </script>

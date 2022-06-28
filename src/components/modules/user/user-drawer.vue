@@ -8,12 +8,18 @@
       :key="key"
     >
       <template #header>
-        <h1
-          class="font-bold text-2xl text-black"
+        <div
+          class="flex items-center"
           v-if="drawer.type === 'show'"
         >
-          {{ drawer.user?.name }}
-        </h1>
+          <base-avatar
+            :name="drawer.user?.name"
+            class="inline-block mr-3"
+          ></base-avatar>
+          <h1 class="font-bold text-2xl text-black">
+            {{ drawer.user?.name }}
+          </h1>
+        </div>
         <h1
           class="font-bold text-2xl text-black"
           v-if="drawer.type === 'edit'"
@@ -39,10 +45,11 @@
 import { defineComponent, ref } from 'vue'
 import UserDrawerProfile from '@/components/modules/user/user-drawer-profile.vue'
 import useUserDrawer from '@/hooks/useUserDrawer'
+import BaseAvatar from '@/components/base/base-avatar.vue'
 
 export default defineComponent({
   name: 'user-drawer',
-  components: { UserDrawerProfile },
+  components: { BaseAvatar, UserDrawerProfile },
   setup: () => {
     const { drawer, closeDrawer } = useUserDrawer()
 

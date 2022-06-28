@@ -67,8 +67,9 @@
           <el-button
             type="primary"
             @click="viewUser(scope.row)"
-            >View</el-button
           >
+            Detail
+          </el-button>
         </template>
       </el-table-column>
 
