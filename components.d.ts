@@ -6,6 +6,7 @@ import '@vue/runtime-core'
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     BaseAvatar: typeof import('./src/components/base/base-avatar.vue')['default']
+    BaseButton: typeof import('./src/components/base/base-button.vue')['default']
     BaseHeader: typeof import('./src/components/base/base-header.vue')['default']
     BaseIconButton: typeof import('./src/components/base/base-icon-button.vue')['default']
     BaseIconText: typeof import('./src/components/base/base-icon-text.vue')['default']
@@ -37,6 +38,7 @@ declare module '@vue/runtime-core' {
     ElOption: typeof import('element-plus/es')['ElOption']
     ElPagination: typeof import('element-plus/es')['ElPagination']
     ElSelect: typeof import('element-plus/es')['ElSelect']
+    ElSwitch: typeof import('element-plus/es')['ElSwitch']
     ElTable: typeof import('element-plus/es')['ElTable']
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
     Loading: typeof import('element-plus/es')['ElLoadingDirective']
@@ -52,6 +54,9 @@ declare module '@vue/runtime-core' {
     UserDrawerProfile: typeof import('./src/components/modules/user/user-drawer-profile.vue')['default']
     UserDrawerProfileForm: typeof import('./src/components/modules/user/user-drawer-profile-form.vue')['default']
     UserListHeader: typeof import('./src/components/modules/user/user-list-header.vue')['default']
+    UserProfile: typeof import('./src/components/modules/user/user-profile.vue')['default']
+    UserProfileForm: typeof import('./src/components/modules/user/user-profile-form.vue')['default']
+    UserShowHeader: typeof import('./src/components/modules/user/user-show-header.vue')['default']
     UserTable: typeof import('./src/components/modules/user/user-table.vue')['default']
   }
 }

@@ -12,6 +12,8 @@ export interface User {
   location_position: string
   state: number
   is_admin: boolean
+  created_at?: string
+  updated_at?: string
 }
 
 export interface UserState {

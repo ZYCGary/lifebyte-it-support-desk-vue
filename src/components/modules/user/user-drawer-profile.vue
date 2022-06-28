@@ -51,7 +51,7 @@
         <el-button type="danger">
           <base-icon-text
             text="Dismiss"
-            icon-class="fa-solid fa-trash-can"
+            icon-class="fa-solid fa-right-from-bracket"
           ></base-icon-text>
         </el-button>
       </div>

@@ -1,6 +1,6 @@
 <template>
   <the-content-header>
-    <h1>User Detail</h1>
+    <user-show-header></user-show-header>
   </the-content-header>
   <el-container
     v-loading="loading"
@@ -12,7 +12,8 @@
         class="border-r"
       >
         <el-main>
-          <div>
+          <!-- Profile description -->
+          <div v-if="!editable">
             <base-avatar
               :name="user.name"
               class="mb-4"
@@ -42,6 +43,24 @@
                 {{ user.is_admin ? 'True' : 'False' }}
               </el-descriptions-item>
             </el-descriptions>
+
+            <div class="flex flex-row flex-nowrap justify-end mt-4">
+              <base-button
+                icon-class="fa-solid fa-pen-to-square"
+                type="primary"
+                @click="editable = true"
+              >
+                Update
+              </base-button>
+            </div>
+          </div>
+
+          <!-- Profile editable form -->
+          <div v-else>
+            <user-profile-form
+              :user="user"
+              @cancel="editable = false"
+            ></user-profile-form>
           </div>
         </el-main>
       </el-aside>
@@ -66,19 +85,21 @@ import TheContentHeader from '@/components/layouts/the-content-header.vue'
 import BaseAvatar from '@/components/base/base-avatar.vue'
 import { useRoute } from 'vue-router'
 import apis from '@/http/apis'
+import BaseButton from '@/components/base/base-button.vue'
+import UserShowHeader from '@/components/modules/user/user-show-header.vue'
+import UserProfileForm from '@/components/modules/user/user-profile-form.vue'
 
 export default defineComponent({
-  components: { BaseAvatar, TheContentHeader },
+  components: { UserProfileForm, UserShowHeader, BaseButton, BaseAvatar, TheContentHeader },
   name: 'user-show-view',
   props: {},
   setup() {
     const route = useRoute()
     const id = parseInt(route.params.id as string)
-
     const user = ref(null)
     const loading = ref(true)
 
-    if (id)
+    if (id) {
       apis.user
         .getUser(id)
         .then((response) => {
@@ -88,8 +109,11 @@ export default defineComponent({
         .catch(() => {
           loading.value = false
         })
+    }
 
-    return { user, loading }
+    const editable = ref(false)
+
+    return { user, loading, editable }
   }
 })
 </script>
