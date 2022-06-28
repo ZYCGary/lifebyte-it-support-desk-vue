@@ -2,10 +2,11 @@
   <div v-show="drawer.user">
     <el-drawer
       v-model="drawer.open"
-      @closed="handleClosed"
       :destroy-on-close="false"
       :size="800"
       :key="key"
+      :before-close="handleBeforeClose"
+      @closed="handleClosed"
     >
       <template #header>
         <div
@@ -46,6 +47,8 @@ import { defineComponent, ref } from 'vue'
 import UserDrawerProfile from '@/components/modules/user/user-drawer-profile.vue'
 import useUserDrawer from '@/hooks/useUserDrawer'
 import BaseAvatar from '@/components/base/base-avatar.vue'
+import { ModuleDrawerType } from '@/types/enums/components.enum'
+import { ElMessageBox } from 'element-plus'
 
 export default defineComponent({
   name: 'user-drawer',
@@ -56,12 +59,28 @@ export default defineComponent({
     // Key used to force update drawer.
     const key = ref(0)
 
+    const handleBeforeClose = (done: () => void) => {
+      if (drawer.value.type === ModuleDrawerType.SHOW) {
+        done()
+      } else {
+        ElMessageBox.confirm('Content edited will not be saved. Continue?', 'Warning', {
+          confirmButtonText: 'Yes',
+          cancelButtonText: 'Cancel',
+          type: 'warning'
+        })
+          .then(() => {
+            done()
+          })
+          .catch()
+      }
+    }
+
     const handleClosed = () => {
       key.value += 1
       closeDrawer()
     }
 
-    return { drawer, key, handleClosed }
+    return { drawer, key, handleBeforeClose, handleClosed }
   }
 })
 </script>
