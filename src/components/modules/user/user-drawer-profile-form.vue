@@ -94,8 +94,9 @@
         <el-button
           v-if="drawer.type === 'create'"
           type="success"
-          @click="handleSave"
+          @click="handleCreate(formRef)"
           class="justify-self-end"
+          :loading="loading"
         >
           <base-icon-text
             icon-class="fa-solid fa-plus"
@@ -124,6 +125,9 @@ import { User } from '@/types/store/user.module.type'
 import BaseIconText from '@/components/base/base-icon-text.vue'
 import { ModuleDrawerType } from '@/types/enums/components.enum'
 import useUserDrawer from '@/hooks/useUserDrawer'
+import { FormInstance } from 'element-plus'
+import apis from '@/http/apis'
+import { ElMessage } from 'element-plus/es'
 
 export default defineComponent({
   name: 'user-drawer-profile-form',
@@ -148,6 +152,8 @@ export default defineComponent({
       state: props.user?.state || 1,
       is_admin: props.user?.is_admin || false
     })
+
+    const loading = ref(false)
 
     const stateOptions = [
       { label: 'Left', value: 0 },
@@ -185,11 +191,61 @@ export default defineComponent({
       openDrawer(ModuleDrawerType.SHOW)
     }
 
+    const handleCreate = (formEl: FormInstance | undefined) => {
+      if (!formEl) return
+
+      formEl.validate((valid) => {
+        if (valid) {
+          loading.value = true
+
+          apis.user
+            .createUser({ ...profile, password: 'password' })
+            .then(() => {
+              loading.value = false
+              ElMessage({
+                type: 'success',
+                message: 'User added successfully.'
+              })
+
+              openDrawer(ModuleDrawerType.SHOW, profile)
+            })
+            .catch((error) => {
+              loading.value = false
+
+              const response = error.response.data
+
+              if (response.status === 422) {
+                ElMessage({
+                  type: 'error',
+                  message: response.message
+                })
+              } else {
+                ElMessage({
+                  type: 'error',
+                  message: 'Something wrong during adding this user.'
+                })
+              }
+            })
+        }
+      })
+    }
+
     const handleCancel = () => {
       openDrawer(ModuleDrawerType.SHOW)
     }
 
-    return { formRef, profile, stateOptions, isAdminOptions, rules, handleSave, handleCancel, drawer }
+    return {
+      formRef,
+      profile,
+      loading,
+      stateOptions,
+      isAdminOptions,
+      rules,
+      handleSave,
+      handleCreate,
+      handleCancel,
+      drawer
+    }
   }
 })
 </script>

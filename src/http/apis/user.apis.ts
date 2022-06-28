@@ -7,7 +7,7 @@ const userApis = {
     return response?.data
   },
   createUser: async (payload: any) => {
-    const response = await requests.post('api/v1/user', payload)
+    const response = await requests.post('api/v1/users', payload)
 
     return response?.data
   }
