@@ -134,7 +134,7 @@ export default {
       table.collection.data = []
 
       apis.user
-        .getUserCollection(param)
+        .getUserTable(param)
         .then((response) => {
           table.loading = false
           table.error = false
