@@ -1,3 +1,5 @@
+import TheApp from '@/components/layouts/the-app.vue'
+
 const routes = [
   {
     path: '/login',
@@ -6,32 +8,64 @@ const routes = [
     meta: { adminOnly: false }
   },
 
+  // Dashboard
   {
     path: '/',
-    name: 'dashboard',
-    component: () => import('@/views/dashboard.view.vue'),
-    meta: { adminOnly: true }
+    component: TheApp,
+    meta: { adminOnly: true },
+    children: [
+      {
+        path: '',
+        name: 'dashboard',
+        component: () => import('@/views/dashboard-view.vue'),
+        meta: { adminOnly: true }
+      }
+    ]
   },
 
+  // User routes
   {
     path: '/users',
-    name: 'user-list',
-    component: () => import('@/views/users/user-list.view.vue'),
-    meta: { adminOnly: true }
+    component: TheApp,
+    meta: { adminOnly: true },
+    children: [
+      {
+        path: '',
+        name: 'user-index',
+        component: () => import('@/views/users/user-index-view.vue'),
+        meta: { adminOnly: true }
+      }
+    ]
   },
 
-  {
-    path: '/software',
-    name: 'software-list',
-    component: () => import('@/views/software/software-list.view.vue'),
-    meta: { adminOnly: true }
-  },
-
+  // Hardware routes
   {
     path: '/hardware',
-    name: 'hardware-list',
-    component: () => import('@/views/hardware/hardware-list.view.vue'),
-    meta: { adminOnly: true }
+    component: TheApp,
+    meta: { adminOnly: true },
+    children: [
+      {
+        path: '',
+        name: 'hardware-index',
+        component: () => import('@/views/hardware/hardware-index-view.vue'),
+        meta: { adminOnly: true }
+      }
+    ]
+  },
+
+  // Software routes
+  {
+    path: '/software',
+    component: TheApp,
+    meta: { adminOnly: true },
+    children: [
+      {
+        path: '',
+        name: 'software-index',
+        component: () => import('@/views/software/software-index-view.vue'),
+        meta: { adminOnly: true }
+      }
+    ]
   },
 
   {

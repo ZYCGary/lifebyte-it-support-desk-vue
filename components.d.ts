@@ -42,6 +42,7 @@ declare module '@vue/runtime-core' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     TheApp: typeof import('./src/components/layouts/the-app.vue')['default']
+    TheContentHeader: typeof import('./src/components/layouts/the-content-header.vue')['default']
     TheHeader: typeof import('./src/components/layouts/the-header.vue')['default']
     TheRightAside: typeof import('./src/components/layouts/the-right-aside.vue')['default']
     TheRoot: typeof import('./src/components/base/the-root.vue')['default']
