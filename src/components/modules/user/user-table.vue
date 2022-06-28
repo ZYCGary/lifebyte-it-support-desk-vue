@@ -78,8 +78,6 @@
       </template>
     </el-table>
   </div>
-
-  <user-drawer></user-drawer>
 </template>
 
 <script lang="ts">
@@ -88,14 +86,12 @@ import { computed, reactive, ref } from 'vue'
 import { BaseTableProps } from '@/types/components.type'
 import BasePagination from '@/components/base/base-pagination.vue'
 import BaseSearchBar from '@/components/base/base-search-bar.vue'
-import UserDrawer from '@/components/modules/user/user-drawer.vue'
 import { User } from '@/types/store/user.module.type'
-import { ModuleDrawerType } from '@/types/enums/components.enum'
-import useUserDrawer from '@/hooks/useUserDrawer'
+import { useRouter } from 'vue-router'
 
 export default {
   name: 'user-table',
-  components: { UserDrawer, BaseSearchBar, BasePagination },
+  components: { BaseSearchBar, BasePagination },
   setup: () => {
     const table: BaseTableProps = reactive({
       loading: true,
@@ -160,10 +156,9 @@ export default {
       loadTable({ page: 1, name: searchValue.value || '' })
     }
 
-    const { openDrawer } = useUserDrawer()
-
     const viewUser = (row: User) => {
-      openDrawer(ModuleDrawerType.SHOW, row)
+      const router = useRouter()
+      router.push({ name: 'user-show', params: { id: row.id } })
     }
 
     return { table, pagination, handlePageChange, search, viewUser, searchValue }
