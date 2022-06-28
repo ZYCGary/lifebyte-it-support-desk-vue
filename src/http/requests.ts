@@ -19,5 +19,14 @@ export default {
       console.error('[TMGM] POST request error:\n', error)
       throw error
     }
+  },
+
+  put: async (url: string, data?: any, config?: AxiosRequestConfig) => {
+    try {
+      return await http.put(url, data, { ...config })
+    } catch (error) {
+      console.error('[TMGM] POST request error:\n', error)
+      throw error
+    }
   }
 }

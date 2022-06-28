@@ -64,12 +64,9 @@
         width="120"
       >
         <template #default="scope">
-          <el-button
-            type="primary"
-            @click="viewUser(scope.row)"
-          >
-            Detail
-          </el-button>
+          <router-link :to="{ name: 'user-show', params: { id: scope.row.id } }">
+            <el-button type="primary"> Detail </el-button>
+          </router-link>
         </template>
       </el-table-column>
 
@@ -78,8 +75,6 @@
       </template>
     </el-table>
   </div>
-
-  <user-drawer></user-drawer>
 </template>
 
 <script lang="ts">
@@ -88,14 +83,10 @@ import { computed, reactive, ref } from 'vue'
 import { BaseTableProps } from '@/types/components.type'
 import BasePagination from '@/components/base/base-pagination.vue'
 import BaseSearchBar from '@/components/base/base-search-bar.vue'
-import UserDrawer from '@/components/modules/user/user-drawer.vue'
-import { User } from '@/types/store/user.module.type'
-import { ModuleDrawerType } from '@/types/enums/components.enum'
-import useUserDrawer from '@/hooks/useUserDrawer'
 
 export default {
   name: 'user-table',
-  components: { UserDrawer, BaseSearchBar, BasePagination },
+  components: { BaseSearchBar, BasePagination },
   setup: () => {
     const table: BaseTableProps = reactive({
       loading: true,
@@ -134,7 +125,7 @@ export default {
       table.collection.data = []
 
       apis.user
-        .getUserCollection(param)
+        .getUserTable(param)
         .then((response) => {
           table.loading = false
           table.error = false
@@ -160,13 +151,7 @@ export default {
       loadTable({ page: 1, name: searchValue.value || '' })
     }
 
-    const { openDrawer } = useUserDrawer()
-
-    const viewUser = (row: User) => {
-      openDrawer(ModuleDrawerType.SHOW, row)
-    }
-
-    return { table, pagination, handlePageChange, search, viewUser, searchValue }
+    return { table, pagination, handlePageChange, search, searchValue }
   }
 }
 </script>

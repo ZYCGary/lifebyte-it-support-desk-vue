@@ -12,12 +12,13 @@ export default defineComponent({
   props: {
     name: {
       require: true,
-      type: String,
-      default: '?'
+      type: String
     }
   },
   setup: (props) => {
-    const initial = computed(() => props.name[0].toUpperCase())
+    const initial = computed(() => {
+      return props.name ? props.name[0].toUpperCase() : '?'
+    })
 
     return { initial }
   }

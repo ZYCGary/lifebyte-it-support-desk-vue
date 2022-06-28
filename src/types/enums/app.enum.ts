@@ -8,7 +8,7 @@ export enum Environment {
 export enum Module {
   USER = 'user',
   HARDWARE = 'hardware',
-  'SOFTWARE' = 'software'
+  SOFTWARE = 'software'
 }
 
 export enum ViewPort {

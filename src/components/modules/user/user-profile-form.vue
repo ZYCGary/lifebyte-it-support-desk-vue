@@ -5,7 +5,6 @@
     :rules="rules"
     label-position="top"
     status-icon
-    class="grid grid-cols-2 gap-x-4"
   >
     <el-form-item
       label="Name"
@@ -64,56 +63,30 @@
       label="Is Admin"
       prop="is_admin"
     >
-      <el-select
+      <el-switch
         v-model="profile.is_admin"
-        placeholder="Whether is admin"
-        class="w-full"
-      >
-        <el-option
-          v-for="item in isAdminOptions"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        />
-      </el-select>
+        inline-prompt
+        active-text="Y"
+        inactive-text="N"
+      ></el-switch>
     </el-form-item>
     <div class="col-span-2 flex flex-row flex-nowrap justify-end mt-4">
       <el-form-item>
-        <el-button
-          v-if="drawer.type === 'edit'"
+        <base-button
+          icon-class="fa-solid fa-check"
           type="success"
-          @click="handleSave"
-          class="justify-self-end"
-        >
-          <base-icon-text
-            icon-class="fa-solid fa-check"
-            text="Save"
-          ></base-icon-text>
-        </el-button>
-
-        <el-button
-          v-if="drawer.type === 'create'"
-          type="success"
-          @click="handleCreate(formRef)"
-          class="justify-self-end"
           :loading="loading"
+          @click="handleSave(formRef)"
         >
-          <base-icon-text
-            icon-class="fa-solid fa-plus"
-            text="Add"
-          ></base-icon-text>
-        </el-button>
-
-        <el-button
+          Save
+        </base-button>
+        <base-button
+          icon-class="fa-solid fa-ban"
           type="info"
           @click="handleCancel"
-          class="justify-self-end"
         >
-          <base-icon-text
-            icon-class="fa-solid fa-xmark"
-            text="Cancel"
-          ></base-icon-text>
-        </el-button>
+          Cancel
+        </base-button>
       </el-form-item>
     </div>
   </el-form>
@@ -122,38 +95,29 @@
 <script lang="ts">
 import { defineComponent, PropType, reactive, ref } from 'vue'
 import { User } from '@/types/store/user.module.type'
-import BaseIconText from '@/components/base/base-icon-text.vue'
-import { ModuleDrawerType } from '@/types/enums/components.enum'
-import useUserDrawer from '@/hooks/useUserDrawer'
-import { FormInstance } from 'element-plus'
+import BaseButton from '@/components/base/base-button.vue'
+import { ElMessage, ElMessageBox } from 'element-plus/es'
 import apis from '@/http/apis'
-import { ElMessage } from 'element-plus/es'
+import { FormInstance } from 'element-plus'
 
 export default defineComponent({
-  name: 'user-drawer-profile-form',
-  components: { BaseIconText },
+  name: 'user-profile-form',
+  components: { BaseButton },
+  emits: ['cancel', 'success'],
   props: {
+    type: {
+      require: true,
+      type: String as PropType<'create' | 'update'>
+    },
     user: {
       required: true,
-      type: Object as PropType<User | null>
+      type: Object as PropType<User>
     }
   },
-  emits: ['close'],
-  setup: (props) => {
+  setup: (props, { emit }) => {
     const formRef = ref()
 
-    const profile = reactive({
-      name: props.user?.name || '',
-      email: props.user?.email || '',
-      department: props.user?.department || '',
-      job_title: props.user?.job_title || '',
-      location_office: props.user?.location_office || '',
-      location_position: props.user?.location_position || '',
-      state: props.user?.state || 1,
-      is_admin: props.user?.is_admin || false
-    })
-
-    const loading = ref(false)
+    const profile = reactive({ ...props.user })
 
     const stateOptions = [
       { label: 'Left', value: 0 },
@@ -185,67 +149,98 @@ export default defineComponent({
       ]
     }
 
-    const { drawer, openDrawer } = useUserDrawer()
-
-    const handleSave = () => {
-      openDrawer(ModuleDrawerType.SHOW)
+    const handleCancel = () => {
+      ElMessageBox.confirm('Your edit will not be saved. Continue?', 'Warning', {
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'Cancel',
+        type: 'warning'
+      })
+        .then(() => emit('cancel'))
+        .catch()
     }
 
-    const handleCreate = (formEl: FormInstance | undefined) => {
+    const loading = ref(false)
+
+    const createUser = () => {
+      apis.user
+        .createUser({ ...profile, password: 'password' })
+        .then((newUser) => {
+          loading.value = false
+
+          ElMessage({
+            type: 'success',
+            message: 'Add user successfully.'
+          })
+
+          emit('success', newUser)
+        })
+        .catch((error) => {
+          loading.value = false
+
+          const response = error.response.data
+
+          if (response.status === 422) {
+            ElMessage({
+              type: 'error',
+              message: response.message
+            })
+          } else {
+            ElMessage({
+              type: 'error',
+              message: 'Something wrong during adding this user.'
+            })
+          }
+        })
+    }
+
+    const updateUser = () => {
+      apis.user
+        .updateUser(props.user.id, { ...profile })
+        .then(() => {
+          loading.value = false
+
+          ElMessage({
+            type: 'success',
+            message: 'Update user profile successfully.'
+          })
+
+          emit('success', profile)
+        })
+        .catch((error) => {
+          loading.value = false
+
+          const response = error.response.data
+
+          if (response.status === 422) {
+            ElMessage({
+              type: 'error',
+              message: response.message
+            })
+          } else {
+            ElMessage({
+              type: 'error',
+              message: 'Something wrong when updating user profile.'
+            })
+          }
+        })
+    }
+
+    const handleSave = (formEl: FormInstance | undefined) => {
       if (!formEl) return
+
+      if (!props.type || (props.type !== 'create' && props.type !== 'update')) handleCancel()
 
       formEl.validate((valid) => {
         if (valid) {
           loading.value = true
 
-          apis.user
-            .createUser({ ...profile, password: 'password' })
-            .then(() => {
-              loading.value = false
-              ElMessage({
-                type: 'success',
-                message: 'User added successfully.'
-              })
-
-              openDrawer(ModuleDrawerType.SHOW, profile)
-            })
-            .catch((error) => {
-              loading.value = false
-
-              const response = error.response.data
-
-              if (response.status === 422) {
-                ElMessage({
-                  type: 'error',
-                  message: response.message
-                })
-              } else {
-                ElMessage({
-                  type: 'error',
-                  message: 'Something wrong during adding this user.'
-                })
-              }
-            })
+          if (props.type === 'update') updateUser()
+          if (props.type === 'create') createUser()
         }
       })
     }
 
-    const handleCancel = () => {
-      openDrawer(ModuleDrawerType.SHOW)
-    }
-
-    return {
-      formRef,
-      profile,
-      loading,
-      stateOptions,
-      isAdminOptions,
-      rules,
-      handleSave,
-      handleCreate,
-      handleCancel,
-      drawer
-    }
+    return { formRef, profile, stateOptions, rules, isAdminOptions, loading, handleSave, handleCancel }
   }
 })
 </script>

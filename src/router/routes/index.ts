@@ -1,39 +1,15 @@
+import userRoutes from '@/router/routes/user.routes'
+import hardwareRoutes from '@/router/routes/hardware.routes'
+import softwareRoutes from '@/router/routes/software.routes'
+import dashboardRoutes from '@/router/routes/dashboard.routes'
+import authRoutes from '@/router/routes/auth.routes'
+
 const routes = [
-  {
-    path: '/login',
-    name: 'auth.login',
-    component: () => import('@/views/auth/log-in.view.vue'),
-    meta: { adminOnly: false }
-  },
-
-  {
-    path: '/',
-    name: 'dashboard',
-    component: () => import('@/views/dashboard.view.vue'),
-    meta: { adminOnly: true }
-  },
-
-  {
-    path: '/users',
-    name: 'user-list',
-    component: () => import('@/views/users/user-list.view.vue'),
-    meta: { adminOnly: true }
-  },
-
-  {
-    path: '/software',
-    name: 'software-list',
-    component: () => import('@/views/software/software-list.view.vue'),
-    meta: { adminOnly: true }
-  },
-
-  {
-    path: '/hardware',
-    name: 'hardware-list',
-    component: () => import('@/views/hardware/hardware-list.view.vue'),
-    meta: { adminOnly: true }
-  },
-
+  authRoutes,
+  dashboardRoutes,
+  userRoutes,
+  hardwareRoutes,
+  softwareRoutes,
   {
     path: '/:pathMatch(.*)*',
     name: 'error-not-found',
