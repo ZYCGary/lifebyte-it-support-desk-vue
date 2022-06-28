@@ -34,19 +34,13 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import BaseIconText from '@/components/base/base-icon-text.vue'
-import { ModuleDrawerType } from '@/types/enums/components.enum'
-import useUserDrawer from '@/hooks/useUserDrawer'
 
 export default defineComponent({
   name: 'user-list-header',
   components: { BaseIconText },
   props: {},
   setup: () => {
-    const { openDrawer } = useUserDrawer()
-
-    const handleNewClick = () => {
-      openDrawer(ModuleDrawerType.CREATE, {})
-    }
+    const handleNewClick = () => {}
 
     const handleImportClick = () => {
       console.log('import user')
