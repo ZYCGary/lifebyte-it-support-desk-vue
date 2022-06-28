@@ -64,12 +64,9 @@
         width="120"
       >
         <template #default="scope">
-          <el-button
-            type="primary"
-            @click="viewUser(scope.row)"
-          >
-            Detail
-          </el-button>
+          <router-link :to="{ name: 'user-show', params: { id: scope.row.id } }">
+            <el-button type="primary"> Detail </el-button>
+          </router-link>
         </template>
       </el-table-column>
 
@@ -86,8 +83,6 @@ import { computed, reactive, ref } from 'vue'
 import { BaseTableProps } from '@/types/components.type'
 import BasePagination from '@/components/base/base-pagination.vue'
 import BaseSearchBar from '@/components/base/base-search-bar.vue'
-import { User } from '@/types/store/user.module.type'
-import { useRouter } from 'vue-router'
 
 export default {
   name: 'user-table',
@@ -156,12 +151,7 @@ export default {
       loadTable({ page: 1, name: searchValue.value || '' })
     }
 
-    const viewUser = (row: User) => {
-      const router = useRouter()
-      router.push({ name: 'user-show', params: { id: row.id } })
-    }
-
-    return { table, pagination, handlePageChange, search, viewUser, searchValue }
+    return { table, pagination, handlePageChange, search, searchValue }
   }
 }
 </script>
