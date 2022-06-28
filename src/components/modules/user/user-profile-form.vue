@@ -75,6 +75,7 @@
         <base-button
           icon-class="fa-solid fa-check"
           type="success"
+          :loading="loading"
           @click="handleSave(formRef)"
         >
           Save
@@ -95,13 +96,19 @@
 import { defineComponent, PropType, reactive, ref } from 'vue'
 import { User } from '@/types/store/user.module.type'
 import BaseButton from '@/components/base/base-button.vue'
-import { ElMessageBox } from 'element-plus/es'
+import { ElMessage, ElMessageBox } from 'element-plus/es'
+import apis from '@/http/apis'
+import { FormInstance } from 'element-plus'
 
 export default defineComponent({
   name: 'user-profile-form',
   components: { BaseButton },
-  emits: ['cancel'],
+  emits: ['cancel', 'success'],
   props: {
+    type: {
+      require: true,
+      type: String as PropType<'create' | 'update'>
+    },
     user: {
       required: true,
       type: Object as PropType<User>
@@ -142,12 +149,6 @@ export default defineComponent({
       ]
     }
 
-    const loading = ref(false)
-
-    const handleSave = () => {
-      console.log('save')
-    }
-
     const handleCancel = () => {
       ElMessageBox.confirm('Your edit will not be saved. Continue?', 'Warning', {
         confirmButtonText: 'Yes',
@@ -156,6 +157,87 @@ export default defineComponent({
       })
         .then(() => emit('cancel'))
         .catch()
+    }
+
+    const loading = ref(false)
+
+    const createUser = () => {
+      apis.user
+        .createUser({ ...profile, password: 'password' })
+        .then((newUser) => {
+          loading.value = false
+
+          ElMessage({
+            type: 'success',
+            message: 'User added successfully.'
+          })
+
+          emit('success', newUser)
+        })
+        .catch((error) => {
+          loading.value = false
+
+          const response = error.response.data
+
+          if (response.status === 422) {
+            ElMessage({
+              type: 'error',
+              message: response.message
+            })
+          } else {
+            ElMessage({
+              type: 'error',
+              message: 'Something wrong during adding this user.'
+            })
+          }
+        })
+    }
+
+    const updateUser = () => {
+      apis.user
+        .updateUser(props.user.id, { ...profile })
+        .then(() => {
+          loading.value = false
+
+          ElMessage({
+            type: 'success',
+            message: 'Update user profile successfully.'
+          })
+
+          emit('success', profile)
+        })
+        .catch((error) => {
+          loading.value = false
+
+          const response = error.response.data
+
+          if (response.status === 422) {
+            ElMessage({
+              type: 'error',
+              message: response.message
+            })
+          } else {
+            ElMessage({
+              type: 'error',
+              message: 'Something wrong when updating user profile.'
+            })
+          }
+        })
+    }
+
+    const handleSave = (formEl: FormInstance | undefined) => {
+      if (!formEl) return
+
+      if (!props.type || (props.type !== 'create' && props.type !== 'update')) handleCancel()
+
+      formEl.validate((valid) => {
+        if (valid) {
+          loading.value = true
+
+          if (props.type === 'update') updateUser()
+          if (props.type === 'create') createUser()
+        }
+      })
     }
 
     return { formRef, profile, stateOptions, rules, isAdminOptions, loading, handleSave, handleCancel }

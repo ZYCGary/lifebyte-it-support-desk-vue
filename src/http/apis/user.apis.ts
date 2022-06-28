@@ -12,7 +12,12 @@ const userApis = {
     return response?.data
   },
   createUser: async (payload: any) => {
-    await requests.post('api/v1/users', payload)
+    const response = await requests.post('api/v1/users', payload)
+
+    return response?.data
+  },
+  updateUser: async (id: number, payload: any) => {
+    await requests.put(`api/v1/users/${id}`, payload)
   }
 }
 

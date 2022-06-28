@@ -64,7 +64,7 @@
           </el-menu>
         </el-aside>
         <el-container direction="vertical">
-          <router-view></router-view>
+          <router-view :key="$route.path"></router-view>
         </el-container>
       </el-container>
     </el-container>
