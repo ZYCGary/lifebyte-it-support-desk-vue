@@ -1,14 +1,21 @@
 <template>
   <el-header class="flex flex-row flex-nowrap items-center border-b py-2 bg-blue-400">
     <div>
-      <base-image src="logos/lifebyte-2.webp"></base-image>
+      <router-link :to="{ name: 'dashboard' }">
+        <base-image
+          src="logos/lifebyte-2.webp"
+          alt="LifeByte System logo."
+        ></base-image>
+      </router-link>
     </div>
     <div class="flex flex-1 justify-end">
       <el-dropdown trigger="click">
         <base-avatar :name="user.name"></base-avatar>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item>Profile</el-dropdown-item>
+            <el-dropdown-item @click="$router.push({ name: 'user-show', params: { id: user.id } })">
+              Profile
+            </el-dropdown-item>
             <el-dropdown-item divided>
               <el-button
                 type="danger"
