@@ -23,11 +23,11 @@
       <el-descriptions-item label="Job Title">
         {{ user.job_title }}
       </el-descriptions-item>
-      <el-descriptions-item label="Location">
-        {{ user.location.name }} - {{ user.location.country }}
-      </el-descriptions-item>
       <el-descriptions-item label="Desk">
         {{ user.desk }}
+      </el-descriptions-item>
+      <el-descriptions-item label="Location">
+        {{ user.location.name }} - {{ user.location.country }}
       </el-descriptions-item>
       <el-descriptions-item label="Company">
         {{ user.company }}

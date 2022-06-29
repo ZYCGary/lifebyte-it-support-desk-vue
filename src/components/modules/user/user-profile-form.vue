@@ -59,7 +59,7 @@
     </el-form-item>
     <el-form-item
       label="Location"
-      prop="location_id"
+      prop="location"
     >
       <el-select
         v-model="profile.location"
@@ -214,8 +214,6 @@ export default defineComponent({
         { required: true, message: `Please input user's email` },
         { type: 'email', message: `Please input a valid email` }
       ],
-      department: [{ required: true, message: `Please input user's department` }],
-      job_title: [{ required: true, message: `Please input user's job title` }],
       company: [{ required: true, message: `Please select/input user's company` }],
       location: [{ required: true, message: `Please select user's location` }],
       type: [{ required: true, message: `Please select user type` }],

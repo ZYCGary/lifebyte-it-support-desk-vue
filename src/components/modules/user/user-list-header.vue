@@ -67,10 +67,16 @@ export default defineComponent({
       email: '',
       department: '',
       job_title: '',
-      location_office: '',
-      location_position: '',
+      location: {
+        id: 1,
+        name: '55C',
+        country: 'Australia'
+      },
+      desk: '',
+      company: 'LifeByte',
+      type: 'Employee',
       state: 1,
-      is_admin: false
+      permission_level: 0
     }
 
     const dialogVisible = ref(false)
