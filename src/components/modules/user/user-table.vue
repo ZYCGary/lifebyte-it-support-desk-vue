@@ -48,14 +48,9 @@
         width="200"
       ></el-table-column>
       <el-table-column
-        property="location_office"
-        label="Office"
-        width="100"
-      ></el-table-column>
-      <el-table-column
-        property="location_position"
+        property="job_title"
         label="Position"
-        width="150"
+        width="250"
       ></el-table-column>
       <el-table-column
         fixed="right"
@@ -94,6 +89,7 @@ import { BaseTableProps } from '@/types/components.type'
 import BasePagination from '@/components/base/base-pagination.vue'
 import BaseSearchBar from '@/components/base/base-search-bar.vue'
 import BaseButton from '@/components/base/base-button.vue'
+import { User } from '@/types/store/user.module.type'
 
 export default {
   name: 'user-table',
@@ -103,7 +99,7 @@ export default {
       loading: true,
       error: false,
       collection: {
-        data: [],
+        data: [] as User[],
         links: {
           first: null,
           last: null,
