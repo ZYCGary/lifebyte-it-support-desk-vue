@@ -31,16 +31,10 @@
       <el-input v-model="profile.job_title" />
     </el-form-item>
     <el-form-item
-      label="Location (office)"
+      label="Location"
       prop="location_office"
     >
       <el-input v-model="profile.location_office" />
-    </el-form-item>
-    <el-form-item
-      label="Location (position)"
-      prop="location_position"
-    >
-      <el-input v-model="profile.location_position" />
     </el-form-item>
     <el-form-item
       label="State"
@@ -58,17 +52,6 @@
           :value="item.value"
         />
       </el-select>
-    </el-form-item>
-    <el-form-item
-      label="Is Admin"
-      prop="is_admin"
-    >
-      <el-switch
-        v-model="profile.is_admin"
-        inline-prompt
-        active-text="Y"
-        inactive-text="N"
-      ></el-switch>
     </el-form-item>
     <div class="col-span-2 flex flex-row flex-nowrap justify-end mt-4">
       <el-form-item>

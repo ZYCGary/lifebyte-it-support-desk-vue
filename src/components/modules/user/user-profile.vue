@@ -11,7 +11,10 @@
       :title="user.email"
       :column="1"
     >
-      <el-descriptions-item label="Type">
+      <el-descriptions-item
+        label="Type"
+        label-class-name="w-40"
+      >
         {{ user.type }}
       </el-descriptions-item>
       <el-descriptions-item label="Department">
@@ -20,17 +23,14 @@
       <el-descriptions-item label="Job Title">
         {{ user.job_title }}
       </el-descriptions-item>
-      <el-descriptions-item label="Office">
-        {{ user.location.name }}
+      <el-descriptions-item label="Location">
+        {{ user.location.name }} - {{ user.location.country }}
       </el-descriptions-item>
       <el-descriptions-item label="Desk">
         {{ user.desk }}
       </el-descriptions-item>
       <el-descriptions-item label="Company">
         {{ user.location.company }}
-      </el-descriptions-item>
-      <el-descriptions-item label="Country">
-        {{ user.location.country }}
       </el-descriptions-item>
       <el-descriptions-item label="State">
         {{ user.state === 1 ? 'On Job' : 'Left' }}
