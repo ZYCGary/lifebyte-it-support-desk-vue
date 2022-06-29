@@ -1,5 +1,6 @@
 <template>
   <el-form
+    v-if="form.show"
     ref="formRef"
     :model="profile"
     :rules="rules"
@@ -31,10 +32,65 @@
       <el-input v-model="profile.job_title" />
     </el-form-item>
     <el-form-item
-      label="Location"
-      prop="location_office"
+      label="Desk"
+      prop="desk"
     >
-      <el-input v-model="profile.location_office" />
+      <el-input v-model="profile.desk" />
+    </el-form-item>
+    <el-form-item
+      label="Company"
+      prop="company"
+    >
+      <el-select
+        v-model="profile.company"
+        placeholder="Select/Input a company"
+        class="w-full"
+        filterable
+        allow-create
+        default-first-option
+      >
+        <el-option
+          v-for="item in form.companyOptions"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        />
+      </el-select>
+    </el-form-item>
+    <el-form-item
+      label="Location"
+      prop="location_id"
+    >
+      <el-select
+        v-model="profile.location"
+        value-key="id"
+        placeholder="Select a type"
+        class="w-full"
+      >
+        <el-option
+          v-for="item in form.locationOptions"
+          :key="item['id']"
+          :label="`${item['name']} - ${item['country']}`"
+          :value="item"
+        />
+      </el-select>
+    </el-form-item>
+    <el-form-item
+      label="Type"
+      prop="type"
+    >
+      <el-select
+        v-model="profile.type"
+        placeholder="Select a type"
+        class="w-full"
+      >
+        <el-option
+          v-for="item in form.typeOptions"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        />
+      </el-select>
     </el-form-item>
     <el-form-item
       label="State"
@@ -46,7 +102,25 @@
         class="w-full"
       >
         <el-option
-          v-for="item in stateOptions"
+          v-for="item in form.stateOptions"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        />
+      </el-select>
+    </el-form-item>
+    <el-form-item
+      v-if="isSuperAdmin"
+      label="Permission Level"
+      prop="permission_level"
+    >
+      <el-select
+        v-model="profile.permission_level"
+        placeholder="Select a company permission level"
+        class="w-full"
+      >
+        <el-option
+          v-for="item in form.permissionLevelOptions"
           :key="item.value"
           :label="item.label"
           :value="item.value"
@@ -58,7 +132,7 @@
         <base-button
           icon-class="fa-solid fa-check"
           type="success"
-          :loading="loading"
+          :loading="form.submitting"
           @click="handleSave(formRef)"
         >
           Save
@@ -73,15 +147,21 @@
       </el-form-item>
     </div>
   </el-form>
+  <div
+    v-loading="form.loading"
+    v-show="!form.show"
+    class="h-72"
+  ></div>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, reactive, ref } from 'vue'
+import { computed, defineComponent, PropType, reactive, ref } from 'vue'
 import { User } from '@/types/store/user.module.type'
 import BaseButton from '@/components/base/base-button.vue'
 import { ElMessage, ElMessageBox } from 'element-plus/es'
 import apis from '@/http/apis'
 import { FormInstance } from 'element-plus'
+import { useStore } from '@/store'
 
 export default defineComponent({
   name: 'user-profile-form',
@@ -102,15 +182,31 @@ export default defineComponent({
 
     const profile = reactive({ ...props.user })
 
-    const stateOptions = [
-      { label: 'Left', value: 0 },
-      { label: 'On Job', value: 1 }
-    ]
-
-    const isAdminOptions = [
-      { label: 'True', value: true },
-      { label: 'False', value: false }
-    ]
+    const form = reactive({
+      loading: true,
+      show: false,
+      companyOptions: [
+        { label: 'LifeByte', value: 'LifeByte' },
+        { label: 'TMGM', value: 'TMGM' }
+      ],
+      locationOptions: [] as Location[],
+      typeOptions: [
+        { label: 'Employee', value: 'Employee' },
+        { label: 'Storage', value: 'Storage' },
+        { label: 'Meeting Room', value: 'Meeting Room' },
+        { label: 'Others', value: 'Others' }
+      ],
+      stateOptions: [
+        { label: 'Left', value: 0 },
+        { label: 'On Job', value: 1 }
+      ],
+      permissionLevelOptions: [
+        { label: '0', value: 0 },
+        { label: '1', value: 1 },
+        { label: '2', value: 2 }
+      ],
+      submitting: false
+    })
 
     const rules = {
       name: [{ required: true, message: `Please input user's name` }],
@@ -120,17 +216,38 @@ export default defineComponent({
       ],
       department: [{ required: true, message: `Please input user's department` }],
       job_title: [{ required: true, message: `Please input user's job title` }],
-      location_office: [{ required: true, message: `Please input user's location (office)` }],
-      location_position: [{ required: true, message: `Please input user's location (position)` }],
+      company: [{ required: true, message: `Please select/input user's company` }],
+      location: [{ required: true, message: `Please select user's location` }],
+      type: [{ required: true, message: `Please select user type` }],
       state: [
         { required: true, message: `Please select user's working state` },
         { type: 'number', message: `Please select a valid option` }
       ],
-      is_admin: [
-        { required: true, message: `Please select whether the user is a admin` },
-        { type: 'boolean', message: `Please select a valid option` }
+      permission_level: [
+        { required: true, message: `Please select user's permission level` },
+        { type: 'number', message: `Please select a valid option` }
       ]
     }
+
+    const store = useStore()
+
+    const isSuperAdmin = computed(() => store.getters['auth/isSuperAdmin'])
+
+    apis.location
+      .getAllLocations()
+      .then((locations: Location[]) => {
+        form.loading = false
+        form.show = true
+        form.locationOptions = locations
+      })
+      .catch(() => {
+        form.loading = false
+        ElMessage({
+          type: 'error',
+          message: 'Failed to load edit form, please try again later.'
+        })
+        emit('cancel')
+      })
 
     const handleCancel = () => {
       ElMessageBox.confirm('Your edit will not be saved. Continue?', 'Warning', {
@@ -145,13 +262,11 @@ export default defineComponent({
         .catch()
     }
 
-    const loading = ref(false)
-
     const createUser = () => {
       apis.user
         .createUser({ ...profile, password: 'password' })
         .then((newUser) => {
-          loading.value = false
+          form.submitting = false
 
           ElMessage({
             type: 'success',
@@ -161,7 +276,7 @@ export default defineComponent({
           emit('success', newUser)
         })
         .catch((error) => {
-          loading.value = false
+          form.submitting = false
 
           const response = error.response.data
 
@@ -183,7 +298,7 @@ export default defineComponent({
       apis.user
         .updateUser(props.user.id, { ...profile })
         .then(() => {
-          loading.value = false
+          form.submitting = false
 
           ElMessage({
             type: 'success',
@@ -193,7 +308,7 @@ export default defineComponent({
           emit('success', profile)
         })
         .catch((error) => {
-          loading.value = false
+          form.submitting = false
 
           const response = error.response.data
 
@@ -218,7 +333,7 @@ export default defineComponent({
 
       formEl.validate((valid) => {
         if (valid) {
-          loading.value = true
+          form.submitting = true
 
           if (props.type === 'update') updateUser()
           if (props.type === 'create') createUser()
@@ -226,7 +341,7 @@ export default defineComponent({
       })
     }
 
-    return { formRef, profile, stateOptions, rules, isAdminOptions, loading, handleSave, handleCancel }
+    return { formRef, profile, form, rules, isSuperAdmin, handleSave, handleCancel }
   }
 })
 </script>

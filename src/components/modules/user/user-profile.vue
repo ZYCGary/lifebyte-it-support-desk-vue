@@ -30,7 +30,7 @@
         {{ user.desk }}
       </el-descriptions-item>
       <el-descriptions-item label="Company">
-        {{ user.location.company }}
+        {{ user.company }}
       </el-descriptions-item>
       <el-descriptions-item label="State">
         {{ user.state === 1 ? 'On Job' : 'Left' }}

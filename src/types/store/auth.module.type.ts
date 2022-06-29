@@ -9,6 +9,7 @@ export interface AuthState {
 
 export interface AuthGetterTree extends GetterTree<AuthState, RootState> {
   isAdmin: () => boolean
+  isSuperAdmin: () => boolean
 }
 
 export interface AuthMutationTree extends MutationTree<AuthState> {

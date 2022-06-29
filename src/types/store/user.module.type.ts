@@ -5,12 +5,12 @@ export interface User {
   id: number
   name: string
   email: string
+  company: string
   department: string | null
   job_title: string | null
   location: {
     id: number
     name: string
-    company: string
     country: string
   }
   desk: string
