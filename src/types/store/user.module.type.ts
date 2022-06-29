@@ -7,7 +7,12 @@ export interface User {
   email: string
   department: string | null
   job_title: string | null
-  office_id: string
+  location: {
+    id: number
+    name: string
+    company: string
+    country: string
+  }
   desk: string
   state: number
   type: string

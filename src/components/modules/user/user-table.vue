@@ -26,6 +26,8 @@
       fit
       lazy
       class="overflow-auto w-auto max-h-full"
+      row-class-name="cursor-pointer"
+      @row-click="handleRowClick"
     >
       <el-table-column
         type="selection"
@@ -58,14 +60,14 @@
         width="120"
       >
         <template #default="scope">
-          <router-link :to="{ name: 'user-show', params: { id: scope.row.id } }">
+          <router-link :to="{ name: 'user-show', params: { id: scope.row.id, type: 'update' } }">
             <el-tooltip
               content="View detail"
               placement="top"
               :show-after="500"
             >
               <base-button
-                icon-class="fa-solid fa-id-card"
+                icon-class="fa-solid fa-pen-to-square"
                 type="primary"
                 :text="false"
               >
@@ -90,6 +92,7 @@ import BasePagination from '@/components/base/base-pagination.vue'
 import BaseSearchBar from '@/components/base/base-search-bar.vue'
 import BaseButton from '@/components/base/base-button.vue'
 import { User } from '@/types/store/user.module.type'
+import { useRouter } from 'vue-router'
 
 export default {
   name: 'user-table',
@@ -158,7 +161,13 @@ export default {
       loadTable({ page: 1, name: searchValue.value || '' })
     }
 
-    return { table, pagination, handlePageChange, search, searchValue }
+    const router = useRouter()
+
+    const handleRowClick = (row: User) => {
+      router.push({ name: 'user-show', params: { id: row.id } })
+    }
+
+    return { table, pagination, handlePageChange, search, searchValue, handleRowClick }
   }
 }
 </script>
