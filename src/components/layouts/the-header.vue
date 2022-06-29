@@ -13,7 +13,7 @@
         <base-avatar :name="user?.name"></base-avatar>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item @click="$router.push({ name: 'user-show', params: { id: user.id } })">
+            <el-dropdown-item @click="$router.push({ name: 'user.show', params: { id: user.id } })">
               Profile
             </el-dropdown-item>
             <el-dropdown-item divided>

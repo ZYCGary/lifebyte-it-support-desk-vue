@@ -7,7 +7,7 @@ export default {
   children: [
     {
       path: '',
-      name: 'hardware-index',
+      name: 'hardware.index',
       component: () => import('@/views/hardware/hardware-index-view.vue'),
       meta: { adminOnly: true }
     }

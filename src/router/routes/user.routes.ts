@@ -7,13 +7,13 @@ export default {
   children: [
     {
       path: '',
-      name: 'user-index',
+      name: 'user.index',
       component: () => import('@/views/users/user-index-view.vue'),
       meta: { adminOnly: true }
     },
     {
       path: ':id',
-      name: 'user-show',
+      name: 'user.show',
       component: () => import('@/views/users/user-show-view.vue'),
       meta: { adminOnly: true }
     }

@@ -92,7 +92,7 @@ export default defineComponent({
     const router = useRouter()
 
     const handleUserAdded = (user: User) => {
-      router.push({ name: 'user-show', params: { id: user.id } })
+      router.push({ name: 'user.show', params: { id: user.id } })
     }
 
     const handleImportClick = () => {

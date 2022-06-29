@@ -60,7 +60,7 @@
         width="120"
       >
         <template #default="scope">
-          <router-link :to="{ name: 'user-show', params: { id: scope.row.id, type: 'update' } }">
+          <router-link :to="{ name: 'user.show', params: { id: scope.row.id, type: 'update' } }">
             <el-tooltip
               content="View detail"
               placement="top"
@@ -164,7 +164,7 @@ export default {
     const router = useRouter()
 
     const handleRowClick = (row: User) => {
-      router.push({ name: 'user-show', params: { id: row.id } })
+      router.push({ name: 'user.show', params: { id: row.id } })
     }
 
     return { table, pagination, handlePageChange, search, searchValue, handleRowClick }

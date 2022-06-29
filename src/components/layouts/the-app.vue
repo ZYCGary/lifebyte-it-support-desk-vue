@@ -27,7 +27,7 @@
             </el-menu-item>
             <el-menu-item
               index="users"
-              :route="{ name: 'user-index' }"
+              :route="{ name: 'user.index' }"
               :class="{ 'is-active': activeMenu === 'users' }"
             >
               <template #title>
@@ -39,7 +39,7 @@
             </el-menu-item>
             <el-menu-item
               index="software"
-              :route="{ name: 'software-index' }"
+              :route="{ name: 'software.index' }"
               :class="{ 'is-active': activeMenu === 'software' }"
             >
               <template #title>
@@ -51,7 +51,7 @@
             </el-menu-item>
             <el-menu-item
               index="hardware"
-              :route="{ name: 'hardware-index' }"
+              :route="{ name: 'hardware.index' }"
               :class="{ 'is-active': activeMenu === 'hardware' }"
             >
               <template #title>
