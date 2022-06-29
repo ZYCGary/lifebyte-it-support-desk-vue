@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <router-view :key="$route.path"></router-view>
+  <router-view></router-view>
 </template>
 
 <style>

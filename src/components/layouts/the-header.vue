@@ -10,7 +10,7 @@
     </div>
     <div class="flex flex-1 justify-end">
       <el-dropdown trigger="click">
-        <base-avatar :name="user.name"></base-avatar>
+        <base-avatar :name="user?.name"></base-avatar>
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item @click="$router.push({ name: 'user-show', params: { id: user.id } })">
