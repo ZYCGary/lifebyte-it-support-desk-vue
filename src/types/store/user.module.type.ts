@@ -7,10 +7,11 @@ export interface User {
   email: string
   department: string | null
   job_title: string | null
-  location_office: string
-  location_position: string
+  office_id: string
+  desk: string
   state: number
-  is_admin: boolean
+  type: string
+  permission_level: number
   created_at?: string
   updated_at?: string
 }

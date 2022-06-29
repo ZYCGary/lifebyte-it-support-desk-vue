@@ -11,7 +11,7 @@ const state: AuthState = {
 
 const getters: AuthGetterTree = {
   isAdmin: () => {
-    return !!(state.user && state.user?.is_admin)
+    return !!(state.user && state.user?.permission_level > 0 && state.user.state !== 0)
   }
 }
 
