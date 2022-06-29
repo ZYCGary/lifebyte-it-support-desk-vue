@@ -77,7 +77,9 @@ export default defineComponent({
 
     const handleClose = (done: () => void) => {
       ElMessageBox.confirm('User is not saved, are you sure to close this dialog?')
-        .then(() => done())
+        .then(() => {
+          done()
+        })
         .catch()
     }
 

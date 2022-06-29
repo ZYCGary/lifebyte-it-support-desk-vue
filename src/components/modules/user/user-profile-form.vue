@@ -155,7 +155,10 @@ export default defineComponent({
         cancelButtonText: 'Cancel',
         type: 'warning'
       })
-        .then(() => emit('cancel'))
+        .then(() => {
+          formRef.value?.resetFields()
+          emit('cancel')
+        })
         .catch()
     }
 
