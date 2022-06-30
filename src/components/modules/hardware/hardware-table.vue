@@ -30,6 +30,11 @@
       width="200"
     ></el-table-column>
     <el-table-column
+      property="user.location.name"
+      label="Location"
+      width="200"
+    ></el-table-column>
+    <el-table-column
       property="serial_number"
       label="Serial Number"
       width="300"
@@ -40,7 +45,7 @@
       width="200"
     ></el-table-column>
     <el-table-column
-      property="user_id"
+      property="user.name"
       label="User"
       width="250"
       fixed="right"

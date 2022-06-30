@@ -1,6 +1,8 @@
+import { User } from '@/types/store/user.module.type'
+
 export interface Hardware {
   id: number
-  user_id: number
+  user: User
   name: string
   description: string
   type: string
