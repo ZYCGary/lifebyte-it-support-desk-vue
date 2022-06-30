@@ -6,6 +6,16 @@
     <el-container class="h-full overflow-y-auto">
       <el-main>
         <div class="relative flex flex-row flex-wrap">
+          <div class="flex w-full mb-4">
+            <div class="flex items-center">
+              <base-search-bar
+                placeholder="Type a name to search"
+                v-model:searchValue="table.filter.name"
+                @search="search"
+              ></base-search-bar>
+            </div>
+          </div>
+
           <hardware-table
             :data="table.data"
             :loading="table.loading"
@@ -25,13 +35,14 @@ import { defineComponent, reactive } from 'vue'
 import TheRightAside from '@/components/layouts/the-right-aside.vue'
 import TheContentHeader from '@/components/layouts/the-content-header.vue'
 import HardwareListHeader from '@/components/modules/hardware/hardware-list-header.vue'
-import { Hardware } from '@/types/store/hardware.module.type'
+import { Hardware, HardwareFilter } from '@/types/store/hardware.module.type'
 import HardwareTable from '@/components/modules/hardware/hardware-table.vue'
 import { BasePaginationProps } from '@/types/components.type'
 import apis from '@/http/apis'
+import BaseSearchBar from '@/components/base/base-search-bar.vue'
 
 export default defineComponent({
-  components: { HardwareTable, HardwareListHeader, TheContentHeader, TheRightAside },
+  components: { BaseSearchBar, HardwareTable, HardwareListHeader, TheContentHeader, TheRightAside },
   props: {},
   setup() {
     const table = reactive({
@@ -55,30 +66,31 @@ export default defineComponent({
           links: []
         }
       } as BasePaginationProps,
-      filter: reactive({
-        name: null,
-        type: null,
-        brand: null,
-        serial_number: null,
-        tag: null,
-        spec_os: null,
-        spec_cpu: null,
-        spec_memory: null,
-        spec_screen_size: null,
+      filter: reactive<HardwareFilter>({
+        page: 1,
+        name: '',
+        type: '',
+        brand: '',
+        serial_number: '',
+        tag: '',
+        spec_os: '',
+        spec_cpu: '',
+        spec_memory: '',
+        spec_screen_size: '',
         spec_ports: [],
-        spec_adapter_input: null,
+        spec_adapter_input: '',
         spec_adapter_output: [],
-        spec_cable_length: null
+        spec_cable_length: ''
       })
     })
 
-    const loadTable = () => {
+    const loadTable = (filter?: HardwareFilter) => {
       table.loading = true
       table.error = false
       table.data = []
 
       apis.hardware
-        .getHardwareCollection()
+        .getHardwareCollection(filter)
         .then((collection) => {
           table.loading = false
           table.error = false
@@ -92,9 +104,13 @@ export default defineComponent({
         })
     }
 
-    loadTable()
+    loadTable(table.filter)
 
-    return { table }
+    const search = () => {
+      loadTable({ page: 1, name: table.filter.name })
+    }
+
+    return { table, search }
   }
 })
 </script>
