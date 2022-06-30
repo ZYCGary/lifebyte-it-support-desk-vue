@@ -14,6 +14,14 @@
                 @search="search"
               ></base-search-bar>
             </div>
+            <div class="flex flex-1 flex-nowrap justify-end items-center">
+              <base-pagination
+                :total="table.pagination.meta.total"
+                :page-size="table.pagination.meta.per_page"
+                :current-page="table.pagination.meta.current_page"
+                @current-change="handlePageChange"
+              />
+            </div>
           </div>
 
           <hardware-table
@@ -40,9 +48,10 @@ import HardwareTable from '@/components/modules/hardware/hardware-table.vue'
 import { BasePaginationProps } from '@/types/components.type'
 import apis from '@/http/apis'
 import BaseSearchBar from '@/components/base/base-search-bar.vue'
+import BasePagination from '@/components/base/base-pagination.vue'
 
 export default defineComponent({
-  components: { BaseSearchBar, HardwareTable, HardwareListHeader, TheContentHeader, TheRightAside },
+  components: { BasePagination, BaseSearchBar, HardwareTable, HardwareListHeader, TheContentHeader, TheRightAside },
   props: {},
   setup() {
     const table = reactive({
@@ -110,7 +119,13 @@ export default defineComponent({
       loadTable({ page: 1, name: table.filter.name })
     }
 
-    return { table, search }
+    const handlePageChange = (page: number) => {
+      console.log(page)
+      table.filter.page = page
+      loadTable(table.filter)
+    }
+
+    return { table, search, handlePageChange }
   }
 })
 </script>

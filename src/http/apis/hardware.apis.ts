@@ -3,10 +3,10 @@ import { HardwareFilter } from '@/types/store/hardware.module.type'
 
 const hardwareApis = {
   getHardwareCollection: async (filter?: HardwareFilter) => {
-    // Clean filter
+    // Remove empty filter keys.
     if (filter) {
       for (const [key, value] of Object.entries(filter)) {
-        if (!Object.keys(value).length) delete filter[key as keyof HardwareFilter]
+        if (typeof value !== 'number' && !Object.keys(value).length) delete filter[key as keyof HardwareFilter]
       }
     }
 
