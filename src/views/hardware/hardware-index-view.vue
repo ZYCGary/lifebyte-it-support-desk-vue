@@ -113,7 +113,7 @@ export default defineComponent({
         })
     }
 
-    loadTable(table.filter)
+    loadTable()
 
     const search = () => {
       loadTable({ page: 1, name: table.filter.name })

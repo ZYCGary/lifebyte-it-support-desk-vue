@@ -45,11 +45,44 @@
       width="200"
     ></el-table-column>
     <el-table-column
-      property="user.name"
       label="User"
       width="250"
+    >
+      <template #default="scope">
+        <el-popover
+          v-if="scope.row.user.type !== 'Storage'"
+          trigger="hover"
+          placement="top"
+          width="auto"
+        >
+          <template #default>
+            <div>{{ scope.row.user.email }}</div>
+          </template>
+          <template #reference>
+            <router-link
+              :to="{ name: 'user.show', params: { id: scope.row.user.id } }"
+              class="hover:text-blue-500"
+            >
+              {{ scope.row.user.name }}
+            </router-link>
+          </template>
+        </el-popover>
+      </template>
+    </el-table-column>
+    <el-table-column
       fixed="right"
-    ></el-table-column>
+      label="State"
+      width="100"
+    >
+      <template #default="scope">
+        <el-tag
+          effect="dark"
+          :type="scope.row.user.type === 'Storage' ? 'info' : 'success'"
+        >
+          {{ scope.row.user.type === 'Storage' ? 'In Stock' : 'In Use' }}
+        </el-tag>
+      </template>
+    </el-table-column>
     <el-table-column
       fixed="right"
       label="Operations"
