@@ -44,6 +44,7 @@ declare module '@vue/runtime-core' {
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
     HardwareListHeader: typeof import('./src/components/modules/hardware/hardware-list-header.vue')['default']
+    HardwareTable: typeof import('./src/components/modules/hardware/hardware-table.vue')['default']
     Loading: typeof import('element-plus/es')['ElLoadingDirective']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
