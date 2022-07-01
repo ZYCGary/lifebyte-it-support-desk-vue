@@ -139,7 +139,7 @@
     </div>
 
     <!-- Specifications -->
-    <div class="grid grid-cols-2 gap-x-4">
+    <div class="grid grid-cols-2 gap-x-4 mb-6">
       <h1 class="col-span-2 mb-4 font-semibold text-xl">
         <base-icon-text
           icon-class="fa-solid fa-gear"
@@ -300,6 +300,47 @@
         />
       </el-form-item>
     </div>
+
+    <!-- Notes -->
+    <div class="grid">
+      <h1 class="mb-4 font-semibold text-xl">
+        <base-icon-text
+          icon-class="fa-solid fa-clipboard-list"
+          text="Notes"
+        ></base-icon-text>
+      </h1>
+      <el-form-item
+        label="Bundle With"
+        prop="together"
+      >
+        <el-select
+          v-model="information.together"
+          placeholder="Select/Input bundle items"
+          class="w-full"
+          multiple
+          clearable
+          filterable
+          allow-create
+          default-first-option
+        >
+          <el-option
+            v-for="(item, index) in form.bundleOptions"
+            :key="index"
+            :value="item"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item
+        label="Note"
+        prop="note"
+      >
+        <el-input
+          v-model="information.note"
+          type="textarea"
+          :rows="3"
+        />
+      </el-form-item>
+    </div>
   </el-form>
   <div
     v-loading="form.loading"
@@ -363,7 +404,8 @@ export default defineComponent({
         'Ethernet',
         '3.5-mm headphone jack',
         'Card Slot'
-      ]
+      ],
+      bundleOptions: ['Charger Cable', 'Power Adapter', 'Receiver', 'Remote']
     })
 
     const rules = {}
