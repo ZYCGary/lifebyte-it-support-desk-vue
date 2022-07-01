@@ -48,6 +48,7 @@ declare module '@vue/runtime-core' {
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
     HardwareInfomation: typeof import('./src/components/modules/hardware/hardware-information.vue')['default']
     HardwareInformation: typeof import('./src/components/modules/hardware/hardware-information.vue')['default']
+    HardwareInformationForm: typeof import('./src/components/modules/hardware/hardware-information-form.vue')['default']
     HardwareListHeader: typeof import('./src/components/modules/hardware/hardware-list-header.vue')['default']
     HardwareShowHeader: typeof import('./src/components/modules/hardware/hardware-show-header.vue')['default']
     HardwareTable: typeof import('./src/components/modules/hardware/hardware-table.vue')['default']

@@ -14,6 +14,19 @@
           ></base-icon-text>
         </h1>
       </template>
+
+      <template #extra>
+        <div class="flex flex-row flex-nowrap justify-end">
+          <base-button
+            icon-class="fa-solid fa-pen-to-square"
+            type="primary"
+            @click="editable = true"
+          >
+            Update
+          </base-button>
+        </div>
+      </template>
+
       <el-descriptions-item
         label="Name"
         span="2"
@@ -40,9 +53,6 @@
       </el-descriptions-item>
       <el-descriptions-item label="Serial Number">{{ hardware.serial_number }}</el-descriptions-item>
       <el-descriptions-item label="Tag">{{ hardware.tag }}</el-descriptions-item>
-      <el-descriptions-item label="Location"
-        >{{ hardware.user.location.name }} - {{ hardware.user.location.country }}</el-descriptions-item
-      >
       <el-descriptions-item label="User">
         <el-popover
           v-if="hardware.user.type !== 'Storage'"
@@ -64,6 +74,9 @@
         </el-popover>
         <span v-else> - </span>
       </el-descriptions-item>
+      <el-descriptions-item label="Location"
+        >{{ hardware.user.location.name }} - {{ hardware.user.location.country }}</el-descriptions-item
+      >
       <el-descriptions-item
         label="Availability"
         width="25%"
@@ -209,6 +222,14 @@
       </el-descriptions-item>
     </el-descriptions>
   </div>
+  <div v-else>
+    <hardware-information-form
+      type="update"
+      :hardware="hardware"
+      @success="handleHardwareUpdated"
+      @cancel="editable = false"
+    ></hardware-information-form>
+  </div>
 </template>
 
 <script lang="ts">
@@ -216,10 +237,12 @@ import { defineComponent, PropType, ref } from 'vue'
 import { Hardware } from '@/types/store/hardware.module.type'
 import { useRoute } from 'vue-router'
 import BaseIconText from '@/components/base/base-icon-text.vue'
+import BaseButton from '@/components/base/base-button.vue'
+import HardwareInformationForm from '@/components/modules/hardware/hardware-information-form.vue'
 
 export default defineComponent({
   name: 'hardware-information',
-  components: { BaseIconText },
+  components: { HardwareInformationForm, BaseButton, BaseIconText },
   props: {
     hardware: {
       required: true,
@@ -234,7 +257,11 @@ export default defineComponent({
 
     if (route.params?.type === 'update') editable.value = true
 
-    return { editable }
+    const handleHardwareUpdated = () => {
+      console.log('hardware updated')
+    }
+
+    return { editable, handleHardwareUpdated }
   }
 })
 </script>

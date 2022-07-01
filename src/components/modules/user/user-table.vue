@@ -133,7 +133,7 @@ export default {
       table.collection.data = []
 
       apis.user
-        .getUserTable(param)
+        .getUserCollection(param)
         .then((response) => {
           table.loading = false
           table.error = false
