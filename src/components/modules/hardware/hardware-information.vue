@@ -27,16 +27,16 @@
         {{ Boolean(hardware.description) ? hardware.description : 'No description.' }}
       </el-descriptions-item>
       <el-descriptions-item
-        label="Brand"
-        width="25%"
-      >
-        {{ hardware.brand }}
-      </el-descriptions-item>
-      <el-descriptions-item
         label="Type"
         width="25%"
       >
         {{ hardware.type }}
+      </el-descriptions-item>
+      <el-descriptions-item
+        label="Brand"
+        width="25%"
+      >
+        {{ hardware.brand }}
       </el-descriptions-item>
       <el-descriptions-item label="Serial Number">{{ hardware.serial_number }}</el-descriptions-item>
       <el-descriptions-item label="Tag">{{ hardware.tag }}</el-descriptions-item>
@@ -64,7 +64,10 @@
         </el-popover>
         <span v-else> - </span>
       </el-descriptions-item>
-      <el-descriptions-item label="Availability">
+      <el-descriptions-item
+        label="Availability"
+        width="25%"
+      >
         <el-tag
           effect="dark"
           :type="hardware.user.type === 'Storage' ? 'success' : 'info'"
@@ -83,31 +86,45 @@
       <template #title>
         <h1 class="font-semibold text-xl">
           <base-icon-text
-            icon-class="fa-solid fa-gears"
+            icon-class="fa-solid fa-gear"
             text="Specifications"
           ></base-icon-text>
         </h1>
       </template>
 
       <el-descriptions-item
+        v-if="['Desktop', 'Laptop', 'Others'].includes(hardware.type)"
         label="Operation System"
         width="25%"
       >
         {{ hardware.spec_os }}
       </el-descriptions-item>
       <el-descriptions-item
+        v-if="['Desktop', 'Laptop', 'Others'].includes(hardware.type)"
         label="CPU"
         width="25%"
       >
         {{ hardware.spec_cpu }}
       </el-descriptions-item>
-      <el-descriptions-item label="Memory (GB)">
+      <el-descriptions-item
+        v-if="['Desktop', 'Laptop', 'Others'].includes(hardware.type)"
+        label="Memory (GB)"
+        width="25%"
+      >
         {{ hardware.spec_memory }}
       </el-descriptions-item>
-      <el-descriptions-item label="Screen Size (inch)">
+      <el-descriptions-item
+        v-if="['Desktop', 'Laptop', 'TV', 'Others'].includes(hardware.type)"
+        label="Screen Size (inch)"
+        width="25%"
+      >
         {{ hardware.spec_screen_size }}
       </el-descriptions-item>
-      <el-descriptions-item label="Ports">
+      <el-descriptions-item
+        v-if="['Desktop', 'Laptop', 'TV', 'Docking Station', 'Keyboard', 'Others'].includes(hardware.type)"
+        label="Ports"
+        width="25%"
+      >
         <template #default>
           <div class="flex flex-row flex-wrap gap-2">
             <el-tag
@@ -120,10 +137,18 @@
           </div>
         </template>
       </el-descriptions-item>
-      <el-descriptions-item label="Input">
+      <el-descriptions-item
+        v-if="['Adapter', 'Others'].includes(hardware.type)"
+        label="Input"
+        width="25%"
+      >
         {{ hardware.spec_adapter_input }}
       </el-descriptions-item>
-      <el-descriptions-item label="Output">
+      <el-descriptions-item
+        v-if="['Adapter', 'Others'].includes(hardware.type)"
+        label="Output"
+        width="25%"
+      >
         <template #default>
           <div class="flex flex-row flex-wrap gap-2">
             <el-tag
@@ -136,10 +161,17 @@
           </div>
         </template>
       </el-descriptions-item>
-      <el-descriptions-item label="Length">
+      <el-descriptions-item
+        v-if="['Keyboard', 'Mouse', 'Adapter', 'Others'].includes(hardware.type)"
+        label="Length"
+        width="25%"
+      >
         {{ hardware.spec_cable_length }}
       </el-descriptions-item>
-      <el-descriptions-item label="Others">
+      <el-descriptions-item
+        label="Others"
+        width="25%"
+      >
         {{ hardware.spec_others }}
       </el-descriptions-item>
     </el-descriptions>
