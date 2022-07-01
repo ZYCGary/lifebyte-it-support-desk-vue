@@ -134,7 +134,7 @@
         {{ hardware.spec_screen_size }}
       </el-descriptions-item>
       <el-descriptions-item
-        v-if="['Desktop', 'Laptop', 'TV', 'Docking Station', 'Keyboard', 'Others'].includes(hardware.type)"
+        v-if="['Desktop', 'Laptop', 'TV', 'Docking Station', 'Others'].includes(hardware.type)"
         label="Ports"
         width="25%"
       >
@@ -176,7 +176,7 @@
       </el-descriptions-item>
       <el-descriptions-item
         v-if="['Keyboard', 'Mouse', 'Adapter', 'Others'].includes(hardware.type)"
-        label="Length"
+        label="Cable Length"
         width="25%"
       >
         {{ hardware.spec_cable_length }}
