@@ -71,13 +71,19 @@
         label="Serial Number"
         prop="serial_number"
       >
-        <el-input v-model="information.serial_number" />
+        <el-input
+          v-model="information.serial_number"
+          clearable
+        />
       </el-form-item>
       <el-form-item
         label="Tag"
         prop="tag"
       >
-        <el-input v-model="information.tag" />
+        <el-input
+          v-model="information.tag"
+          clearable
+        />
       </el-form-item>
       <el-form-item
         label="User"
@@ -140,9 +146,10 @@
           default-first-option
         >
           <el-option
-            v-for="(os, index) in form.osOptions"
-            :key="index"
-            :value="os"
+            v-for="os in form.osOptions"
+            :key="os.value"
+            :label="os.label"
+            :value="os.value"
           />
         </el-select>
       </el-form-item>
@@ -160,9 +167,10 @@
           default-first-option
         >
           <el-option
-            v-for="(cpu, index) in form.cpuOptions"
-            :key="index"
-            :value="cpu"
+            v-for="cpu in form.cpuOptions"
+            :key="cpu.value"
+            :label="cpu.label"
+            :value="cpu.value"
           />
         </el-select>
       </el-form-item>
@@ -207,9 +215,10 @@
           default-first-option
         >
           <el-option
-            v-for="(port, index) in form.portOptions"
-            :key="index"
-            :value="port"
+            v-for="port in form.portOptions"
+            :key="port.value"
+            :label="port.label"
+            :value="port.value"
           />
         </el-select>
       </el-form-item>
@@ -227,9 +236,10 @@
           default-first-option
         >
           <el-option
-            v-for="(port, index) in form.portOptions"
-            :key="index"
-            :value="port"
+            v-for="port in form.portOptions"
+            :key="port.value"
+            :label="port.label"
+            :value="port.value"
           />
         </el-select>
       </el-form-item>
@@ -251,9 +261,10 @@
           default-first-option
         >
           <el-option
-            v-for="(port, index) in form.portOptions"
-            :key="index"
-            :value="port"
+            v-for="port in form.portOptions"
+            :key="port.value"
+            :label="port.label"
+            :value="port.value"
           />
         </el-select>
       </el-form-item>
@@ -277,6 +288,7 @@
         <el-input
           v-model="information.spec_others"
           type="textarea"
+          :rows="4"
         />
       </el-form-item>
     </div>
@@ -317,7 +329,7 @@
         <el-input
           v-model="information.note"
           type="textarea"
-          :rows="3"
+          :rows="4"
         />
       </el-form-item>
     </div>
@@ -383,32 +395,45 @@ export default defineComponent({
       submitting: false,
       userOptions: [] as User[],
       typeOptions: ['Desktop', 'Laptop', 'Mouse', 'Keyboard', 'Adapter', 'Docking Station', 'TV', 'Others'],
-      brandOptions: ['Apple', 'MicroSoft', 'UGreen'],
-      osOptions: ['Windows', 'macOS', 'Linux'],
+      brandOptions: ['Apple', 'MicroSoft', 'UGreen', 'Unknown Brand'],
+      osOptions: [
+        { label: '-', value: null },
+        { label: 'Windows', value: 'Windows' },
+        { label: 'macOS', value: 'macOS' },
+        { label: 'Linux', value: 'Linux' }
+      ],
       cpuOptions: [
-        'Apple M1',
-        'Apple M1 Pro',
-        'Apple M1 Max',
-        'Apple M1 Ultra',
-        'Apple M2',
-        'Intel Core i9',
-        'Intel Core i7',
-        'Intel Core i5'
+        { label: '-', value: null },
+        { label: 'Apple M1', value: 'Apple M1' },
+        { label: 'Apple M1 Pro', value: 'Apple M1 Pro' },
+        { label: 'Apple M1 Max', value: 'Apple M1 Max' },
+        { label: 'Apple M1 Ultra', value: 'Apple M1 Ultra' },
+        { label: 'Apple M2', value: 'Apple M2' },
+        { label: 'Intel Core i9', value: 'Intel Core i9' },
+        { label: 'Intel Core i5', value: 'Intel Core i5' }
       ],
       portOptions: [
-        'USB-A',
-        'USB-C',
-        'HDMI',
-        'DisplayPort',
-        'mini DisplayPort',
-        'Ethernet',
-        '3.5-mm headphone jack',
-        'Card Slot'
+        { label: '-', value: null },
+        { label: 'USB-A', value: 'USB-A' },
+        { label: 'USB-C', value: 'USB-C' },
+        { label: 'HDMI', value: 'HDMI' },
+        { label: 'DisplayPort', value: 'DisplayPort' },
+        { label: 'Mini DisplayPort', value: 'Mini DisplayPort' },
+        { label: 'Ethernet', value: 'Ethernet' },
+        { label: '3.5-mm headphone jack', value: '3.5-mm headphone jack' },
+        { label: 'Card Slot', value: 'Card Slot' }
       ],
       bundleOptions: ['Charger Cable', 'Power Adapter', 'Receiver', 'Remote']
     })
 
-    const rules = {}
+    const rules = {
+      name: [{ required: true, message: `Please input hardware's name` }],
+      type: [{ required: true, message: `Please select hardware's type` }],
+      brand: [{ required: true, message: `Please select/input hardware's brand` }],
+      serial_number: [{ required: true, message: `Please input hardware's serial number` }],
+      tag: [{ required: true, message: `Please input hardware's tag` }],
+      user: [{ required: true, message: `Please select hardware's user` }]
+    }
 
     apis.user
       .getUserCollection({ pagination: false })
@@ -439,8 +464,55 @@ export default defineComponent({
         .catch()
     }
 
+    const updateHardware = () => {
+      apis.hardware
+        .updateHardware(props.hardware.id, { ...information })
+        .then(() => {
+          form.submitting = false
+
+          ElMessage({
+            type: 'success',
+            message: 'Update user profile successfully.'
+          })
+
+          emit('success', information)
+        })
+        .catch((error) => {
+          form.submitting = false
+
+          const response = error.response.data
+
+          if (response.status === 422) {
+            ElMessage({
+              type: 'error',
+              message: response.message
+            })
+          } else {
+            ElMessage({
+              type: 'error',
+              message: 'Something wrong when updating hardware information.'
+            })
+          }
+        })
+    }
+
+    const createHardware = () => {
+      console.log('create')
+    }
+
     const handleSave = (formEl: FormInstance | undefined) => {
-      console.log('save', formEl)
+      if (!formEl) return
+
+      if (!props.type || (props.type !== 'create' && props.type !== 'update')) handleCancel()
+
+      formEl.validate((valid) => {
+        if (valid) {
+          form.submitting = true
+
+          if (props.type === 'update') updateHardware()
+          if (props.type === 'create') createHardware()
+        }
+      })
     }
 
     return { formRef, form, information, rules, handleCancel, handleSave }

@@ -37,7 +37,7 @@
         label="Description"
         span="2"
       >
-        {{ Boolean(hardware.description) ? hardware.description : 'No description.' }}
+        {{ hardware.description || '-' }}
       </el-descriptions-item>
       <el-descriptions-item
         label="Type"
@@ -110,28 +110,28 @@
         label="Operation System"
         width="25%"
       >
-        {{ hardware.spec_os }}
+        {{ hardware.spec_os || '-' }}
       </el-descriptions-item>
       <el-descriptions-item
         v-if="['Desktop', 'Laptop', 'Others'].includes(hardware.type)"
         label="CPU"
         width="25%"
       >
-        {{ hardware.spec_cpu }}
+        {{ hardware.spec_cpu || '-' }}
       </el-descriptions-item>
       <el-descriptions-item
         v-if="['Desktop', 'Laptop', 'Others'].includes(hardware.type)"
         label="Memory (GB)"
         width="25%"
       >
-        {{ hardware.spec_memory }}
+        {{ hardware.spec_memory || '-' }}
       </el-descriptions-item>
       <el-descriptions-item
         v-if="['Desktop', 'Laptop', 'TV', 'Others'].includes(hardware.type)"
         label="Screen Size (inch)"
         width="25%"
       >
-        {{ hardware.spec_screen_size }}
+        {{ hardware.spec_screen_size || '-' }}
       </el-descriptions-item>
       <el-descriptions-item
         v-if="['Desktop', 'Laptop', 'TV', 'Docking Station', 'Others'].includes(hardware.type)"
@@ -140,13 +140,16 @@
       >
         <template #default>
           <div class="flex flex-row flex-wrap gap-2">
-            <el-tag
-              v-for="(port, index) in hardware.spec_ports"
-              :key="index"
-              type="info"
-            >
-              {{ port }}
-            </el-tag>
+            <template v-if="hardware.spec_ports.length">
+              <el-tag
+                v-for="(port, index) in hardware.spec_ports"
+                :key="index"
+                type="info"
+              >
+                {{ port }}
+              </el-tag>
+            </template>
+            <template v-else> - </template>
           </div>
         </template>
       </el-descriptions-item>
@@ -155,7 +158,7 @@
         label="Input"
         width="25%"
       >
-        {{ hardware.spec_adapter_input }}
+        {{ hardware.spec_adapter_input || '-' }}
       </el-descriptions-item>
       <el-descriptions-item
         v-if="['Adapter', 'Others'].includes(hardware.type)"
@@ -164,13 +167,16 @@
       >
         <template #default>
           <div class="flex flex-row flex-wrap gap-2">
-            <el-tag
-              v-for="(output, index) in hardware.spec_adapter_output"
-              :key="index"
-              type="info"
-            >
-              {{ output }}
-            </el-tag>
+            <template v-if="hardware.spec_adapter_output.length">
+              <el-tag
+                v-for="(output, index) in hardware.spec_adapter_output"
+                :key="index"
+                type="info"
+              >
+                {{ output }}
+              </el-tag>
+            </template>
+            <template v-else> - </template>
           </div>
         </template>
       </el-descriptions-item>
@@ -179,13 +185,13 @@
         label="Cable Length"
         width="25%"
       >
-        {{ hardware.spec_cable_length }}
+        {{ hardware.spec_cable_length || '-' }}
       </el-descriptions-item>
       <el-descriptions-item
         label="Others"
         width="25%"
       >
-        {{ hardware.spec_others }}
+        {{ hardware.spec_others || '-' }}
       </el-descriptions-item>
     </el-descriptions>
 
@@ -206,19 +212,22 @@
 
       <el-descriptions-item label="Bundle With">
         <template #default>
-          <div
-            v-for="(item, index) in hardware.together"
-            :key="index"
-            class="my-2"
-          >
-            <el-tag type="info">
-              {{ item }}
-            </el-tag>
-          </div>
+          <template v-if="hardware.together.length">
+            <div
+              v-for="(item, index) in hardware.together"
+              :key="index"
+              class="my-2"
+            >
+              <el-tag type="info">
+                {{ item }}
+              </el-tag>
+            </div>
+          </template>
+          <template v-else> - </template>
         </template>
       </el-descriptions-item>
       <el-descriptions-item label="Note">
-        {{ hardware.note }}
+        {{ hardware.note || '-' }}
       </el-descriptions-item>
     </el-descriptions>
   </div>
@@ -250,15 +259,16 @@ export default defineComponent({
     }
   },
   emits: ['update:hardware'],
-  setup: () => {
+  setup: (props, { emit }) => {
     const editable = ref(false)
 
     const route = useRoute()
 
     if (route.params?.type === 'update') editable.value = true
 
-    const handleHardwareUpdated = () => {
-      console.log('hardware updated')
+    const handleHardwareUpdated = (information: Object) => {
+      emit('update:hardware', { ...props.hardware, ...information })
+      editable.value = false
     }
 
     return { editable, handleHardwareUpdated }

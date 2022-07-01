@@ -18,6 +18,9 @@ const hardwareApis = {
     const response = await requests.get(`api/v1/hardware/${hardwareId}`)
 
     return response.data
+  },
+  updateHardware: async (id: number, payload: any) => {
+    await requests.put(`api/v1/hardware/${id}`, payload)
   }
 }
 
