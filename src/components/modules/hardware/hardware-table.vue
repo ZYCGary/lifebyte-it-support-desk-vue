@@ -90,7 +90,7 @@
       width="120"
     >
       <template #default="scope">
-        <router-link :to="{ name: 'user.show', params: { id: scope.row.id, type: 'update' } }">
+        <router-link :to="{ name: 'hardware.show', params: { id: scope.row.id, type: 'update' } }">
           <el-tooltip
             content="View detail"
             placement="top"

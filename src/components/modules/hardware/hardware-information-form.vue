@@ -7,26 +7,6 @@
     label-position="top"
     status-icon
   >
-    <div class="flex flex-row flex-nowrap justify-end">
-      <el-form-item>
-        <base-button
-          icon-class="fa-solid fa-check"
-          type="success"
-          :loading="form.submitting"
-          @click="handleSave(formRef)"
-        >
-          Save
-        </base-button>
-        <base-button
-          icon-class="fa-solid fa-ban"
-          type="info"
-          @click="handleCancel"
-        >
-          Cancel
-        </base-button>
-      </el-form-item>
-    </div>
-
     <!-- Information -->
     <div class="grid grid-cols-2 gap-x-4 mb-6">
       <h1 class="col-span-2 mb-4 font-semibold text-xl">
@@ -302,7 +282,7 @@
     </div>
 
     <!-- Notes -->
-    <div class="grid">
+    <div class="grid mb-6">
       <h1 class="mb-4 font-semibold text-xl">
         <base-icon-text
           icon-class="fa-solid fa-clipboard-list"
@@ -339,6 +319,26 @@
           type="textarea"
           :rows="3"
         />
+      </el-form-item>
+    </div>
+
+    <div class="flex flex-row flex-nowrap justify-end">
+      <el-form-item>
+        <base-button
+          icon-class="fa-solid fa-check"
+          type="success"
+          :loading="form.submitting"
+          @click="handleSave(formRef)"
+        >
+          Save
+        </base-button>
+        <base-button
+          icon-class="fa-solid fa-ban"
+          type="info"
+          @click="handleCancel"
+        >
+          Cancel
+        </base-button>
       </el-form-item>
     </div>
   </el-form>
