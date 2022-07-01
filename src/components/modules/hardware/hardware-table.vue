@@ -67,17 +67,18 @@
             </router-link>
           </template>
         </el-popover>
+        <span v-else>-</span>
       </template>
     </el-table-column>
     <el-table-column
       fixed="right"
-      label="State"
-      width="100"
+      label="Availability"
+      width="120"
     >
       <template #default="scope">
         <el-tag
           effect="dark"
-          :type="scope.row.user.type === 'Storage' ? 'info' : 'success'"
+          :type="scope.row.user.type === 'Storage' ? 'success' : 'info'"
         >
           {{ scope.row.user.type === 'Storage' ? 'In Stock' : 'In Use' }}
         </el-tag>
@@ -116,6 +117,7 @@
 import { defineComponent, PropType } from 'vue'
 import { Hardware } from '@/types/store/hardware.module.type'
 import BaseButton from '@/components/base/base-button.vue'
+import { useRouter } from 'vue-router'
 
 export default defineComponent({
   name: 'hardware-table',
@@ -136,8 +138,10 @@ export default defineComponent({
     }
   },
   setup: () => {
+    const router = useRouter()
+
     const handleRowClick = (row: Hardware) => {
-      console.log('row clicked: ', row)
+      router.push({ name: 'hardware.show', params: { id: row.id } })
     }
 
     return { handleRowClick }

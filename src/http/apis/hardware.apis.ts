@@ -13,6 +13,11 @@ const hardwareApis = {
     const response = await requests.get('api/v1/hardware', filter)
 
     return response.data
+  },
+  getHardware: async (hardwareId: number) => {
+    const response = await requests.get(`api/v1/hardware/${hardwareId}`)
+
+    return response.data
   }
 }
 

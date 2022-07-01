@@ -1,6 +1,8 @@
 <template>
-  <el-icon><i :class="iconClass"></i></el-icon>
-  <span>{{ text }}</span>
+  <div class="flex flex-row flex-nowrap items-center">
+    <el-icon><i :class="iconClass"></i></el-icon>
+    <span class="ml-2">{{ text }}</span>
+  </div>
 </template>
 
 <script lang="ts">
