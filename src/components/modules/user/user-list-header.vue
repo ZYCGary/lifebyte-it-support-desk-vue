@@ -55,6 +55,7 @@ import { User } from '@/types/store/user.module.type'
 import { ElMessageBox } from 'element-plus/es'
 import UserProfileForm from '@/components/modules/user/user-profile-form.vue'
 import { useRouter } from 'vue-router'
+import apis from '@/http/apis'
 
 export default defineComponent({
   name: 'user-list-header',
@@ -100,7 +101,17 @@ export default defineComponent({
     }
 
     const handleExportClick = () => {
-      console.log('export user')
+      apis.user
+        .exportUsers()
+        .then((file) => {
+          const url = window.URL.createObjectURL(new Blob([file]))
+          const link = document.createElement('a')
+          link.href = url
+          link.setAttribute('download', 'users.xlsx')
+          document.body.appendChild(link)
+          link.click()
+        })
+        .catch()
     }
 
     return { newUser, dialogVisible, handleClose, handleUserAdded, handleImportClick, handleExportClick }
