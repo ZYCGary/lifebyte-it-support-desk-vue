@@ -2,7 +2,7 @@ import http from '@/http'
 
 const authApis = {
   login: async (form: { email: string; password: string }) => {
-    await http.post('api/v1/login', {
+    await http.post('/login', {
       email: form.email,
       password: form.password,
       is_admin: 1
@@ -10,13 +10,13 @@ const authApis = {
   },
 
   getCurrentUser: async () => {
-    const response = await http.get('api/v1/user')
+    const response = await http.get('/api/v1/user')
 
     return response?.data
   },
 
   logout: async () => {
-    await http.post('api/v1/logout')
+    await http.post('/api/v1/logout')
   }
 }
 
