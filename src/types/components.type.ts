@@ -1,8 +1,21 @@
-// Base table props
-import { ModelCollection } from '@/types/store/root.module.type'
-
-export interface BaseTableProps {
-  loading: boolean
-  error: boolean
-  collection: ModelCollection
+export interface BasePaginationProps {
+  links: {
+    first: string | null
+    last: string | null
+    next: string | null
+    prev: string | null
+  }
+  meta: {
+    current_page: number
+    per_page: number
+    last_page: number
+    total: number
+    from: number
+    to: number
+    links: {
+      url: string | null
+      label: string
+      active: boolean
+    }[]
+  }
 }

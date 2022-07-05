@@ -4,7 +4,7 @@
     <div class="flex flex-1 justify-end">
       <base-button
         icon-class="fa-solid fa-right-from-bracket"
-        type="danger"
+        type="warning"
       >
         Dismiss
       </base-button>

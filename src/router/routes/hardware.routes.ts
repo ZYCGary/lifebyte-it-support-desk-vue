@@ -10,6 +10,12 @@ export default {
       name: 'hardware.index',
       component: () => import('@/views/hardware/hardware-index-view.vue'),
       meta: { adminOnly: true }
+    },
+    {
+      path: ':id',
+      name: 'hardware.show',
+      component: () => import('@/views/hardware/hardware-show-view.vue'),
+      meta: { adminOnly: true }
     }
   ]
 }

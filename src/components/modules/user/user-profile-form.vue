@@ -64,7 +64,7 @@
       <el-select
         v-model="profile.location"
         value-key="id"
-        placeholder="Select a type"
+        placeholder="Select a location"
         class="w-full"
       >
         <el-option

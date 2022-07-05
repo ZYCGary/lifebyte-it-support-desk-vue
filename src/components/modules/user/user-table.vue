@@ -19,7 +19,6 @@
     </div>
 
     <el-table
-      ref="multipleTableRef"
       :data="table.collection.data"
       border
       flexible
@@ -87,7 +86,6 @@
 <script lang="ts">
 import apis from '@/http/apis'
 import { computed, reactive, ref } from 'vue'
-import { BaseTableProps } from '@/types/components.type'
 import BasePagination from '@/components/base/base-pagination.vue'
 import BaseSearchBar from '@/components/base/base-search-bar.vue'
 import BaseButton from '@/components/base/base-button.vue'
@@ -98,7 +96,7 @@ export default {
   name: 'user-table',
   components: { BaseButton, BaseSearchBar, BasePagination },
   setup: () => {
-    const table: BaseTableProps = reactive({
+    const table = reactive({
       loading: true,
       error: false,
       collection: {
@@ -135,7 +133,7 @@ export default {
       table.collection.data = []
 
       apis.user
-        .getUserTable(param)
+        .getUserCollection(param)
         .then((response) => {
           table.loading = false
           table.error = false
