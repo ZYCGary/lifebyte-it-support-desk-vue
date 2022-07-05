@@ -1,9 +1,34 @@
 import axios, { AxiosResponse } from 'axios'
 import configs from '@/configs'
+import router from '@/router'
+import { store } from '@/store'
+import { ElMessage } from 'element-plus/es'
 
 /** Request error handler. */
-const handleError = (response: AxiosResponse) => {
-  console.error(`[TMGM] Request error: [${response.status}] ${response.data?.message}`)
+const handleError = async (response: AxiosResponse) => {
+  const status = response.status
+  const message = response.data.message
+
+  console.error(`[TMGM] Response error: [${status}] ${message}`)
+
+  switch (status) {
+    // Unauthorized
+    case 401:
+      store.commit('auth/setUser', null)
+      store.commit('auth/setAuthenticated', false)
+
+      await router.push({ name: 'auth.login' })
+
+      ElMessage({
+        type: 'warning',
+        message: 'Session expired, please login again.'
+      })
+
+      break
+
+    default:
+      break
+  }
 }
 
 /** Initialise Axios instance. */
@@ -32,7 +57,7 @@ instance.interceptors.response.use(
   (response) => {
     return response
   },
-  (error) => {
+  async (error) => {
     if (error && error.response) {
       // Construct error response
       error.response.data = {
@@ -43,7 +68,7 @@ instance.interceptors.response.use(
         ...error.response.data
       }
 
-      handleError(error.response)
+      await handleError(error.response)
 
       return Promise.reject(error)
     } else {

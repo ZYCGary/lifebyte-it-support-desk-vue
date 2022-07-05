@@ -31,9 +31,9 @@
           <el-button
             type="primary"
             @click="login(formRef)"
-            :loading="form.loading"
+            :loading="form.submitting"
           >
-            {{ form.loading ? 'Logging In' : 'Log In' }}
+            {{ form.submitting ? 'Logging In' : 'Log In' }}
           </el-button>
         </el-form-item>
       </el-form>
@@ -59,7 +59,7 @@ export default defineComponent({
     const form = reactive({
       email: '',
       password: '',
-      loading: false
+      submitting: false
     })
 
     const rules = {
@@ -82,7 +82,7 @@ export default defineComponent({
 
       formEl.validate((valid) => {
         if (valid) {
-          form.loading = true
+          form.submitting = true
 
           store
             .dispatch('auth/login', {
@@ -100,7 +100,7 @@ export default defineComponent({
               })
             })
             .catch(() => {
-              form.loading = false
+              form.submitting = false
 
               ElMessage({
                 type: 'error',

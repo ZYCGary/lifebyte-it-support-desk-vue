@@ -2,21 +2,17 @@
   <div>
     <div class="flex w-full mb-4">
       <div class="flex items-center">
-        <el-input
-          v-model="searchValue"
-          placeholder="Search by name"
-          @change="search"
-        >
-          <template #prefix>
-            <i class="fa-solid fa-magnifying-glass"></i>
-          </template>
-        </el-input>
+        <base-search-bar
+          placeholder="Type a name to search"
+          v-model:searchValue="searchValue"
+          @search="search"
+        ></base-search-bar>
       </div>
       <div class="flex flex-1 flex-nowrap justify-end items-center">
-        <el-pagination
-          layout="prev, pager, next"
+        <base-pagination
           :total="pagination.total"
           :page-size="pagination.page_size"
+          :current-page="pagination.current_page"
           @current-change="handlePageChange"
         />
       </div>
@@ -25,12 +21,13 @@
     <el-table
       ref="multipleTableRef"
       :data="table.collection.data"
-      height="776px"
       border
       flexible
       fit
       lazy
       class="overflow-auto w-auto max-h-full"
+      row-class-name="cursor-pointer"
+      @row-click="handleRowClick"
     >
       <el-table-column
         type="selection"
@@ -53,33 +50,29 @@
         width="200"
       ></el-table-column>
       <el-table-column
-        property="location_office"
-        label="Office"
-        width="100"
-      ></el-table-column>
-      <el-table-column
-        property="location_position"
+        property="job_title"
         label="Position"
-        width="150"
-      ></el-table-column>
-      <el-table-column
-        property="state"
-        label="State"
-        width="100"
-      ></el-table-column>
-      <el-table-column
-        property="is_admin"
-        label="Is Admin"
-        width="100"
+        width="250"
       ></el-table-column>
       <el-table-column
         fixed="right"
         label="Operations"
         width="120"
       >
-        <template #default>
-          <router-link :to="{ name: 'dashboard' }">
-            <el-button type="primary"> View </el-button>
+        <template #default="scope">
+          <router-link :to="{ name: 'user.show', params: { id: scope.row.id, type: 'update' } }">
+            <el-tooltip
+              content="View detail"
+              placement="top"
+              :show-after="500"
+            >
+              <base-button
+                icon-class="fa-solid fa-pen-to-square"
+                type="primary"
+                :text="false"
+              >
+              </base-button>
+            </el-tooltip>
           </router-link>
         </template>
       </el-table-column>
@@ -95,15 +88,21 @@
 import apis from '@/http/apis'
 import { computed, reactive, ref } from 'vue'
 import { BaseTableProps } from '@/types/components.type'
+import BasePagination from '@/components/base/base-pagination.vue'
+import BaseSearchBar from '@/components/base/base-search-bar.vue'
+import BaseButton from '@/components/base/base-button.vue'
+import { User } from '@/types/store/user.module.type'
+import { useRouter } from 'vue-router'
 
 export default {
   name: 'user-table',
+  components: { BaseButton, BaseSearchBar, BasePagination },
   setup: () => {
     const table: BaseTableProps = reactive({
       loading: true,
       error: false,
       collection: {
-        data: [],
+        data: [] as User[],
         links: {
           first: null,
           last: null,
@@ -124,8 +123,11 @@ export default {
 
     const pagination = reactive({
       total: computed(() => table.collection.meta.total),
-      page_size: computed(() => table.collection.meta.per_page)
+      page_size: computed(() => table.collection.meta.per_page),
+      current_page: computed(() => table.collection.meta.current_page)
     })
+
+    const searchValue = ref('')
 
     const loadTable = (param?: { page?: number; name?: string }) => {
       table.loading = true
@@ -133,7 +135,7 @@ export default {
       table.collection.data = []
 
       apis.user
-        .getUserCollection(param)
+        .getUserTable(param)
         .then((response) => {
           table.loading = false
           table.error = false
@@ -152,17 +154,20 @@ export default {
     loadTable()
 
     const handlePageChange = (page: number) => {
-      loadTable({ page: page })
+      loadTable({ page: page, name: searchValue.value || '' })
     }
 
-    const searchValue = ref('')
-    const search = (value: string) => {
-      if (searchValue.value && searchValue.value !== '') {
-        loadTable({ name: value })
-      }
+    const search = () => {
+      loadTable({ page: 1, name: searchValue.value || '' })
     }
 
-    return { table, pagination, handlePageChange, searchValue, search }
+    const router = useRouter()
+
+    const handleRowClick = (row: User) => {
+      router.push({ name: 'user.show', params: { id: row.id } })
+    }
+
+    return { table, pagination, handlePageChange, search, searchValue, handleRowClick }
   }
 }
 </script>

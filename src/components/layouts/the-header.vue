@@ -1,16 +1,21 @@
 <template>
   <el-header class="flex flex-row flex-nowrap items-center border-b py-2 bg-blue-400">
     <div>
-      <base-image src="logos/lifebyte-2.webp"></base-image>
+      <router-link :to="{ name: 'dashboard' }">
+        <base-image
+          src="logos/lifebyte-2.webp"
+          alt="LifeByte System logo."
+        ></base-image>
+      </router-link>
     </div>
     <div class="flex flex-1 justify-end">
       <el-dropdown trigger="click">
-        <span class="w-9 h-9 rounded-full bg-green-600/70 leading-9 font-bold text-center text-xl text-white">{{
-          initial
-        }}</span>
+        <base-avatar :name="user?.name"></base-avatar>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item>Profile</el-dropdown-item>
+            <el-dropdown-item @click="$router.push({ name: 'user.show', params: { id: user.id } })">
+              Profile
+            </el-dropdown-item>
             <el-dropdown-item divided>
               <el-button
                 type="danger"
@@ -29,21 +34,20 @@
 
 <script>
 import BaseImage from '@/components/base/base-image.vue'
+import BaseAvatar from '@/components/base/base-avatar.vue'
 import { useStore } from '@/store'
-import { computed, reactive } from 'vue'
+import { computed, defineComponent, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 
-export default {
-  name: 'base-header',
-  components: { BaseImage },
+export default defineComponent({
+  name: 'the-header',
+  components: { BaseAvatar, BaseImage },
   setup: () => {
     const store = useStore()
     const router = useRouter()
 
     const user = computed(() => store.state.auth.user)
-
-    const initial = user.value.name[0].toUpperCase()
 
     const status = reactive({
       logging_out: false
@@ -69,9 +73,9 @@ export default {
         })
     }
 
-    return { initial, status, logout }
+    return { user, status, logout }
   }
-}
+})
 </script>
 
 <style scoped></style>

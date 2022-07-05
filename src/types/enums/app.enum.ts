@@ -5,6 +5,12 @@ export enum Environment {
   PROD = 'production'
 }
 
+export enum Module {
+  USER = 'user',
+  HARDWARE = 'hardware',
+  SOFTWARE = 'software'
+}
+
 export enum ViewPort {
   XS = 'xs',
   SM = 'sm',
