@@ -32,7 +32,10 @@
           </div>
         </el-main>
         <the-right-aside>
-          <user-list-filter v-model:filter="table.filter"></user-list-filter>
+          <user-list-filter
+            :filter="table.filter"
+            @filter="handleFilter"
+          ></user-list-filter>
         </the-right-aside>
       </el-container>
     </template>
@@ -88,16 +91,16 @@ export default defineComponent({
       } as BasePaginationProps,
       filter: reactive<UserFilter>({
         page: 1,
-        name: null,
-        email: null,
-        department: null,
-        job_title: null,
-        company: null,
-        type: null,
-        location_id: null,
-        desk: null,
-        state: null,
-        permission_level: null
+        name: '',
+        email: '',
+        department: '',
+        job_title: '',
+        company: '',
+        type: '',
+        location_id: '',
+        desk: '',
+        state: '',
+        permission_level: ''
       })
     })
 
@@ -132,7 +135,12 @@ export default defineComponent({
       loadTable(table.filter)
     }
 
-    return { table, search, handlePageChange }
+    const handleFilter = (filter: UserFilter) => {
+      table.filter = filter
+      loadTable(filter)
+    }
+
+    return { table, search, handlePageChange, handleFilter }
   }
 })
 </script>

@@ -4,7 +4,7 @@ const locationApis = {
   getAllLocations: async () => {
     const response = await requests.get('/api/v1/locations')
 
-    return response?.data
+    return response?.data?.data
   }
 }
 

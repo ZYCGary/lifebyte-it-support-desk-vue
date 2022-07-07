@@ -23,16 +23,16 @@ export interface User {
 
 export interface UserFilter {
   page?: number | string
-  name?: string | null
-  email?: string | null
-  department?: string | null
-  job_title?: string | null
-  company?: string | null
-  type?: string | null
-  location_id?: number | null
-  desk?: string | null
-  state?: number | null
-  permission_level?: number | null
+  name?: string
+  email?: string
+  department?: string
+  job_title?: string
+  company?: string
+  type?: string
+  location_id?: number | string
+  desk?: string
+  state?: number | string
+  permission_level?: number | string
 }
 
 export interface UserState {}
