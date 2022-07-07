@@ -32,7 +32,7 @@
           </div>
         </el-main>
         <the-right-aside>
-          <h1>Filter</h1>
+          <user-list-filter v-model:filter="table.filter"></user-list-filter>
         </the-right-aside>
       </el-container>
     </template>
@@ -50,9 +50,18 @@ import apis from '@/http/apis'
 import BaseSearchBar from '@/components/base/base-search-bar.vue'
 import BasePagination from '@/components/base/base-pagination.vue'
 import { User, UserFilter } from '@/types/store/user.module.type'
+import UserListFilter from '@/components/modules/user/user-list-filter.vue'
 
 export default defineComponent({
-  components: { BasePagination, BaseSearchBar, TheMainContent, UserListHeader, UserTable, TheRightAside },
+  components: {
+    UserListFilter,
+    BasePagination,
+    BaseSearchBar,
+    TheMainContent,
+    UserListHeader,
+    UserTable,
+    TheRightAside
+  },
   name: 'user-index-view',
   props: {},
   setup() {

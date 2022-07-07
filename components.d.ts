@@ -67,6 +67,7 @@ declare module '@vue/runtime-core' {
     UserDrawer: typeof import('./src/components/modules/user/user-drawer.vue')['default']
     UserDrawerProfile: typeof import('./src/components/modules/user/user-drawer-profile.vue')['default']
     UserDrawerProfileForm: typeof import('./src/components/modules/user/user-drawer-profile-form.vue')['default']
+    UserListFilter: typeof import('./src/components/modules/user/user-list-filter.vue')['default']
     UserListHeader: typeof import('./src/components/modules/user/user-list-header.vue')['default']
     UserProfile: typeof import('./src/components/modules/user/user-profile.vue')['default']
     UserProfileForm: typeof import('./src/components/modules/user/user-profile-form.vue')['default']
