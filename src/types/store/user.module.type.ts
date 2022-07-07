@@ -21,6 +21,20 @@ export interface User {
   updated_at?: string
 }
 
+export interface UserFilter {
+  page?: number | string
+  name?: string | null
+  email?: string | null
+  department?: string | null
+  job_title?: string | null
+  company?: string | null
+  type?: string | null
+  location_id?: number | null
+  desk?: string | null
+  state?: number | null
+  permission_level?: number | null
+}
+
 export interface UserState {}
 
 export interface UserGetterTree extends GetterTree<UserState, RootState> {}

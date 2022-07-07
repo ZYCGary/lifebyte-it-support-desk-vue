@@ -122,7 +122,6 @@ import { useRouter } from 'vue-router'
 export default defineComponent({
   name: 'hardware-table',
   components: { BaseButton },
-
   props: {
     data: {
       required: true,

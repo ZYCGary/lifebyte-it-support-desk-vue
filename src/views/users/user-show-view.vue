@@ -7,12 +7,12 @@
     <template #content>
       <el-container
         v-loading="loading"
-        class="relative"
+        class="h-full"
       >
         <template v-if="user">
           <el-aside
-            width="40%"
-            class="border-r"
+            width="30%"
+            class="h-full border-r"
           >
             <el-main>
               <user-profile v-model:user="user"></user-profile>

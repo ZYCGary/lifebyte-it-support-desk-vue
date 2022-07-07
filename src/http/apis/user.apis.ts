@@ -1,7 +1,7 @@
 import requests from '@/http/requests'
 
 const userApis = {
-  getUserCollection: async (params?: { page?: number; name?: string }) => {
+  getUserCollection: async (params?: Object) => {
     const response = await requests.get('/api/v1/users', params)
 
     return response?.data

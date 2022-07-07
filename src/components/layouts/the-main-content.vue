@@ -6,7 +6,7 @@
       </div>
     </template>
 
-    <div class="z-0 flex-1 h-full bg-gray-50 overflow-y-auto">
+    <div class="z-0 flex-1 bg-gray-50 overflow-y-auto">
       <slot name="content"></slot>
     </div>
 
