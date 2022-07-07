@@ -5,17 +5,81 @@
     </template>
 
     <template #content>
-      <el-container
-        v-loading="loading"
-        class="h-full"
-      >
-        <template v-if="user">
+      <el-container class="h-full">
+        <template v-if="loading || user">
           <el-aside
             width="30%"
             class="h-full border-r"
           >
             <el-main>
-              <user-profile v-model:user="user"></user-profile>
+              <!-- User profile -->
+              <template v-if="user">
+                <base-avatar
+                  :name="user.name"
+                  class="mb-4"
+                ></base-avatar>
+                <h1 class="mb-2 font-bold text-2xl">{{ user.name }}</h1>
+                <el-descriptions
+                  border
+                  :title="user.email"
+                  :column="1"
+                >
+                  <el-descriptions-item
+                    label="Type"
+                    label-class-name="w-40"
+                  >
+                    {{ user.type }}
+                  </el-descriptions-item>
+                  <el-descriptions-item label="Department">
+                    {{ user.department }}
+                  </el-descriptions-item>
+                  <el-descriptions-item label="Job Title">
+                    {{ user.job_title }}
+                  </el-descriptions-item>
+                  <el-descriptions-item label="Desk">
+                    {{ user.desk }}
+                  </el-descriptions-item>
+                  <el-descriptions-item label="Location">
+                    {{ user.location.name }} - {{ user.location.country }}
+                  </el-descriptions-item>
+                  <el-descriptions-item label="Company">
+                    {{ user.company }}
+                  </el-descriptions-item>
+                  <el-descriptions-item label="State">
+                    {{ user.state === 1 ? 'On Job' : 'Left' }}
+                  </el-descriptions-item>
+                  <el-descriptions-item label="Permission Level">
+                    {{ user.permission_level }}
+                  </el-descriptions-item>
+                </el-descriptions>
+
+                <div class="flex flex-row flex-nowrap justify-end mt-4">
+                  <base-button
+                    icon-class="fa-solid fa-pen-to-square"
+                    type="primary"
+                  >
+                    Update
+                  </base-button>
+                </div>
+              </template>
+              <!-- User profile end -->
+
+              <!-- User profile skeleton -->
+              <template v-else>
+                <el-skeleton
+                  animated
+                  style="--el-skeleton-circle-size: 2.25rem"
+                >
+                  <template #template>
+                    <el-skeleton-item
+                      variant="circle"
+                      style="width: 36px"
+                    ></el-skeleton-item>
+                  </template>
+                </el-skeleton>
+                <el-skeleton :rows="7"></el-skeleton>
+              </template>
+              <!-- User profile skeleton end -->
             </el-main>
           </el-aside>
           <el-container class="h-full overflow-y-auto">
@@ -23,13 +87,8 @@
           </el-container>
         </template>
 
-        <template v-else>
-          <el-main
-            v-if="!loading"
-            class="text-center"
-          >
-            User not found
-          </el-main>
+        <template v-if="!loading && !user">
+          <el-main class="text-center"> User not found </el-main>
         </template>
       </el-container>
     </template>
@@ -40,12 +99,13 @@
 import { defineComponent, ref } from 'vue'
 import apis from '@/http/apis'
 import UserShowHeader from '@/components/modules/user/user-show-header.vue'
-import UserProfile from '@/components/modules/user/user-profile.vue'
 import { useRoute } from 'vue-router'
 import TheMainContent from '@/components/layouts/the-main-content.vue'
+import BaseAvatar from '@/components/base/base-avatar.vue'
+import BaseButton from '@/components/base/base-button.vue'
 
 export default defineComponent({
-  components: { TheMainContent, UserProfile, UserShowHeader },
+  components: { BaseButton, BaseAvatar, TheMainContent, UserShowHeader },
   name: 'user-show-view',
   props: {},
   setup() {

@@ -174,7 +174,7 @@
   <div v-show="loading">
     <el-skeleton
       :count="9"
-      loading
+      animated
     >
       <template #template>
         <el-skeleton-item

@@ -31,7 +31,7 @@
     ></el-table-column>
     <el-table-column
       property="job_title"
-      label="Position"
+      label="Job Title"
       width="250"
     ></el-table-column>
     <el-table-column
