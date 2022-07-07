@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="flex w-full mb-4">
+    <div class="flex w-full mb-2">
       <div class="flex items-center">
         <base-search-bar
           placeholder="Type a name to search"

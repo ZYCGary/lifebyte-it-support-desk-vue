@@ -1,5 +1,5 @@
 <template>
-  <el-header class="flex flex-row flex-nowrap items-center border-b py-2 bg-blue-400">
+  <el-header class="flex flex-row flex-nowrap items-center h-14 bg-blue-400">
     <div>
       <router-link :to="{ name: 'dashboard' }">
         <base-image
