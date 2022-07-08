@@ -1,22 +1,51 @@
 import { reactive } from 'vue'
-import { User } from '@/types/store/user.module.type'
+import { User, UserFilter } from '@/types/store/user.module.type'
 import apis from '@/http/apis'
+import { BasePaginationProps } from '@/types/components.type'
 
 const useUser = () => {
   const loading = reactive({
-    table: false,
-    all: false,
+    collection: false,
     show: false,
     store: false,
     update: false
   })
   const error = reactive({
-    table: false,
-    all: false,
+    collection: false,
     show: false,
     store: false,
     update: false
   })
+
+  const getUserCollection = async (
+    filter?: UserFilter
+  ): Promise<{
+    data: User[]
+    pagination: BasePaginationProps
+  }> => {
+    try {
+      loading.collection = true
+      error.collection = false
+
+      const list = await apis.user.index(filter)
+
+      loading.collection = false
+      error.collection = false
+
+      return {
+        data: list?.data,
+        pagination: {
+          links: list?.links,
+          meta: list?.meta
+        }
+      }
+    } catch (err) {
+      loading.collection = false
+      error.collection = true
+
+      throw err
+    }
+  }
 
   const getUserById = async (id: number): Promise<User> => {
     try {
@@ -53,7 +82,7 @@ const useUser = () => {
       throw err
     }
   }
-  return { loading, error, getUserById, updateUser }
+  return { loading, error, getUserCollection, getUserById, updateUser }
 }
 
 export default useUser

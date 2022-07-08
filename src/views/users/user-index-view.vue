@@ -26,8 +26,8 @@
 
             <user-table
               :data="table.data"
-              :loading="table.loading"
-              :error="table.error"
+              :loading="loading.collection"
+              :error="error.collection"
             ></user-table>
           </div>
         </el-main>
@@ -49,11 +49,11 @@ import UserTable from '@/components/modules/user/user-table.vue'
 import UserListHeader from '@/components/modules/user/user-list-header.vue'
 import TheMainContent from '@/components/layouts/the-main-content.vue'
 import { BasePaginationProps } from '@/types/components.type'
-import apis from '@/http/apis'
 import BaseSearchBar from '@/components/base/base-search-bar.vue'
 import BasePagination from '@/components/base/base-pagination.vue'
 import { User, UserFilter } from '@/types/store/user.module.type'
 import UserListFilter from '@/components/modules/user/user-list-filter.vue'
+import useUser from '@/hooks/useUser'
 
 export default defineComponent({
   components: {
@@ -68,9 +68,9 @@ export default defineComponent({
   name: 'user-index-view',
   props: {},
   setup() {
+    const { loading, error, getUserCollection } = useUser()
+
     const table = reactive({
-      loading: true,
-      error: false,
       data: [] as User[],
       pagination: {
         links: {
@@ -89,7 +89,7 @@ export default defineComponent({
           links: []
         }
       } as BasePaginationProps,
-      filter: reactive<UserFilter>({
+      filter: {
         page: 1,
         name: '',
         email: '',
@@ -101,27 +101,19 @@ export default defineComponent({
         desk: '',
         state: '',
         permission_level: ''
-      })
+      } as UserFilter
     })
 
     const loadTable = (filter?: UserFilter) => {
-      table.loading = true
-      table.error = false
       table.data = []
 
-      apis.user
-        .index(filter)
+      getUserCollection(filter)
         .then((collection) => {
-          table.loading = false
-          table.error = false
           table.data = collection.data
-          table.pagination.links = collection.links
-          table.pagination.meta = collection.meta
+          table.pagination.links = collection.pagination.links
+          table.pagination.meta = collection.pagination.meta
         })
-        .catch(() => {
-          table.loading = false
-          table.error = true
-        })
+        .catch(() => {})
     }
 
     loadTable()
@@ -140,7 +132,7 @@ export default defineComponent({
       loadTable(filter)
     }
 
-    return { table, search, handlePageChange, handleFilter }
+    return { loading, error, table, search, handlePageChange, handleFilter }
   }
 })
 </script>
