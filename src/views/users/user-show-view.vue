@@ -54,12 +54,14 @@
                 </el-descriptions>
 
                 <div class="flex flex-row flex-nowrap justify-end mt-4">
-                  <base-button
-                    icon-class="fa-solid fa-pen-to-square"
-                    type="primary"
-                  >
-                    Update
-                  </base-button>
+                  <router-link :to="{ name: 'user.edit', params: { id: user.id } }">
+                    <base-button
+                      icon-class="fa-solid fa-pen-to-square"
+                      type="primary"
+                    >
+                      Edit
+                    </base-button>
+                  </router-link>
                 </div>
               </template>
               <!-- User profile end -->

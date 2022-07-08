@@ -1,28 +1,32 @@
 import apis from '@/http/apis'
-import { ref } from 'vue'
+import { reactive } from 'vue'
 import { Location } from '@/types/store/location.module.type'
 
-const useLocations = () => {
-  const loading = ref<boolean>(true)
+const useLocation = () => {
+  const loading = reactive({
+    all: false
+  })
 
-  const error = ref<boolean>(false)
+  const error = reactive({
+    all: false
+  })
 
   const getAllLocations = async (): Promise<Location[]> => {
     try {
       const locations = await apis.location.getAllLocations()
-      loading.value = false
-      error.value = false
+      loading.all = false
+      error.all = false
 
       return locations
     } catch (err) {
-      loading.value = false
-      error.value = true
+      loading.all = false
+      error.all = true
 
-      return []
+      throw err
     }
   }
 
   return { loading, error, getAllLocations }
 }
 
-export default useLocations
+export default useLocation

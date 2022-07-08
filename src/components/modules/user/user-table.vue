@@ -40,7 +40,7 @@
       width="120"
     >
       <template #default="scope">
-        <router-link :to="{ name: 'user.show', params: { id: scope.row.id, type: 'update' } }">
+        <router-link :to="{ name: 'user.edit', params: { id: scope.row.id } }">
           <el-tooltip
             content="Update Profile"
             placement="top"

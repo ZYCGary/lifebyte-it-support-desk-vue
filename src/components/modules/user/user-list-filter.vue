@@ -1,27 +1,48 @@
 <template>
   <div class="flex flex-nowrap items-center mb-4">
     <h1 class="flex-1">Filter</h1>
-    <base-button
-      v-show="!loading && !error"
-      icon-class="fa-solid fa-filter"
-      type="primary"
-      :text="false"
-      @click="handleFilter(formRef)"
-    >
-    </base-button>
-    <base-button
-      v-show="!loading && !error"
-      icon-class="fa-solid fa-arrows-rotate"
-      type="info"
-      :text="false"
-      @click="resetFilter(formRef)"
-    >
-    </base-button>
+    <div v-if="!loading.all && !error.all">
+      <base-button
+        icon-class="fa-solid fa-filter"
+        type="primary"
+        :text="false"
+        @click="handleFilter(formRef)"
+      >
+      </base-button>
+      <base-button
+        icon-class="fa-solid fa-arrows-rotate"
+        type="info"
+        :text="false"
+        @click="resetFilter(formRef)"
+      >
+      </base-button>
+    </div>
   </div>
 
-  <div v-show="!loading">
+  <!-- Filter skeleton -->
+  <div v-if="loading.all">
+    <el-skeleton
+      :count="9"
+      animated
+    >
+      <template #template>
+        <el-skeleton-item
+          variant="h3"
+          style="width: 50%"
+        ></el-skeleton-item>
+        <el-skeleton-item
+          variant="button"
+          class="w-full mb-4"
+        ></el-skeleton-item>
+      </template>
+    </el-skeleton>
+  </div>
+  <!-- Filter skeleton end -->
+
+  <!-- Filter form -->
+  <div v-else>
     <el-form
-      v-show="!error"
+      v-if="!error.all"
       ref="formRef"
       :model="form.data"
       label-position="top"
@@ -169,31 +190,15 @@
       </el-form-item>
     </el-form>
 
-    <div v-show="error">Failed to load filter.</div>
+    <div v-show="error.all">Failed to load filter.</div>
   </div>
-  <div v-show="loading">
-    <el-skeleton
-      :count="9"
-      animated
-    >
-      <template #template>
-        <el-skeleton-item
-          variant="h3"
-          style="width: 50%"
-        ></el-skeleton-item>
-        <el-skeleton-item
-          variant="button"
-          class="w-full mb-4"
-        ></el-skeleton-item>
-      </template>
-    </el-skeleton>
-  </div>
+  <!-- Filter form end -->
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType, reactive, ref } from 'vue'
 import { UserFilter } from '@/types/store/user.module.type'
-import useLocations from '@/hooks/useLocations'
+import useLocation from '@/hooks/useLocation'
 import { Location } from '@/types/store/location.module.type'
 import BaseButton from '@/components/base/base-button.vue'
 import { FormInstance } from 'element-plus/es'
@@ -211,7 +216,7 @@ export default defineComponent({
   setup: (props, { emit }) => {
     const formRef = ref()
 
-    const { loading, error, getAllLocations } = useLocations()
+    const { loading, error, getAllLocations } = useLocation()
 
     const form = reactive({
       data: { ...props.filter } as UserFilter,

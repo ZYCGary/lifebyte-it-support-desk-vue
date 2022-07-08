@@ -6,8 +6,8 @@ export interface User {
   name: string
   email: string
   company: string
-  department: string | null
-  job_title: string | null
+  department: string
+  job_title: string
   location: {
     id: number
     name: string
