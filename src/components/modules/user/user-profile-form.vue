@@ -262,7 +262,7 @@ export default defineComponent({
 
     const createUser = () => {
       apis.user
-        .createUser({ ...profile, password: 'password' })
+        .store({ ...profile, password: 'password' })
         .then((newUser) => {
           form.submitting = false
 
@@ -294,7 +294,7 @@ export default defineComponent({
 
     const updateUser = () => {
       apis.user
-        .updateUser(props.user.id, { ...profile })
+        .update(props.user.id, { ...profile })
         .then(() => {
           form.submitting = false
 

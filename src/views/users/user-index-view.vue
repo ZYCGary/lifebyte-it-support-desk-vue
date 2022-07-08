@@ -110,7 +110,7 @@ export default defineComponent({
       table.data = []
 
       apis.user
-        .getUserCollection(filter)
+        .index(filter)
         .then((collection) => {
           table.loading = false
           table.error = false

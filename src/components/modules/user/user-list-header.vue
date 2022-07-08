@@ -102,7 +102,7 @@ export default defineComponent({
 
     const handleExportClick = () => {
       apis.user
-        .exportUsers()
+        .export()
         .then((file) => {
           const url = window.URL.createObjectURL(new Blob([file]))
           const link = document.createElement('a')

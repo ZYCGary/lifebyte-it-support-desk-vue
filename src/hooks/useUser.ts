@@ -23,7 +23,7 @@ const useUser = () => {
       loading.show = true
       error.show = false
 
-      const response = await apis.user.getUser(id)
+      const response = await apis.user.show(id)
 
       loading.show = false
       error.show = false
@@ -42,7 +42,7 @@ const useUser = () => {
       loading.update = true
       error.update = false
 
-      await apis.user.updateUser(id, payload)
+      await apis.user.update(id, payload)
 
       loading.update = false
       error.update = false

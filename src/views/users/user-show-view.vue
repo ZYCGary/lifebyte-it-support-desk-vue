@@ -119,7 +119,7 @@ export default defineComponent({
 
     if (id) {
       apis.user
-        .getUser(id)
+        .show(id)
         .then((response) => {
           user.value = response.data
           loading.value = false
