@@ -47,7 +47,6 @@
             >
               <base-button
                 icon-class="fa-solid fa-user"
-                type="primary"
                 :text="false"
               >
               </base-button>
@@ -61,7 +60,7 @@
           >
             <base-button
               icon-class="fa-solid fa-pen-to-square"
-              type="success"
+              type="primary"
               :text="false"
               @click="showUpdateDialog(scope.row.id)"
             >
@@ -78,7 +77,7 @@
 
   <!-- User profile update dialog -->
   <el-dialog
-    v-model="updateDialogVisible"
+    v-model="updateUserDialogVisible"
     title="Update User"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
@@ -87,7 +86,7 @@
   >
     <user-profile-update-form
       :user-id="clickedUserId"
-      @cancel="updateDialogVisible = false"
+      @cancel="updateUserDialogVisible = false"
       @updated="handleUserUpdated"
     ></user-profile-update-form>
   </el-dialog>
@@ -119,20 +118,20 @@ export default defineComponent({
   },
   emits: ['userUpdated'],
   setup: (props, { emit }) => {
-    const updateDialogVisible = ref<boolean>(false)
+    const updateUserDialogVisible = ref<boolean>(false)
     const clickedUserId = ref<number>(0)
 
     const showUpdateDialog = (userId: number) => {
       clickedUserId.value = userId
-      updateDialogVisible.value = true
+      updateUserDialogVisible.value = true
     }
 
     const handleUserUpdated = () => {
-      updateDialogVisible.value = false
+      updateUserDialogVisible.value = false
       emit('userUpdated')
     }
 
-    return { updateDialogVisible, clickedUserId, showUpdateDialog, handleUserUpdated }
+    return { updateUserDialogVisible, clickedUserId, showUpdateDialog, handleUserUpdated }
   }
 })
 </script>

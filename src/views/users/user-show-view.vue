@@ -1,135 +1,171 @@
 <template>
   <the-main-content>
     <template #header>
-      <user-show-header :user="user"></user-show-header>
+      <div class="flex flex-row flex-nowrap items-center">
+        <h1>User Detail</h1>
+        <div class="flex flex-1 justify-end">
+          <base-button
+            icon-class="fa-solid fa-right-from-bracket"
+            type="warning"
+          >
+            Dismiss
+          </base-button>
+        </div>
+      </div>
     </template>
 
     <template #content>
       <el-container class="h-full">
-        <template v-if="loading || user">
-          <el-aside
-            width="30%"
-            class="h-full border-r"
-          >
-            <el-main>
-              <!-- User profile -->
-              <template v-if="user">
-                <base-avatar
-                  :name="user.name"
-                  class="mb-4"
-                ></base-avatar>
-                <h1 class="mb-2 font-bold text-2xl">{{ user.name }}</h1>
-                <el-descriptions
-                  border
-                  :title="user.email"
-                  :column="1"
-                >
-                  <el-descriptions-item
-                    label="Type"
-                    label-class-name="w-40"
-                  >
-                    {{ user.type }}
-                  </el-descriptions-item>
-                  <el-descriptions-item label="Department">
-                    {{ user.department }}
-                  </el-descriptions-item>
-                  <el-descriptions-item label="Job Title">
-                    {{ user.job_title }}
-                  </el-descriptions-item>
-                  <el-descriptions-item label="Desk">
-                    {{ user.desk }}
-                  </el-descriptions-item>
-                  <el-descriptions-item label="Location">
-                    {{ user.location.name }} - {{ user.location.country }}
-                  </el-descriptions-item>
-                  <el-descriptions-item label="Company">
-                    {{ user.company }}
-                  </el-descriptions-item>
-                  <el-descriptions-item label="State">
-                    {{ user.state === 1 ? 'On Job' : 'Left' }}
-                  </el-descriptions-item>
-                  <el-descriptions-item label="Permission Level">
-                    {{ user.permission_level }}
-                  </el-descriptions-item>
-                </el-descriptions>
+        <el-main>
+          <!-- User profile skeleton -->
+          <template v-if="loading.show">
+            <el-skeleton
+              animated
+              style="--el-skeleton-circle-size: 2.25rem"
+            >
+              <template #template>
+                <el-skeleton-item
+                  variant="circle"
+                  style="width: 36px"
+                ></el-skeleton-item>
+              </template>
+            </el-skeleton>
+            <el-skeleton :rows="7"></el-skeleton>
+          </template>
+          <!-- User profile skeleton end -->
 
-                <div class="flex flex-row flex-nowrap justify-end mt-4">
-                  <router-link :to="{ name: 'user.edit', params: { id: user.id } }">
+          <template v-else>
+            <template v-if="!error.show && user">
+              <div class="flex flex-row flex-nowrap items-center mb-8">
+                <base-avatar :name="user.name"></base-avatar>
+                <h1 class="mx-4 font-bold text-2xl">
+                  {{ user.name }}
+                  <span class="font-normal text-lg">({{ user.email }})</span>
+                </h1>
+              </div>
+
+              <el-tabs v-model="activeTab">
+                <!-- User profile -->
+                <el-tab-pane
+                  label="Profile"
+                  name="profile"
+                >
+                  <el-descriptions
+                    border
+                    :column="2"
+                  >
+                    <el-descriptions-item label="Type">
+                      {{ user.type }}
+                    </el-descriptions-item>
+                    <el-descriptions-item label="Department">
+                      {{ user.department }}
+                    </el-descriptions-item>
+                    <el-descriptions-item label="Job Title">
+                      {{ user.job_title }}
+                    </el-descriptions-item>
+                    <el-descriptions-item label="Desk">
+                      {{ user.desk }}
+                    </el-descriptions-item>
+                    <el-descriptions-item label="Location">
+                      {{ user.location.name }} - {{ user.location.country }}
+                    </el-descriptions-item>
+                    <el-descriptions-item label="Company">
+                      {{ user.company }}
+                    </el-descriptions-item>
+                    <el-descriptions-item label="State">
+                      {{ user.state === 1 ? 'On Job' : 'Left' }}
+                    </el-descriptions-item>
+                    <el-descriptions-item label="Permission Level">
+                      {{ user.permission_level }}
+                    </el-descriptions-item>
+                  </el-descriptions>
+
+                  <div class="flex flex-row flex-nowrap justify-end mt-4">
                     <base-button
                       icon-class="fa-solid fa-pen-to-square"
                       type="primary"
+                      @click="updateUserDialogVisible = true"
                     >
                       Edit
                     </base-button>
-                  </router-link>
-                </div>
-              </template>
-              <!-- User profile end -->
+                  </div>
+                </el-tab-pane>
+                <!-- User profile end -->
+              </el-tabs>
+            </template>
 
-              <!-- User profile skeleton -->
-              <template v-else>
-                <el-skeleton
-                  animated
-                  style="--el-skeleton-circle-size: 2.25rem"
-                >
-                  <template #template>
-                    <el-skeleton-item
-                      variant="circle"
-                      style="width: 36px"
-                    ></el-skeleton-item>
-                  </template>
-                </el-skeleton>
-                <el-skeleton :rows="7"></el-skeleton>
-              </template>
-              <!-- User profile skeleton end -->
-            </el-main>
-          </el-aside>
-          <el-container class="h-full overflow-y-auto">
-            <el-main> Assets </el-main>
-          </el-container>
-        </template>
-
-        <template v-if="!loading && !user">
-          <el-main class="text-center"> User not found </el-main>
-        </template>
+            <template v-else>
+              <div class="text-center">User not found</div>
+            </template>
+          </template>
+        </el-main>
       </el-container>
     </template>
   </the-main-content>
+
+  <!-- User profile update dialog -->
+  <el-dialog
+    v-model="updateUserDialogVisible"
+    title="Update User"
+    :close-on-click-modal="false"
+    :close-on-press-escape="false"
+    :show-close="false"
+    :destroy-on-close="true"
+  >
+    <user-profile-update-form
+      :user-id="userId"
+      @cancel="updateUserDialogVisible = false"
+      @updated="handleUserUpdated"
+    ></user-profile-update-form>
+  </el-dialog>
+  <!-- User profile update dialog end -->
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
-import apis from '@/http/apis'
-import UserShowHeader from '@/components/modules/user/user-show-header.vue'
 import { useRoute } from 'vue-router'
 import TheMainContent from '@/components/layouts/the-main-content.vue'
 import BaseAvatar from '@/components/base/base-avatar.vue'
 import BaseButton from '@/components/base/base-button.vue'
+import useUser from '@/hooks/useUser'
+import { ElMessage } from 'element-plus/es'
+import { User } from '@/types/store/user.module.type'
+import UserProfileUpdateForm from '@/components/modules/user/user-profile-update-form.vue'
 
 export default defineComponent({
-  components: { BaseButton, BaseAvatar, TheMainContent, UserShowHeader },
+  components: { UserProfileUpdateForm, BaseButton, BaseAvatar, TheMainContent },
   name: 'user-show-view',
   props: {},
   setup() {
     const route = useRoute()
+    const userId = parseInt(route.params.id as string)
 
-    const id = parseInt(route.params.id as string)
-    const user = ref(null)
-    const loading = ref(true)
-
-    if (id) {
-      apis.user
-        .show(id)
-        .then((response) => {
-          user.value = response.data
-          loading.value = false
+    const user = ref<null | User>(null)
+    const { loading, error, getUserById } = useUser()
+    const loadUser = () => {
+      getUserById(userId)
+        .then((res) => {
+          user.value = res
         })
         .catch(() => {
-          loading.value = false
+          ElMessage({
+            type: 'error',
+            message: 'Failed to get user details.'
+          })
         })
     }
 
-    return { user, loading }
+    const activeTab = ref<string>('profile')
+
+    const updateUserDialogVisible = ref<boolean>(false)
+    const handleUserUpdated = () => {
+      updateUserDialogVisible.value = false
+      loadUser()
+    }
+
+    loadUser()
+
+    return { loading, error, user, userId, activeTab, updateUserDialogVisible, handleUserUpdated }
   }
 })
 </script>
