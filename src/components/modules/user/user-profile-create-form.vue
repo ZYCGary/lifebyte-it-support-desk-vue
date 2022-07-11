@@ -161,9 +161,9 @@
               icon-class="fa-solid fa-check"
               type="success"
               :loading="form.submitting"
-              @click="handleUpdate(formRef)"
+              @click="handleCreate(formRef)"
             >
-              Update
+              Save
             </base-button>
             <base-button
               icon-class="fa-solid fa-ban"
@@ -183,22 +183,18 @@
 
 <script lang="ts">
 import { defineComponent, reactive, ref } from 'vue'
-import { ElMessage, ElMessageBox, FormInstance } from 'element-plus/es'
+import { ElMessage, ElMessageBox } from 'element-plus/es'
 import useUser from '@/hooks/useUser'
 import useLocation from '@/hooks/useLocation'
 import { Location } from '@/types/store/location.module.type'
 import BaseButton from '@/components/base/base-button.vue'
+import { FormInstance } from 'element-plus'
 
 export default defineComponent({
-  name: 'user-profile-update-form',
+  name: 'user-profile-create-form',
   components: { BaseButton },
-  props: {
-    userId: {
-      required: true,
-      type: Number
-    }
-  },
-  emits: ['cancel', 'updated'],
+  props: {},
+  emits: ['cancel', 'created'],
   setup: (props, { emit }) => {
     const formRef = ref()
 
@@ -211,10 +207,10 @@ export default defineComponent({
         department: '',
         job_title: '',
         desk: '',
-        location_id: '' as string | number,
+        location_id: 1 as string | number,
         company: '',
-        state: '' as string | number,
-        permission_level: '' as string | number
+        state: 1 as string | number,
+        permission_level: 0 as string | number
       },
       companyOptions: [
         { label: 'LifeByte', value: 'LifeByte' },
@@ -256,58 +252,37 @@ export default defineComponent({
       }
     })
 
-    const { loading: loadingUser, error: userError, getUserById, updateUser } = useUser()
-    getUserById(props.userId)
-      .then((user) => {
-        form.data.name = user.name
-        form.data.email = user.email
-        form.data.type = user.type
-        form.data.department = user.department
-        form.data.job_title = user.job_title
-        form.data.desk = user.desk
-        form.data.location_id = user.location.id
-        form.data.company = user.company
-        form.data.state = user.state
-        form.data.permission_level = user.permission_level
-      })
-      .catch(() => {
-        ElMessage({
-          type: 'error',
-          message: 'User not found.'
-        })
-
-        emit('cancel')
-      })
+    const { loading: loadingUser, error: userError, createUser } = useUser()
 
     const { loading: loadingLocation, error: locationError, getAllLocations } = useLocation()
     getAllLocations().then((locations) => {
       form.locationOptions = locations
     })
 
-    const handleUpdate = (formEl: FormInstance | undefined) => {
+    const handleCreate = (formEl: FormInstance | undefined) => {
       if (!formEl) return
 
       formEl.validate((valid) => {
         if (valid) {
           form.submitting = true
 
-          updateUser(props.userId, form.data)
-            .then(() => {
+          createUser(form.data)
+            .then((user) => {
               form.submitting = false
 
               ElMessage({
                 type: 'success',
-                message: 'Update user profile successfully.'
+                message: 'Create a user successfully.'
               })
 
-              emit('updated')
+              emit('created', user.id)
             })
             .catch(() => {
               form.submitting = false
 
               ElMessage({
                 type: 'error',
-                message: 'Failed to update user profile.'
+                message: 'Failed to create the user.'
               })
             })
         }
@@ -327,7 +302,7 @@ export default defineComponent({
         .catch(() => {})
     }
 
-    return { formRef, form, loadingUser, userError, loadingLocation, locationError, handleUpdate, handleCancel }
+    return { formRef, form, loadingUser, userError, loadingLocation, locationError, handleCreate, handleCancel }
   }
 })
 </script>

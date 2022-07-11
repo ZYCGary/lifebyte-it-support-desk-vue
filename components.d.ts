@@ -72,6 +72,7 @@ declare module '@vue/runtime-core' {
     UserListFilter: typeof import('./src/components/modules/user/user-list-filter.vue')['default']
     UserListHeader: typeof import('./src/components/modules/user/user-list-header.vue')['default']
     UserProfile: typeof import('./src/components/modules/user/user-profile.vue')['default']
+    UserProfileCreateForm: typeof import('./src/components/modules/user/user-profile-create-form.vue')['default']
     UserProfileForm: typeof import('./src/components/modules/user/user-profile-form.vue')['default']
     UserProfileUpdate: typeof import('./src/components/modules/user/user-profile-update-form.vue')['default']
     UserProfileUpdateForm: typeof import('./src/components/modules/user/user-profile-update-form.vue')['default']

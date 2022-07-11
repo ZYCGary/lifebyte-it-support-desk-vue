@@ -82,7 +82,27 @@ const useUser = () => {
       throw err
     }
   }
-  return { loading, error, getUserCollection, getUserById, updateUser }
+
+  const createUser = async (payload: object): Promise<User> => {
+    try {
+      loading.store = true
+      error.store = false
+
+      const user = await apis.user.store(payload)
+
+      loading.store = false
+      error.store = false
+
+      return user
+    } catch (err) {
+      loading.store = false
+      error.store = true
+
+      throw err
+    }
+  }
+
+  return { loading, error, getUserCollection, getUserById, updateUser, createUser }
 }
 
 export default useUser

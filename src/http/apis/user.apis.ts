@@ -14,7 +14,7 @@ const userApis = {
   store: async (payload: any) => {
     const response = await requests.post('/api/v1/users', payload)
 
-    return response?.data
+    return response?.data?.data
   },
   update: async (id: number, payload: any) => {
     await requests.put(`/api/v1/users/${id}`, payload)

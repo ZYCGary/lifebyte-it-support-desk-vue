@@ -1,7 +1,36 @@
 <template>
   <the-main-content>
     <template #header>
-      <user-list-header></user-list-header>
+      <div class="flex flex-row flex-nowrap items-center">
+        <h1>User List</h1>
+        <div class="flex flex-1 justify-end">
+          <el-button
+            type="success"
+            class="mr-4"
+            @click="newUserDialogVisible = true"
+          >
+            <base-icon-text
+              icon-class="fa-solid fa-plus"
+              text="New"
+            ></base-icon-text>
+          </el-button>
+
+          <el-button-group>
+            <el-button @click="handleImportClick">
+              <base-icon-text
+                icon-class="fa-solid fa-file-import"
+                text="import"
+              ></base-icon-text>
+            </el-button>
+            <el-button @click="handleExportClick">
+              <base-icon-text
+                icon-class="fa-solid fa-file-export"
+                text="Export"
+              ></base-icon-text>
+            </el-button>
+          </el-button-group>
+        </div>
+      </div>
     </template>
 
     <template #content>
@@ -41,13 +70,28 @@
       </el-container>
     </template>
   </the-main-content>
+
+  <!-- New user dialog -->
+  <el-dialog
+    v-model="newUserDialogVisible"
+    title="New User"
+    :close-on-click-modal="false"
+    :close-on-press-escape="false"
+    :show-close="false"
+    :destroy-on-close="true"
+  >
+    <user-profile-create-form
+      @cancel="newUserDialogVisible = false"
+      @created="handleUserCreated"
+    ></user-profile-create-form>
+  </el-dialog>
+  <!-- New user dialog end -->
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from 'vue'
+import { defineComponent, reactive, ref } from 'vue'
 import TheRightAside from '@/components/layouts/the-right-aside.vue'
 import UserTable from '@/components/modules/user/user-table.vue'
-import UserListHeader from '@/components/modules/user/user-list-header.vue'
 import TheMainContent from '@/components/layouts/the-main-content.vue'
 import { BasePaginationProps } from '@/types/components.type'
 import BaseSearchBar from '@/components/base/base-search-bar.vue'
@@ -55,14 +99,18 @@ import BasePagination from '@/components/base/base-pagination.vue'
 import { User, UserFilter } from '@/types/store/user.module.type'
 import UserListFilter from '@/components/modules/user/user-list-filter.vue'
 import useUser from '@/hooks/useUser'
+import BaseIconText from '@/components/base/base-icon-text.vue'
+import UserProfileCreateForm from '@/components/modules/user/user-profile-create-form.vue'
+import { useRouter } from 'vue-router'
 
 export default defineComponent({
   components: {
+    UserProfileCreateForm,
+    BaseIconText,
     UserListFilter,
     BasePagination,
     BaseSearchBar,
     TheMainContent,
-    UserListHeader,
     UserTable,
     TheRightAside
   },
@@ -137,7 +185,37 @@ export default defineComponent({
       loadTable(table.filter)
     }
 
-    return { loading, error, table, search, handlePageChange, handleFilter, handleUserUpdated }
+    const newUserDialogVisible = ref<boolean>(false)
+
+    const router = useRouter()
+
+    const handleUserCreated = (userId: number) => {
+      router.push({ name: 'user.show', params: { id: userId } })
+    }
+
+    const handleImportClick = () => {
+      // TODO: user import
+      console.log('import')
+    }
+
+    const handleExportClick = () => {
+      // TODO: user export
+      console.log('export')
+    }
+
+    return {
+      loading,
+      error,
+      table,
+      search,
+      handlePageChange,
+      handleFilter,
+      handleUserUpdated,
+      handleUserCreated,
+      newUserDialogVisible,
+      handleImportClick,
+      handleExportClick
+    }
   }
 })
 </script>
