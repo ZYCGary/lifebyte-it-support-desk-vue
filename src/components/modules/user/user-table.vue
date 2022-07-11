@@ -6,8 +6,6 @@
     fit
     lazy
     class="overflow-auto w-auto max-h-full"
-    row-class-name="cursor-pointer"
-    @row-click="handleRowClick"
   >
     <el-table-column
       type="selection"
@@ -40,20 +38,36 @@
       width="120"
     >
       <template #default="scope">
-        <router-link :to="{ name: 'user.edit', params: { id: scope.row.id } }">
+        <div class="flex flex-row flex-nowrap gap-x-2">
+          <router-link :to="{ name: 'user.show', params: { id: scope.row.id } }">
+            <el-tooltip
+              content="Profile"
+              placement="top"
+              :show-after="500"
+            >
+              <base-button
+                icon-class="fa-solid fa-user"
+                type="primary"
+                :text="false"
+              >
+              </base-button>
+            </el-tooltip>
+          </router-link>
+
           <el-tooltip
-            content="Update Profile"
+            content="Edit"
             placement="top"
             :show-after="500"
           >
             <base-button
               icon-class="fa-solid fa-pen-to-square"
-              type="primary"
+              type="success"
               :text="false"
+              @click="showUpdateDialog(scope.row.id)"
             >
             </base-button>
           </el-tooltip>
-        </router-link>
+        </div>
       </template>
     </el-table-column>
 
@@ -61,17 +75,34 @@
       {{ loading ? 'Loading data...' : error ? 'Failed to load data' : 'No data' }}
     </template>
   </el-table>
+
+  <!-- User profile update dialog -->
+  <el-dialog
+    v-model="updateDialogVisible"
+    title="Update User"
+    :close-on-click-modal="false"
+    :close-on-press-escape="false"
+    :show-close="false"
+    :destroy-on-close="true"
+  >
+    <user-profile-update-form
+      :user-id="clickedUserId"
+      @cancel="updateDialogVisible = false"
+      @updated="handleUserUpdated"
+    ></user-profile-update-form>
+  </el-dialog>
+  <!-- User profile update dialog end -->
 </template>
 
 <script lang="ts">
-import { PropType } from 'vue'
+import { defineComponent, PropType, ref } from 'vue'
 import BaseButton from '@/components/base/base-button.vue'
 import { User } from '@/types/store/user.module.type'
-import { useRouter } from 'vue-router'
+import UserProfileUpdateForm from '@/components/modules/user/user-profile-update-form.vue'
 
-export default {
+export default defineComponent({
   name: 'user-table',
-  components: { BaseButton },
+  components: { UserProfileUpdateForm, BaseButton },
   props: {
     data: {
       required: true,
@@ -86,16 +117,24 @@ export default {
       type: Boolean
     }
   },
-  setup: () => {
-    const router = useRouter()
+  emits: ['userUpdated'],
+  setup: (props, { emit }) => {
+    const updateDialogVisible = ref<boolean>(false)
+    const clickedUserId = ref<number>(0)
 
-    const handleRowClick = (row: User) => {
-      router.push({ name: 'user.show', params: { id: row.id } })
+    const showUpdateDialog = (userId: number) => {
+      clickedUserId.value = userId
+      updateDialogVisible.value = true
     }
 
-    return { handleRowClick }
+    const handleUserUpdated = () => {
+      updateDialogVisible.value = false
+      emit('userUpdated')
+    }
+
+    return { updateDialogVisible, clickedUserId, showUpdateDialog, handleUserUpdated }
   }
-}
+})
 </script>
 
 <style scoped></style>

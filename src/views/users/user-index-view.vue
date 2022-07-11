@@ -28,6 +28,7 @@
               :data="table.data"
               :loading="loading.collection"
               :error="error.collection"
+              @user-updated="handleUserUpdated"
             ></user-table>
           </div>
         </el-main>
@@ -132,7 +133,11 @@ export default defineComponent({
       loadTable(filter)
     }
 
-    return { loading, error, table, search, handlePageChange, handleFilter }
+    const handleUserUpdated = () => {
+      loadTable(table.filter)
+    }
+
+    return { loading, error, table, search, handlePageChange, handleFilter, handleUserUpdated }
   }
 })
 </script>

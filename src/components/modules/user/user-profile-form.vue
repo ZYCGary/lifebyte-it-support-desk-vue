@@ -183,8 +183,9 @@ export default defineComponent({
     const profile = reactive({ ...props.user })
 
     const form = reactive({
-      loading: true,
-      show: false,
+      loading: false,
+      error: false,
+      submitting: false,
       companyOptions: [
         { label: 'LifeByte', value: 'LifeByte' },
         { label: 'TMGM', value: 'TMGM' }
@@ -204,8 +205,7 @@ export default defineComponent({
         { label: '0', value: 0 },
         { label: '1', value: 1 },
         { label: '2', value: 2 }
-      ],
-      submitting: false
+      ]
     })
 
     const rules = {

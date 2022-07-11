@@ -1,7 +1,7 @@
 <template>
   <section class="relative flex flex-col h-full">
     <template v-if="header">
-      <div class="sticky z-10 top-0 grid items-center h-12 border-b px-5">
+      <div class="sticky top-0 grid items-center h-12 border-b px-5">
         <slot name="header"></slot>
       </div>
     </template>
