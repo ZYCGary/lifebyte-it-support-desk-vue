@@ -48,6 +48,8 @@
                 :total="table.pagination.meta.total"
                 :page-size="table.pagination.meta.per_page"
                 :current-page="table.pagination.meta.current_page"
+                :from="table.pagination.meta.from"
+                :to="table.pagination.meta.to"
                 @current-change="handlePageChange"
               />
             </div>
