@@ -16,7 +16,7 @@ const authApis = {
   },
 
   logout: async () => {
-    await http.post('/api/v1/logout')
+    await http.post('/logout')
   }
 }
 

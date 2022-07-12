@@ -1,173 +1,139 @@
 <template>
-  <div>
-    <div class="flex w-full mb-4">
-      <div class="flex items-center">
-        <base-search-bar
-          placeholder="Type a name to search"
-          v-model:searchValue="searchValue"
-          @search="search"
-        ></base-search-bar>
-      </div>
-      <div class="flex flex-1 flex-nowrap justify-end items-center">
-        <base-pagination
-          :total="pagination.total"
-          :page-size="pagination.page_size"
-          :current-page="pagination.current_page"
-          @current-change="handlePageChange"
-        />
-      </div>
-    </div>
-
-    <el-table
-      :data="table.collection.data"
-      border
-      flexible
-      fit
-      lazy
-      class="overflow-auto w-auto max-h-full"
-      row-class-name="cursor-pointer"
-      @row-click="handleRowClick"
+  <el-table
+    :data="data"
+    border
+    flexible
+    fit
+    lazy
+    class="overflow-auto w-auto max-h-full"
+  >
+    <el-table-column
+      type="selection"
+      width="55"
+    ></el-table-column>
+    <el-table-column
+      property="name"
+      label="Name"
+      width="250"
+      fixed
+    ></el-table-column>
+    <el-table-column
+      property="email"
+      label="Email"
+      width="300"
+    ></el-table-column>
+    <el-table-column
+      property="department"
+      label="Department"
+      min-width="200"
+    ></el-table-column>
+    <el-table-column
+      property="job_title"
+      label="Job Title"
+      min-width="250"
+    ></el-table-column>
+    <el-table-column
+      fixed="right"
+      label="Operations"
+      width="140"
     >
-      <el-table-column
-        type="selection"
-        width="55"
-      ></el-table-column>
-      <el-table-column
-        property="name"
-        label="Name"
-        width="250"
-        fixed
-      ></el-table-column>
-      <el-table-column
-        property="email"
-        label="Email"
-        width="300"
-      ></el-table-column>
-      <el-table-column
-        property="department"
-        label="Department"
-        width="200"
-      ></el-table-column>
-      <el-table-column
-        property="job_title"
-        label="Position"
-        width="250"
-      ></el-table-column>
-      <el-table-column
-        fixed="right"
-        label="Operations"
-        width="120"
-      >
-        <template #default="scope">
-          <router-link :to="{ name: 'user.show', params: { id: scope.row.id, type: 'update' } }">
+      <template #default="scope">
+        <div class="flex flex-row flex-nowrap gap-x-2">
+          <router-link :to="{ name: 'user.show', params: { id: scope.row.id } }">
             <el-tooltip
-              content="View detail"
+              content="Profile"
               placement="top"
               :show-after="500"
             >
               <base-button
-                icon-class="fa-solid fa-pen-to-square"
-                type="primary"
+                icon-class="fa-solid fa-user"
                 :text="false"
               >
               </base-button>
             </el-tooltip>
           </router-link>
-        </template>
-      </el-table-column>
 
-      <template #empty>
-        {{ table.loading ? 'Loading data...' : table.error ? 'Failed to load data' : 'No data' }}
+          <el-tooltip
+            content="Edit"
+            placement="top"
+            :show-after="500"
+          >
+            <base-button
+              icon-class="fa-solid fa-pen-to-square"
+              type="primary"
+              :text="false"
+              @click="showUpdateDialog(scope.row.id)"
+            >
+            </base-button>
+          </el-tooltip>
+        </div>
       </template>
-    </el-table>
-  </div>
+    </el-table-column>
+
+    <template #empty>
+      {{ loading ? 'Loading data...' : error ? 'Failed to load data' : 'No data' }}
+    </template>
+  </el-table>
+
+  <!-- User profile update dialog -->
+  <el-dialog
+    v-model="updateUserDialogVisible"
+    title="Update User"
+    :close-on-click-modal="false"
+    :close-on-press-escape="false"
+    :show-close="false"
+    :destroy-on-close="true"
+  >
+    <user-profile-update-form
+      :user-id="clickedUserId"
+      @cancel="updateUserDialogVisible = false"
+      @updated="handleUserUpdated"
+    ></user-profile-update-form>
+  </el-dialog>
+  <!-- User profile update dialog end -->
 </template>
 
 <script lang="ts">
-import apis from '@/http/apis'
-import { computed, reactive, ref } from 'vue'
-import BasePagination from '@/components/base/base-pagination.vue'
-import BaseSearchBar from '@/components/base/base-search-bar.vue'
+import { defineComponent, PropType, ref } from 'vue'
 import BaseButton from '@/components/base/base-button.vue'
 import { User } from '@/types/store/user.module.type'
-import { useRouter } from 'vue-router'
+import UserProfileUpdateForm from '@/components/modules/user/user-profile-update-form.vue'
 
-export default {
+export default defineComponent({
   name: 'user-table',
-  components: { BaseButton, BaseSearchBar, BasePagination },
-  setup: () => {
-    const table = reactive({
-      loading: true,
-      error: false,
-      collection: {
-        data: [] as User[],
-        links: {
-          first: null,
-          last: null,
-          next: null,
-          prev: null
-        },
-        meta: {
-          current_page: 1,
-          per_page: 15,
-          last_page: 1,
-          total: 0,
-          from: 0,
-          to: 0,
-          links: []
-        }
-      }
-    })
+  components: { UserProfileUpdateForm, BaseButton },
+  props: {
+    data: {
+      required: true,
+      type: Array as PropType<User[]>
+    },
+    loading: {
+      required: true,
+      type: Boolean
+    },
+    error: {
+      required: true,
+      type: Boolean
+    }
+  },
+  emits: ['userUpdated'],
+  setup: (props, { emit }) => {
+    const updateUserDialogVisible = ref<boolean>(false)
+    const clickedUserId = ref<number>(0)
 
-    const pagination = reactive({
-      total: computed(() => table.collection.meta.total),
-      page_size: computed(() => table.collection.meta.per_page),
-      current_page: computed(() => table.collection.meta.current_page)
-    })
-
-    const searchValue = ref('')
-
-    const loadTable = (param?: { page?: number; name?: string }) => {
-      table.loading = true
-      table.error = false
-      table.collection.data = []
-
-      apis.user
-        .getUserCollection(param)
-        .then((response) => {
-          table.loading = false
-          table.error = false
-          table.collection = {
-            data: response.data,
-            links: response.links,
-            meta: response.meta
-          }
-        })
-        .catch(() => {
-          table.loading = false
-          table.error = true
-        })
+    const showUpdateDialog = (userId: number) => {
+      clickedUserId.value = userId
+      updateUserDialogVisible.value = true
     }
 
-    loadTable()
-
-    const handlePageChange = (page: number) => {
-      loadTable({ page: page, name: searchValue.value || '' })
+    const handleUserUpdated = () => {
+      updateUserDialogVisible.value = false
+      emit('userUpdated')
     }
 
-    const search = () => {
-      loadTable({ page: 1, name: searchValue.value || '' })
-    }
-
-    const router = useRouter()
-
-    const handleRowClick = (row: User) => {
-      router.push({ name: 'user.show', params: { id: row.id } })
-    }
-
-    return { table, pagination, handlePageChange, search, searchValue, handleRowClick }
+    return { updateUserDialogVisible, clickedUserId, showUpdateDialog, handleUserUpdated }
   }
-}
+})
 </script>
 
 <style scoped></style>

@@ -1,5 +1,5 @@
 <template>
-  <el-aside class="border-l">
+  <el-aside class="min-h-full border-l">
     <el-main>
       <slot></slot>
     </el-main>

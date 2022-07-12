@@ -1,11 +1,13 @@
 <template>
   <el-pagination
-    layout="prev, pager, next"
+    layout="slot, prev, pager, next"
     :total="total"
     :page-size="pageSize"
     :current-page="currentPage"
     @current-change="handleCurrentChange"
-  />
+  >
+    <span class="mx-4">Showing {{ from }} to {{ to }} of {{ total }} entities</span>
+  </el-pagination>
 </template>
 
 <script lang="ts">
@@ -23,6 +25,14 @@ export default defineComponent({
       type: Number
     },
     currentPage: {
+      required: true,
+      type: Number
+    },
+    from: {
+      required: true,
+      type: Number
+    },
+    to: {
       required: true,
       type: Number
     }

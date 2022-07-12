@@ -436,7 +436,7 @@ export default defineComponent({
     }
 
     apis.user
-      .getUserCollection({ pagination: false })
+      .index({ pagination: false })
       .then((response) => {
         form.loading = false
         form.show = true
