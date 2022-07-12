@@ -94,6 +94,13 @@
                   </div>
                 </el-tab-pane>
                 <!-- User profile end -->
+
+                <el-tab-pane
+                  :label="`Hardware (${user.hardware.length})`"
+                  name="hardware"
+                >
+                  <user-hardware-table :data="user.hardware"></user-hardware-table>
+                </el-tab-pane>
               </el-tabs>
             </template>
 
@@ -134,9 +141,10 @@ import useUser from '@/hooks/useUser'
 import { ElMessage, ElMessageBox } from 'element-plus/es'
 import { User } from '@/types/store/user.module.type'
 import UserProfileUpdateForm from '@/components/modules/user/user-profile-update-form.vue'
+import UserHardwareTable from '@/components/modules/user/user-hardware-table.vue'
 
 export default defineComponent({
-  components: { UserProfileUpdateForm, BaseButton, BaseAvatar, TheMainContent },
+  components: { UserHardwareTable, UserProfileUpdateForm, BaseButton, BaseAvatar, TheMainContent },
   name: 'user-show-view',
   props: {},
   setup() {

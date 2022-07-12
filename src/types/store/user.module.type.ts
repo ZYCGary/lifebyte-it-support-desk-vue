@@ -1,5 +1,6 @@
 import { ActionTree, GetterTree, MutationTree } from 'vuex'
 import { RootState } from '@/types/store/root.module.type'
+import { Hardware } from '@/types/store/hardware.module.type'
 
 export interface User {
   id: number
@@ -13,6 +14,7 @@ export interface User {
     name: string
     country: string
   }
+  hardware?: Hardware[]
   desk: string
   state: number
   type: string

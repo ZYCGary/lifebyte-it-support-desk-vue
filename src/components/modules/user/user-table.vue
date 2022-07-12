@@ -25,17 +25,17 @@
     <el-table-column
       property="department"
       label="Department"
-      width="200"
+      min-width="200"
     ></el-table-column>
     <el-table-column
       property="job_title"
       label="Job Title"
-      width="250"
+      min-width="250"
     ></el-table-column>
     <el-table-column
       fixed="right"
       label="Operations"
-      width="120"
+      width="140"
     >
       <template #default="scope">
         <div class="flex flex-row flex-nowrap gap-x-2">
