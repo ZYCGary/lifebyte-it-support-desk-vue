@@ -8,13 +8,15 @@ const useUser = () => {
     collection: false,
     show: false,
     store: false,
-    update: false
+    update: false,
+    dismiss: false
   })
   const error = reactive({
     collection: false,
     show: false,
     store: false,
-    update: false
+    update: false,
+    dismiss: false
   })
 
   const getUserCollection = async (
@@ -102,7 +104,24 @@ const useUser = () => {
     }
   }
 
-  return { loading, error, getUserCollection, getUserById, updateUser, createUser }
+  const dismissUser = async (userId: number): Promise<void> => {
+    try {
+      loading.dismiss = true
+      error.dismiss = true
+
+      await apis.user.update(userId, { state: 0 })
+
+      loading.dismiss = false
+      error.dismiss = false
+    } catch (err) {
+      loading.dismiss = false
+      error.dismiss = true
+
+      throw err
+    }
+  }
+
+  return { loading, error, getUserCollection, getUserById, updateUser, createUser, dismissUser }
 }
 
 export default useUser

@@ -5,8 +5,11 @@
         <h1>User Detail</h1>
         <div class="flex flex-1 justify-end">
           <base-button
+            v-if="user?.state"
             icon-class="fa-solid fa-right-from-bracket"
             type="warning"
+            @click="dismiss"
+            :loading="loading.dismiss"
           >
             Dismiss
           </base-button>
@@ -128,7 +131,7 @@ import TheMainContent from '@/components/layouts/the-main-content.vue'
 import BaseAvatar from '@/components/base/base-avatar.vue'
 import BaseButton from '@/components/base/base-button.vue'
 import useUser from '@/hooks/useUser'
-import { ElMessage } from 'element-plus/es'
+import { ElMessage, ElMessageBox } from 'element-plus/es'
 import { User } from '@/types/store/user.module.type'
 import UserProfileUpdateForm from '@/components/modules/user/user-profile-update-form.vue'
 
@@ -141,7 +144,7 @@ export default defineComponent({
     const userId = parseInt(route.params.id as string)
 
     const user = ref<null | User>(null)
-    const { loading, error, getUserById } = useUser()
+    const { loading, error, getUserById, dismissUser } = useUser()
     const loadUser = () => {
       getUserById(userId)
         .then((res) => {
@@ -163,9 +166,35 @@ export default defineComponent({
       loadUser()
     }
 
+    const dismiss = () => {
+      ElMessageBox.confirm('Are you sure you want to dismiss this user?', 'Warning', {
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'Cancel',
+        type: 'warning'
+      })
+        .then(() => {
+          dismissUser(userId)
+            .then(() => {
+              ElMessage({
+                type: 'success',
+                message: 'Dismissed user successfully.'
+              })
+
+              loadUser()
+            })
+            .catch(() => {
+              ElMessage({
+                type: 'error',
+                message: 'Failed to dismiss user.'
+              })
+            })
+        })
+        .catch(() => {})
+    }
+
     loadUser()
 
-    return { loading, error, user, userId, activeTab, updateUserDialogVisible, handleUserUpdated }
+    return { loading, error, user, userId, activeTab, updateUserDialogVisible, handleUserUpdated, dismiss }
   }
 })
 </script>
