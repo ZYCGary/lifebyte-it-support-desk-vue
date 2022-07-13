@@ -49,7 +49,7 @@ export default defineComponent({
 
     if (id) {
       apis.hardware
-        .getHardware(id)
+        .show(id)
         .then((response) => {
           hardware.value = response.data
           loading.value = false

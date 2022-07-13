@@ -1,44 +1,3 @@
-<!--<template>-->
-<!--  <the-content-header>-->
-<!--    <hardware-list-header></hardware-list-header>-->
-<!--  </the-content-header>-->
-<!--  <el-container class="relative">-->
-<!--    <el-container class="h-full overflow-y-auto">-->
-<!--      <el-main>-->
-<!--        <div class="relative flex flex-row flex-wrap">-->
-<!--          <div class="flex w-full mb-4">-->
-<!--            <div class="flex items-center">-->
-<!--              <base-search-bar-->
-<!--                placeholder="Type a name to search"-->
-<!--                v-model:searchValue="table.filter.name"-->
-<!--                @search="search"-->
-<!--              ></base-search-bar>-->
-<!--            </div>-->
-<!--            <div class="flex flex-1 flex-nowrap justify-end items-center">-->
-<!--              <base-pagination-->
-<!--                :total="table.pagination.meta.total"-->
-<!--                :page-size="table.pagination.meta.per_page"-->
-<!--                :current-page="table.pagination.meta.current_page"-->
-<!--                :from="table.pagination.meta.from"-->
-<!--                :to="table.pagination.meta.to"-->
-<!--                @current-change="handlePageChange"-->
-<!--              />-->
-<!--            </div>-->
-<!--          </div>-->
-
-<!--          <hardware-table-->
-<!--            :data="table.data"-->
-<!--            :loading="table.loading"-->
-<!--            :error="table.error"-->
-<!--          ></hardware-table>-->
-<!--        </div>-->
-<!--      </el-main>-->
-<!--    </el-container>-->
-<!--    <the-right-aside>-->
-<!--      <h1>Filter</h1>-->
-<!--    </the-right-aside>-->
-<!--  </el-container>-->
-<!--</template>-->
 <template>
   <the-main-content>
     <template #header>
@@ -102,6 +61,7 @@
               :error="error.collection"
               :loading="loading.collection"
               :data="table.data"
+              @hardware-updated="handleHardwareUpdated"
             ></hardware-table>
           </div>
         </el-main>
@@ -207,6 +167,10 @@ export default defineComponent({
       loadTable(table.filter)
     }
 
+    const handleHardwareUpdated = () => {
+      loadTable(table.filter)
+    }
+
     const newHardwareDialogVisible = ref<boolean>(false)
 
     const handleImportClick = () => {}
@@ -219,6 +183,7 @@ export default defineComponent({
       table,
       search,
       handlePageChange,
+      handleHardwareUpdated,
       newHardwareDialogVisible,
       handleImportClick,
       handleExportClick

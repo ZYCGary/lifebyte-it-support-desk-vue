@@ -466,7 +466,7 @@ export default defineComponent({
 
     const updateHardware = () => {
       apis.hardware
-        .updateHardware(props.hardware.id, { ...information })
+        .update(props.hardware.id, { ...information })
         .then(() => {
           form.submitting = false
 

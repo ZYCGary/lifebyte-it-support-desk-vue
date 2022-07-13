@@ -46,6 +46,7 @@
     ></el-table-column>
     <el-table-column
       label="User"
+      property="user"
       width="250"
     >
       <template #default="scope">
@@ -91,9 +92,9 @@
       width="120"
     >
       <template #default="scope">
-        <router-link :to="{ name: 'hardware.show', params: { id: scope.row.id, type: 'update' } }">
+        <div class="flex flex-row flex-nowrap gap-x-2">
           <el-tooltip
-            content="View detail"
+            content="Edit"
             placement="top"
             :show-after="500"
           >
@@ -101,10 +102,11 @@
               icon-class="fa-solid fa-pen-to-square"
               type="primary"
               :text="false"
+              @click="showUpdateDialog(scope.row.id)"
             >
             </base-button>
           </el-tooltip>
-        </router-link>
+        </div>
       </template>
     </el-table-column>
 
@@ -112,18 +114,36 @@
       {{ loading ? 'Loading data...' : error ? 'Failed to load data' : 'No data' }}
     </template>
   </el-table>
+
+  <!-- Hardware update dialog -->
+  <el-dialog
+    v-model="updateHardwareDialogVisible"
+    title="Update Hardware"
+    :close-on-click-modal="false"
+    :close-on-press-escape="false"
+    :show-close="false"
+    :destroy-on-close="true"
+  >
+    <hardware-form-update
+      :hardware-id="clickedHardwareId"
+      @cancel="updateHardwareDialogVisible = false"
+      @updated="handleHardwareUpdated"
+    ></hardware-form-update>
+  </el-dialog>
+  <!-- Hardware update dialog end -->
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
+import { defineComponent, PropType, ref } from 'vue'
 import { Hardware } from '@/types/store/hardware.module.type'
 import BaseButton from '@/components/base/base-button.vue'
 import { useRouter } from 'vue-router'
 import { TableColumnCtx } from 'element-plus/es/components/table/src/table-column/defaults'
+import HardwareFormUpdate from '@/components/modules/hardware/hardware-form-update.vue'
 
 export default defineComponent({
   name: 'hardware-table',
-  components: { BaseButton },
+  components: { HardwareFormUpdate, BaseButton },
   props: {
     data: {
       required: true,
@@ -138,16 +158,29 @@ export default defineComponent({
       type: Boolean
     }
   },
-  setup: () => {
+  emits: ['hardwareUpdated'],
+  setup: (props, { emit }) => {
+    const updateHardwareDialogVisible = ref<boolean>(false)
+    const clickedHardwareId = ref<number>(0)
     const router = useRouter()
 
     const handleRowClick = (row: Hardware, column: TableColumnCtx<Hardware>) => {
-      if (column.property !== 'operations') {
+      if (column.property !== 'operations' && column.property !== 'user') {
         router.push({ name: 'hardware.show', params: { id: row.id } })
       }
     }
 
-    return { handleRowClick }
+    const showUpdateDialog = (hardwareId: number) => {
+      clickedHardwareId.value = hardwareId
+      updateHardwareDialogVisible.value = true
+    }
+
+    const handleHardwareUpdated = () => {
+      updateHardwareDialogVisible.value = false
+      emit('hardwareUpdated')
+    }
+
+    return { updateHardwareDialogVisible, clickedHardwareId, handleRowClick, showUpdateDialog, handleHardwareUpdated }
   }
 })
 </script>

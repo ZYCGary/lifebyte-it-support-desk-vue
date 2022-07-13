@@ -10,14 +10,14 @@ export interface Hardware {
   model: string
   serial_number: string
   tag: string
-  spec_os: string
-  spec_cpu: string
-  spec_memory: number
-  spec_storage: number
-  spec_screen_size: number
-  spec_others: string
-  bundle_with: string[]
-  note: string
+  spec_os: string | null
+  spec_cpu: string | null
+  spec_memory: number | null
+  spec_storage: number | null
+  spec_screen_size: number | null
+  spec_others: string | null
+  bundle_with: string[] | null
+  note: string | null
   created_at?: string
   updated_at?: string
 }

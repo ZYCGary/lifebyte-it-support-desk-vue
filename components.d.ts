@@ -51,6 +51,7 @@ declare module '@vue/runtime-core' {
     ElTabs: typeof import('element-plus/es')['ElTabs']
     ElTag: typeof import('element-plus/es')['ElTag']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
+    HardwareFormUpdate: typeof import('./src/components/modules/hardware/hardware-form-update.vue')['default']
     HardwareInfomation: typeof import('./src/components/modules/hardware/hardware-information.vue')['default']
     HardwareInformation: typeof import('./src/components/modules/hardware/hardware-information.vue')['default']
     HardwareInformationForm: typeof import('./src/components/modules/hardware/hardware-information-form.vue')['default']
