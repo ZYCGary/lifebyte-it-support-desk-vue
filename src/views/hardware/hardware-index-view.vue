@@ -44,6 +44,33 @@
     <template #header>
       <div class="flex flex-row flex-nowrap items-center">
         <h1>Hardware List</h1>
+        <div class="flex flex-1 justify-end">
+          <el-button
+            type="success"
+            class="mr-4"
+            @click="newHardwareDialogVisible = true"
+          >
+            <base-icon-text
+              icon-class="fa-solid fa-plus"
+              text="New"
+            ></base-icon-text>
+          </el-button>
+
+          <el-button-group>
+            <el-button @click="handleImportClick">
+              <base-icon-text
+                icon-class="fa-solid fa-file-import"
+                text="import"
+              ></base-icon-text>
+            </el-button>
+            <el-button @click="handleExportClick">
+              <base-icon-text
+                icon-class="fa-solid fa-file-export"
+                text="Export"
+              ></base-icon-text>
+            </el-button>
+          </el-button-group>
+        </div>
       </div>
     </template>
 
@@ -83,10 +110,23 @@
       </el-container>
     </template>
   </the-main-content>
+
+  <!-- New hardware dialog -->
+  <el-dialog
+    v-model="newHardwareDialogVisible"
+    title="New User"
+    :close-on-click-modal="false"
+    :close-on-press-escape="false"
+    :show-close="false"
+    :destroy-on-close="true"
+  >
+    new hardware
+  </el-dialog>
+  <!-- New hardware dialog -->
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from 'vue'
+import { defineComponent, reactive, ref } from 'vue'
 import TheRightAside from '@/components/layouts/the-right-aside.vue'
 import { Hardware, HardwareFilter } from '@/types/store/hardware.module.type'
 import HardwareTable from '@/components/modules/hardware/hardware-table.vue'
@@ -95,9 +135,11 @@ import BaseSearchBar from '@/components/base/base-search-bar.vue'
 import BasePagination from '@/components/base/base-pagination.vue'
 import TheMainContent from '@/components/layouts/the-main-content.vue'
 import useHardware from '@/hooks/useHardware'
+import BaseIconText from '@/components/base/base-icon-text.vue'
 
 export default defineComponent({
   components: {
+    BaseIconText,
     TheMainContent,
     BasePagination,
     BaseSearchBar,
@@ -165,7 +207,22 @@ export default defineComponent({
       loadTable(table.filter)
     }
 
-    return { loading, error, table, search, handlePageChange }
+    const newHardwareDialogVisible = ref<boolean>(false)
+
+    const handleImportClick = () => {}
+
+    const handleExportClick = () => {}
+
+    return {
+      loading,
+      error,
+      table,
+      search,
+      handlePageChange,
+      newHardwareDialogVisible,
+      handleImportClick,
+      handleExportClick
+    }
   }
 })
 </script>
