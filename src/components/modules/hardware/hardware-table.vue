@@ -87,6 +87,7 @@
     <el-table-column
       fixed="right"
       label="Operations"
+      property="operations"
       width="120"
     >
       <template #default="scope">
@@ -118,6 +119,7 @@ import { defineComponent, PropType } from 'vue'
 import { Hardware } from '@/types/store/hardware.module.type'
 import BaseButton from '@/components/base/base-button.vue'
 import { useRouter } from 'vue-router'
+import { TableColumnCtx } from 'element-plus/es/components/table/src/table-column/defaults'
 
 export default defineComponent({
   name: 'hardware-table',
@@ -139,8 +141,10 @@ export default defineComponent({
   setup: () => {
     const router = useRouter()
 
-    const handleRowClick = (row: Hardware) => {
-      router.push({ name: 'hardware.show', params: { id: row.id } })
+    const handleRowClick = (row: Hardware, column: TableColumnCtx<Hardware>) => {
+      if (column.property !== 'operations') {
+        router.push({ name: 'hardware.show', params: { id: row.id } })
+      }
     }
 
     return { handleRowClick }

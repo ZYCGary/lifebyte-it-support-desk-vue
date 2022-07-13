@@ -36,7 +36,7 @@
     <template #content>
       <el-container class="h-full">
         <el-main>
-          <div class="">
+          <div>
             <!-- table tool bar -->
             <div class="flex flex-nowrap gap-x-4 items-center mb-2">
               <base-search-bar

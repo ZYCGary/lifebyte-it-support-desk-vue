@@ -1,62 +1,114 @@
+<!--<template>-->
+<!--  <the-content-header>-->
+<!--    <hardware-list-header></hardware-list-header>-->
+<!--  </the-content-header>-->
+<!--  <el-container class="relative">-->
+<!--    <el-container class="h-full overflow-y-auto">-->
+<!--      <el-main>-->
+<!--        <div class="relative flex flex-row flex-wrap">-->
+<!--          <div class="flex w-full mb-4">-->
+<!--            <div class="flex items-center">-->
+<!--              <base-search-bar-->
+<!--                placeholder="Type a name to search"-->
+<!--                v-model:searchValue="table.filter.name"-->
+<!--                @search="search"-->
+<!--              ></base-search-bar>-->
+<!--            </div>-->
+<!--            <div class="flex flex-1 flex-nowrap justify-end items-center">-->
+<!--              <base-pagination-->
+<!--                :total="table.pagination.meta.total"-->
+<!--                :page-size="table.pagination.meta.per_page"-->
+<!--                :current-page="table.pagination.meta.current_page"-->
+<!--                :from="table.pagination.meta.from"-->
+<!--                :to="table.pagination.meta.to"-->
+<!--                @current-change="handlePageChange"-->
+<!--              />-->
+<!--            </div>-->
+<!--          </div>-->
+
+<!--          <hardware-table-->
+<!--            :data="table.data"-->
+<!--            :loading="table.loading"-->
+<!--            :error="table.error"-->
+<!--          ></hardware-table>-->
+<!--        </div>-->
+<!--      </el-main>-->
+<!--    </el-container>-->
+<!--    <the-right-aside>-->
+<!--      <h1>Filter</h1>-->
+<!--    </the-right-aside>-->
+<!--  </el-container>-->
+<!--</template>-->
 <template>
-  <the-content-header>
-    <hardware-list-header></hardware-list-header>
-  </the-content-header>
-  <el-container class="relative">
-    <el-container class="h-full overflow-y-auto">
-      <el-main>
-        <div class="relative flex flex-row flex-wrap">
-          <div class="flex w-full mb-4">
-            <div class="flex items-center">
+  <the-main-content>
+    <template #header>
+      <div class="flex flex-row flex-nowrap items-center">
+        <h1>Hardware List</h1>
+      </div>
+    </template>
+
+    <template #content>
+      <el-container class="h-full">
+        <el-main>
+          <div>
+            <!-- table tool bar -->
+            <div class="flex flex-nowrap gap-x-4 items-center mb-2">
               <base-search-bar
                 placeholder="Type a name to search"
                 v-model:searchValue="table.filter.name"
                 @search="search"
+                class="w-auto"
               ></base-search-bar>
-            </div>
-            <div class="flex flex-1 flex-nowrap justify-end items-center">
               <base-pagination
                 :total="table.pagination.meta.total"
                 :page-size="table.pagination.meta.per_page"
                 :current-page="table.pagination.meta.current_page"
+                :from="table.pagination.meta.from"
+                :to="table.pagination.meta.to"
                 @current-change="handlePageChange"
+                class="flex-1 justify-end"
               />
             </div>
-          </div>
+            <!-- table tool bar end -->
 
-          <hardware-table
-            :data="table.data"
-            :loading="table.loading"
-            :error="table.error"
-          ></hardware-table>
-        </div>
-      </el-main>
-    </el-container>
-    <the-right-aside>
-      <h1>Filter</h1>
-    </the-right-aside>
-  </el-container>
+            <hardware-table
+              :error="error.collection"
+              :loading="loading.collection"
+              :data="table.data"
+            ></hardware-table>
+          </div>
+        </el-main>
+
+        <the-right-aside> Filter </the-right-aside>
+      </el-container>
+    </template>
+  </the-main-content>
 </template>
 
 <script lang="ts">
 import { defineComponent, reactive } from 'vue'
 import TheRightAside from '@/components/layouts/the-right-aside.vue'
-import TheContentHeader from '@/components/layouts/the-content-header.vue'
-import HardwareListHeader from '@/components/modules/hardware/hardware-list-header.vue'
 import { Hardware, HardwareFilter } from '@/types/store/hardware.module.type'
 import HardwareTable from '@/components/modules/hardware/hardware-table.vue'
 import { BasePaginationProps } from '@/types/components.type'
-import apis from '@/http/apis'
 import BaseSearchBar from '@/components/base/base-search-bar.vue'
 import BasePagination from '@/components/base/base-pagination.vue'
+import TheMainContent from '@/components/layouts/the-main-content.vue'
+import useHardware from '@/hooks/useHardware'
 
 export default defineComponent({
-  components: { BasePagination, BaseSearchBar, HardwareTable, HardwareListHeader, TheContentHeader, TheRightAside },
+  components: {
+    TheMainContent,
+    BasePagination,
+    BaseSearchBar,
+    HardwareTable,
+    TheRightAside
+  },
   props: {},
   setup() {
+    const { loading, error, getHardwareCollection } = useHardware()
+
     const table = reactive({
-      loading: true,
-      error: false,
       data: [] as Hardware[],
       pagination: {
         links: {
@@ -80,37 +132,26 @@ export default defineComponent({
         name: '',
         type: '',
         brand: '',
+        model: '',
         serial_number: '',
         tag: '',
         spec_os: '',
         spec_cpu: '',
         spec_memory: '',
-        spec_screen_size: '',
-        spec_ports: [],
-        spec_adapter_input: '',
-        spec_adapter_output: [],
-        spec_cable_length: ''
+        spec_screen_size: ''
       })
     })
 
     const loadTable = (filter?: HardwareFilter) => {
-      table.loading = true
-      table.error = false
       table.data = []
 
-      apis.hardware
-        .getHardwareCollection(filter)
+      getHardwareCollection(filter)
         .then((collection) => {
-          table.loading = false
-          table.error = false
           table.data = collection.data
-          table.pagination.links = collection.links
-          table.pagination.meta = collection.meta
+          table.pagination.links = collection.pagination.links
+          table.pagination.meta = collection.pagination.meta
         })
-        .catch(() => {
-          table.loading = false
-          table.error = true
-        })
+        .catch(() => {})
     }
 
     loadTable()
@@ -120,12 +161,11 @@ export default defineComponent({
     }
 
     const handlePageChange = (page: number) => {
-      console.log(page)
       table.filter.page = page
       loadTable(table.filter)
     }
 
-    return { table, search, handlePageChange }
+    return { loading, error, table, search, handlePageChange }
   }
 })
 </script>

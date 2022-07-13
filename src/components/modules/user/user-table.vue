@@ -6,6 +6,8 @@
     fit
     lazy
     class="overflow-auto w-auto max-h-full"
+    row-class-name="cursor-pointer"
+    @row-click="handleRowClick"
   >
     <el-table-column
       type="selection"
@@ -35,24 +37,11 @@
     <el-table-column
       fixed="right"
       label="Operations"
+      property="operations"
       width="140"
     >
       <template #default="scope">
         <div class="flex flex-row flex-nowrap gap-x-2">
-          <router-link :to="{ name: 'user.show', params: { id: scope.row.id } }">
-            <el-tooltip
-              content="Profile"
-              placement="top"
-              :show-after="500"
-            >
-              <base-button
-                icon-class="fa-solid fa-user"
-                :text="false"
-              >
-              </base-button>
-            </el-tooltip>
-          </router-link>
-
           <el-tooltip
             content="Edit"
             placement="top"
@@ -98,6 +87,8 @@ import { defineComponent, PropType, ref } from 'vue'
 import BaseButton from '@/components/base/base-button.vue'
 import { User } from '@/types/store/user.module.type'
 import UserProfileUpdateForm from '@/components/modules/user/user-profile-update-form.vue'
+import { TableColumnCtx } from 'element-plus/es/components/table/src/table-column/defaults'
+import { useRouter } from 'vue-router'
 
 export default defineComponent({
   name: 'user-table',
@@ -120,6 +111,13 @@ export default defineComponent({
   setup: (props, { emit }) => {
     const updateUserDialogVisible = ref<boolean>(false)
     const clickedUserId = ref<number>(0)
+    const router = useRouter()
+
+    const handleRowClick = (row: User, column: TableColumnCtx<User>) => {
+      if (column.property !== 'operations') {
+        router.push({ name: 'user.show', params: { id: row.id } })
+      }
+    }
 
     const showUpdateDialog = (userId: number) => {
       clickedUserId.value = userId
@@ -131,7 +129,7 @@ export default defineComponent({
       emit('userUpdated')
     }
 
-    return { updateUserDialogVisible, clickedUserId, showUpdateDialog, handleUserUpdated }
+    return { handleRowClick, updateUserDialogVisible, clickedUserId, showUpdateDialog, handleUserUpdated }
   }
 })
 </script>

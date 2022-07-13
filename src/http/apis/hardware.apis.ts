@@ -2,7 +2,7 @@ import requests from '@/http/requests'
 import { HardwareFilter } from '@/types/store/hardware.module.type'
 
 const hardwareApis = {
-  getHardwareCollection: async (filter?: HardwareFilter) => {
+  index: async (filter?: HardwareFilter) => {
     // Remove empty filter keys.
     if (filter) {
       for (const [key, value] of Object.entries(filter)) {
