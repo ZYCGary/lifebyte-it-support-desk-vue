@@ -32,6 +32,19 @@
         </template>
       </el-menu-item>
       <el-menu-item
+        index="hardware"
+        :route="{ name: 'hardware.index' }"
+        :class="{ 'is-active': activeMenu === 'hardware' }"
+        @click="activeMenu = 'hardware'"
+      >
+        <template #title>
+          <base-icon-text
+            text="Hardware"
+            icon-class="fa-solid fa-layer-group"
+          ></base-icon-text>
+        </template>
+      </el-menu-item>
+      <el-menu-item
         index="software"
         :route="{ name: 'software.index' }"
         :class="{ 'is-active': activeMenu === 'software' }"
@@ -41,19 +54,6 @@
           <base-icon-text
             text="Software"
             icon-class="fa-brands fa-uncharted"
-          ></base-icon-text>
-        </template>
-      </el-menu-item>
-      <el-menu-item
-        index="hardware"
-        :route="{ name: 'hardware.index' }"
-        :class="{ 'is-active': activeMenu === 'hardware' }"
-        @click="activeMenu = 'hardware'"
-      >
-        <template #title>
-          <base-icon-text
-            text="Hardware"
-            icon-class="fa-solid fa-computer"
           ></base-icon-text>
         </template>
       </el-menu-item>

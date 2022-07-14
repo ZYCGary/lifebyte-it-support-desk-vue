@@ -1,75 +1,203 @@
+<!--<template>-->
+<!--  <the-content-header>-->
+<!--    <hardware-show-header-->
+<!--      v-if="hardware"-->
+<!--      :hardware="hardware"-->
+<!--    ></hardware-show-header>-->
+<!--  </the-content-header>-->
+<!--  <el-container-->
+<!--    v-loading="loading"-->
+<!--    class="relative"-->
+<!--  >-->
+<!--    <template v-if="!error && hardware">-->
+<!--      <el-main>-->
+<!--        <hardware-information v-model:hardware="hardware"></hardware-information>-->
+<!--      </el-main>-->
+<!--    </template>-->
+
+<!--    <template v-else>-->
+<!--      <el-main-->
+<!--        v-if="!loading"-->
+<!--        class="text-center"-->
+<!--      >-->
+<!--        {{ error }}-->
+<!--      </el-main>-->
+<!--    </template>-->
+<!--  </el-container>-->
+<!--</template>-->
 <template>
-  <the-content-header>
-    <hardware-show-header
-      v-if="hardware"
-      :hardware="hardware"
-    ></hardware-show-header>
-  </the-content-header>
-  <el-container
-    v-loading="loading"
-    class="relative"
-  >
-    <template v-if="!error && hardware">
-      <el-main>
-        <hardware-information v-model:hardware="hardware"></hardware-information>
-      </el-main>
+  <the-main-content>
+    <template #header>
+      <div class="flex flex-row flex-nowrap items-center">
+        <h1>Hardware Detail</h1>
+        <div class="flex flex-1 justify-end">
+          <base-button
+            icon-class="fa-solid fa-rotate-left"
+            type="warning"
+          >
+            Return
+          </base-button>
+          <base-button
+            icon-class="fa-solid fa-trash-can"
+            type="danger"
+          >
+            Delete
+          </base-button>
+        </div>
+      </div>
     </template>
 
-    <template v-else>
-      <el-main
-        v-if="!loading"
-        class="text-center"
-      >
-        {{ error }}
-      </el-main>
+    <template #content>
+      <el-container class="h-full">
+        <el-main>
+          <!-- Hardware loading skeleton -->
+          <template v-if="loading.show">
+            <el-skeleton
+              animated
+              style="--el-skeleton-circle-size: 2.25rem"
+            >
+              <template #template>
+                <el-skeleton-item
+                  variant="circle"
+                  style="width: 36px"
+                ></el-skeleton-item>
+              </template>
+            </el-skeleton>
+            <el-skeleton :rows="7"></el-skeleton>
+          </template>
+          <!-- Hardware loading skeleton end -->
+
+          <template v-else>
+            <template v-if="!error.show && hardware">
+              <!-- Heading -->
+              <div class="flex flex-row flex-nowrap items-center mb-8">
+                <base-avatar
+                  type="icon"
+                  :icon="avatar"
+                ></base-avatar>
+                <div class="mx-4">
+                  <h1 class="mb-2 font-bold text-2xl">
+                    {{ hardware.name }}
+                  </h1>
+                  <el-tag
+                    effect="dark"
+                    class="mr-1"
+                    round
+                  >
+                    {{ hardware.serial_number }}
+                  </el-tag>
+                  <el-tag
+                    type="success"
+                    effect="dark"
+                    round
+                  >
+                    {{ hardware.tag }}
+                  </el-tag>
+                </div>
+              </div>
+              <!-- Heading end -->
+
+              <el-tabs v-model="activeTab">
+                <!-- Hardware information -->
+                <el-tab-pane
+                  label="Information"
+                  name="information"
+                >
+                  <hardware-information :hardware="hardware"></hardware-information>
+                </el-tab-pane>
+              </el-tabs>
+            </template>
+          </template>
+        </el-main>
+      </el-container>
     </template>
-  </el-container>
+  </the-main-content>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
-import HardwareShowHeader from '@/components/modules/hardware/hardware-show-header.vue'
-import TheContentHeader from '@/components/layouts/the-content-header.vue'
 import { useRoute } from 'vue-router'
-import apis from '@/http/apis'
+import TheMainContent from '@/components/layouts/the-main-content.vue'
+import BaseButton from '@/components/base/base-button.vue'
+import { Hardware } from '@/types/store/hardware.module.type'
+import useHardware from '@/hooks/useHardware'
 import { ElMessage } from 'element-plus/es'
+import BaseAvatar from '@/components/base/base-avatar.vue'
 import HardwareInformation from '@/components/modules/hardware/hardware-information.vue'
 
 export default defineComponent({
   name: 'hardware-show-view',
-  components: { HardwareInformation, TheContentHeader, HardwareShowHeader },
+  components: { HardwareInformation, BaseAvatar, BaseButton, TheMainContent },
   props: {},
   setup: () => {
     const route = useRoute()
+    const hardwareId = parseInt(route.params.id as string)
 
-    const id = parseInt(route.params.id as string)
-    const hardware = ref(null)
-    const loading = ref<boolean>(true)
-    const error = ref<boolean | string>(false)
+    const hardware = ref<Hardware | null>(null)
+    const avatar = ref<string>('')
 
-    if (id) {
-      apis.hardware
-        .show(id)
-        .then((response) => {
-          hardware.value = response.data
-          loading.value = false
-          error.value = false
-        })
-        .catch((err) => {
-          loading.value = false
+    const { loading, error, getHardwareById } = useHardware()
+    const loadHardware = () => {
+      getHardwareById(hardwareId)
+        .then((res) => {
+          hardware.value = res
 
-          if (err.response.status === 404) {
-            error.value = 'Hardware not found'
-          } else {
-            error.value = 'Failed to load hardware detail'
-            ElMessage({
-              type: 'error',
-              message: 'Failed to load hardware detail, please try again later.'
-            })
+          switch (hardware.value.type) {
+            case 'Desktop':
+              avatar.value = 'fa-solid fa-computer'
+              break
+
+            case 'Laptop':
+              avatar.value = 'fa-solid fa-laptop'
+              break
+
+            case 'Mouse':
+              avatar.value = 'fa-solid fa-computer-mouse'
+              break
+
+            case 'Keyboard':
+              avatar.value = 'fa-solid fa-keyboard'
+              break
+
+            case 'Docking Station':
+              avatar.value = 'fa-solid fa-ethernet'
+              break
+
+            case 'Adapter':
+              avatar.value = 'fa-solid fa-timeline'
+              break
+
+            case 'TV':
+              avatar.value = 'fa-solid fa-tv'
+              break
+
+            case 'Monitor':
+              avatar.value = 'fa-solid fa-desktop'
+              break
+
+            case 'Phone':
+              avatar.value = 'fa-solid fa-phone'
+              break
+
+            default:
+              avatar.value = 'fa-solid fa-ellipsis'
+              break
           }
         })
+        .catch(() => {
+          ElMessage({
+            type: 'error',
+            message: 'Failed to get hardware details.'
+          })
+        })
     }
-    return { hardware, loading, error }
+
+    const activeTab = ref<string>('information')
+
+    if (hardwareId) {
+      loadHardware()
+    }
+    return { hardware, avatar, loading, error, activeTab }
   }
 })
 </script>
