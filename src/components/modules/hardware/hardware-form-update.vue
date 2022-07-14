@@ -378,13 +378,13 @@ export default defineComponent({
       ],
       brandOptions: ['Apple', 'MicroSoft', 'UGreen', 'Unknown Brand'],
       osOptions: [
-        { label: '-', value: null },
+        { label: '-', value: '' },
         { label: 'Windows', value: 'Windows' },
         { label: 'macOS', value: 'macOS' },
         { label: 'Linux', value: 'Linux' }
       ],
       cpuOptions: [
-        { label: '-', value: null },
+        { label: '-', value: '' },
         { label: 'Apple M1', value: 'Apple M1' },
         { label: 'Apple M1 Pro', value: 'Apple M1 Pro' },
         { label: 'Apple M1 Max', value: 'Apple M1 Max' },
@@ -413,7 +413,7 @@ export default defineComponent({
       if (!formEl) return
 
       formEl.validate((valid) => {
-        if (valid) {
+        if (valid && form.data) {
           form.submitting = true
 
           updateHardware(props.hardwareId, form.data)
