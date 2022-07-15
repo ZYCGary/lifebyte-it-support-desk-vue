@@ -68,16 +68,14 @@
   <el-dialog
     v-model="updateUserDialogVisible"
     title="Update User"
-    :close-on-click-modal="false"
-    :close-on-press-escape="false"
-    :show-close="false"
     :destroy-on-close="true"
+    :before-close="closeUpdateDialog"
   >
-    <user-profile-update-form
+    <user-profile-form-update
       :user-id="clickedUserId"
-      @cancel="updateUserDialogVisible = false"
+      @cancel="closeUpdateDialog"
       @updated="handleUserUpdated"
-    ></user-profile-update-form>
+    ></user-profile-form-update>
   </el-dialog>
   <!-- User profile update dialog end -->
 </template>
@@ -86,13 +84,14 @@
 import { defineComponent, PropType, ref } from 'vue'
 import BaseButton from '@/components/base/base-button.vue'
 import { User } from '@/types/store/user.module.type'
-import UserProfileUpdateForm from '@/components/modules/user/user-profile-update-form.vue'
+import UserProfileFormUpdate from '@/components/modules/user/user-profile-form-update.vue'
 import { TableColumnCtx } from 'element-plus/es/components/table/src/table-column/defaults'
 import { useRouter } from 'vue-router'
+import { ElMessageBox } from 'element-plus/es'
 
 export default defineComponent({
   name: 'user-table',
-  components: { UserProfileUpdateForm, BaseButton },
+  components: { UserProfileFormUpdate, BaseButton },
   props: {
     data: {
       required: true,
@@ -124,12 +123,31 @@ export default defineComponent({
       updateUserDialogVisible.value = true
     }
 
+    const closeUpdateDialog = () => {
+      ElMessageBox.confirm('Your edit will not be saved. Continue?', 'Warning', {
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'Cancel',
+        type: 'warning'
+      })
+        .then(() => {
+          updateUserDialogVisible.value = false
+        })
+        .catch(() => {})
+    }
+
     const handleUserUpdated = () => {
       updateUserDialogVisible.value = false
       emit('userUpdated')
     }
 
-    return { handleRowClick, updateUserDialogVisible, clickedUserId, showUpdateDialog, handleUserUpdated }
+    return {
+      handleRowClick,
+      updateUserDialogVisible,
+      clickedUserId,
+      showUpdateDialog,
+      closeUpdateDialog,
+      handleUserUpdated
+    }
   }
 })
 </script>

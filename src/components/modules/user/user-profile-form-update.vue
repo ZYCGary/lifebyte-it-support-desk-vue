@@ -169,7 +169,7 @@
               icon-class="fa-solid fa-ban"
               type="info"
               :disabled="form.submitting"
-              @click="handleCancel"
+              @click="$emit('cancel')"
             >
               Cancel
             </base-button>
@@ -183,14 +183,14 @@
 
 <script lang="ts">
 import { defineComponent, reactive, ref } from 'vue'
-import { ElMessage, ElMessageBox, FormInstance } from 'element-plus/es'
+import { ElMessage, FormInstance } from 'element-plus/es'
 import useUser from '@/hooks/useUser'
 import useLocation from '@/hooks/useLocation'
 import { Location } from '@/types/store/location.module.type'
 import BaseButton from '@/components/base/base-button.vue'
 
 export default defineComponent({
-  name: 'user-profile-update-form',
+  name: 'user-profile-form-update',
   components: { BaseButton },
   props: {
     userId: {
@@ -314,20 +314,7 @@ export default defineComponent({
       })
     }
 
-    const handleCancel = () => {
-      ElMessageBox.confirm('Your edit will not be saved. Continue?', 'Warning', {
-        confirmButtonText: 'Yes',
-        cancelButtonText: 'Cancel',
-        type: 'warning'
-      })
-        .then(() => {
-          formRef.value?.resetFields()
-          emit('cancel')
-        })
-        .catch(() => {})
-    }
-
-    return { formRef, form, loadingUser, userError, loadingLocation, locationError, handleUpdate, handleCancel }
+    return { formRef, form, loadingUser, userError, loadingLocation, locationError, handleUpdate }
   }
 })
 </script>

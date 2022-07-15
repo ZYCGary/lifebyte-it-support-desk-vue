@@ -117,16 +117,14 @@
   <el-dialog
     v-model="updateUserDialogVisible"
     title="Update User"
-    :close-on-click-modal="false"
-    :close-on-press-escape="false"
-    :show-close="false"
     :destroy-on-close="true"
+    :before-close="closeUpdateDialog"
   >
-    <user-profile-update-form
+    <user-profile-form-update
       :user-id="userId"
-      @cancel="updateUserDialogVisible = false"
+      @cancel="closeUpdateDialog"
       @updated="handleUserUpdated"
-    ></user-profile-update-form>
+    ></user-profile-form-update>
   </el-dialog>
   <!-- User profile update dialog end -->
 </template>
@@ -140,11 +138,11 @@ import BaseButton from '@/components/base/base-button.vue'
 import useUser from '@/hooks/useUser'
 import { ElMessage, ElMessageBox } from 'element-plus/es'
 import { User } from '@/types/store/user.module.type'
-import UserProfileUpdateForm from '@/components/modules/user/user-profile-update-form.vue'
+import UserProfileFormUpdate from '@/components/modules/user/user-profile-form-update.vue'
 import UserHardwareTable from '@/components/modules/user/user-hardware-table.vue'
 
 export default defineComponent({
-  components: { UserHardwareTable, UserProfileUpdateForm, BaseButton, BaseAvatar, TheMainContent },
+  components: { UserHardwareTable, UserProfileFormUpdate, BaseButton, BaseAvatar, TheMainContent },
   name: 'user-show-view',
   props: {},
   setup() {
@@ -169,6 +167,19 @@ export default defineComponent({
     const activeTab = ref<string>('profile')
 
     const updateUserDialogVisible = ref<boolean>(false)
+
+    const closeUpdateDialog = () => {
+      ElMessageBox.confirm('Your edit will not be saved. Continue?', 'Warning', {
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'Cancel',
+        type: 'warning'
+      })
+        .then(() => {
+          updateUserDialogVisible.value = false
+        })
+        .catch(() => {})
+    }
+
     const handleUserUpdated = () => {
       updateUserDialogVisible.value = false
       loadUser()
@@ -202,7 +213,17 @@ export default defineComponent({
 
     loadUser()
 
-    return { loading, error, user, userId, activeTab, updateUserDialogVisible, handleUserUpdated, dismiss }
+    return {
+      loading,
+      error,
+      user,
+      userId,
+      activeTab,
+      updateUserDialogVisible,
+      closeUpdateDialog,
+      handleUserUpdated,
+      dismiss
+    }
   }
 })
 </script>

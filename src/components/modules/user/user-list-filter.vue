@@ -2,20 +2,32 @@
   <div class="flex flex-nowrap items-center mb-4">
     <h1 class="flex-1">Filter</h1>
     <div v-if="!loading.all && !error.all">
-      <base-button
-        icon-class="fa-solid fa-filter"
-        type="primary"
-        :text="false"
-        @click="handleFilter(formRef)"
-      >
-      </base-button>
-      <base-button
-        icon-class="fa-solid fa-arrows-rotate"
-        type="info"
-        :text="false"
-        @click="resetFilter(formRef)"
-      >
-      </base-button>
+      <el-button-group>
+        <el-tooltip
+          content="Apply Filter"
+          placement="bottom"
+          :show-after="500"
+        >
+          <base-button
+            icon-class="fa-solid fa-filter"
+            :text="false"
+            @click="handleFilter(formRef)"
+          >
+          </base-button>
+        </el-tooltip>
+        <el-tooltip
+          content="Reset Filter"
+          placement="bottom"
+          :show-after="500"
+        >
+          <base-button
+            icon-class="fa-solid fa-arrows-rotate"
+            :text="false"
+            @click="resetFilter(formRef)"
+          >
+          </base-button>
+        </el-tooltip>
+      </el-button-group>
     </div>
   </div>
 
