@@ -169,7 +169,7 @@
               icon-class="fa-solid fa-ban"
               type="info"
               :disabled="form.submitting"
-              @click="handleCancel"
+              @click="$emit('cancel')"
             >
               Cancel
             </base-button>
@@ -191,7 +191,7 @@ import BaseButton from '@/components/base/base-button.vue'
 import { FormInstance } from 'element-plus'
 
 export default defineComponent({
-  name: 'user-profile-create-form',
+  name: 'user-profile-form-create',
   components: { BaseButton },
   props: {},
   emits: ['cancel', 'created'],

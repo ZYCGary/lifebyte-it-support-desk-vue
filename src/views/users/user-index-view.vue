@@ -79,15 +79,13 @@
   <el-dialog
     v-model="newUserDialogVisible"
     title="New User"
-    :close-on-click-modal="false"
-    :close-on-press-escape="false"
-    :show-close="false"
     :destroy-on-close="true"
+    :before-close="closeNewUserDialog"
   >
-    <user-profile-create-form
-      @cancel="newUserDialogVisible = false"
+    <user-profile-form-create
+      @cancel="closeNewUserDialog"
       @created="handleUserCreated"
-    ></user-profile-create-form>
+    ></user-profile-form-create>
   </el-dialog>
   <!-- New user dialog end -->
 </template>
@@ -104,12 +102,13 @@ import { User, UserFilter } from '@/types/store/user.module.type'
 import UserListFilter from '@/components/modules/user/user-list-filter.vue'
 import useUser from '@/hooks/useUser'
 import BaseIconText from '@/components/base/base-icon-text.vue'
-import UserProfileCreateForm from '@/components/modules/user/user-profile-create-form.vue'
+import UserProfileFormCreate from '@/components/modules/user/user-profile-form-create.vue'
 import { useRouter } from 'vue-router'
+import { ElMessageBox } from 'element-plus/es'
 
 export default defineComponent({
   components: {
-    UserProfileCreateForm,
+    UserProfileFormCreate,
     BaseIconText,
     UserListFilter,
     BasePagination,
@@ -191,6 +190,18 @@ export default defineComponent({
 
     const newUserDialogVisible = ref<boolean>(false)
 
+    const closeNewUserDialog = () => {
+      ElMessageBox.confirm('Your edit will not be saved. Continue?', 'Warning', {
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'Cancel',
+        type: 'warning'
+      })
+        .then(() => {
+          newUserDialogVisible.value = false
+        })
+        .catch(() => {})
+    }
+
     const router = useRouter()
 
     const handleUserCreated = (userId: number) => {
@@ -217,6 +228,7 @@ export default defineComponent({
       handleUserUpdated,
       handleUserCreated,
       newUserDialogVisible,
+      closeNewUserDialog,
       handleImportClick,
       handleExportClick
     }
