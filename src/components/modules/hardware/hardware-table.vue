@@ -119,14 +119,12 @@
   <el-dialog
     v-model="updateHardwareDialogVisible"
     title="Update Hardware"
-    :close-on-click-modal="false"
-    :close-on-press-escape="false"
-    :show-close="false"
     :destroy-on-close="true"
+    :before-close="closeUpdateDialog"
   >
     <hardware-form-update
       :hardware-id="clickedHardwareId"
-      @cancel="updateHardwareDialogVisible = false"
+      @cancel="closeUpdateDialog"
       @updated="handleHardwareUpdated"
     ></hardware-form-update>
   </el-dialog>
@@ -140,6 +138,7 @@ import BaseButton from '@/components/base/base-button.vue'
 import { useRouter } from 'vue-router'
 import { TableColumnCtx } from 'element-plus/es/components/table/src/table-column/defaults'
 import HardwareFormUpdate from '@/components/modules/hardware/hardware-form-update.vue'
+import { ElMessageBox } from 'element-plus/es'
 
 export default defineComponent({
   name: 'hardware-table',
@@ -175,12 +174,31 @@ export default defineComponent({
       updateHardwareDialogVisible.value = true
     }
 
+    const closeUpdateDialog = () => {
+      ElMessageBox.confirm('Your edit will not be saved. Continue?', 'Warning', {
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'Cancel',
+        type: 'warning'
+      })
+        .then(() => {
+          updateHardwareDialogVisible.value = false
+        })
+        .catch(() => {})
+    }
+
     const handleHardwareUpdated = () => {
       updateHardwareDialogVisible.value = false
       emit('hardwareUpdated')
     }
 
-    return { updateHardwareDialogVisible, clickedHardwareId, handleRowClick, showUpdateDialog, handleHardwareUpdated }
+    return {
+      updateHardwareDialogVisible,
+      clickedHardwareId,
+      handleRowClick,
+      showUpdateDialog,
+      closeUpdateDialog,
+      handleHardwareUpdated
+    }
   }
 })
 </script>

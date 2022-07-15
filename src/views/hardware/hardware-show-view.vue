@@ -104,6 +104,15 @@
                   name="information"
                 >
                   <hardware-information :hardware="hardware"></hardware-information>
+                  <div class="flex flex-row flex-nowrap justify-end mt-4">
+                    <base-button
+                      icon-class="fa-solid fa-pen-to-square"
+                      type="primary"
+                      @click="updateHardwareDialogVisible = true"
+                    >
+                      Edit
+                    </base-button>
+                  </div>
                 </el-tab-pane>
               </el-tabs>
             </template>
@@ -112,6 +121,21 @@
       </el-container>
     </template>
   </the-main-content>
+
+  <!-- Hardware update dialog -->
+  <el-dialog
+    v-model="updateHardwareDialogVisible"
+    title="Update Hardware"
+    :destroy-on-close="true"
+    :before-close="closeUpdateDialog"
+  >
+    <hardware-form-update
+      :hardware-id="hardwareId"
+      @cancel="closeUpdateDialog"
+      @updated="handleHardwareUpdated"
+    ></hardware-form-update>
+  </el-dialog>
+  <!-- Hardware update dialog end -->
 </template>
 
 <script lang="ts">
@@ -121,13 +145,14 @@ import TheMainContent from '@/components/layouts/the-main-content.vue'
 import BaseButton from '@/components/base/base-button.vue'
 import { Hardware } from '@/types/store/hardware.module.type'
 import useHardware from '@/hooks/useHardware'
-import { ElMessage } from 'element-plus/es'
+import { ElMessage, ElMessageBox } from 'element-plus/es'
 import BaseAvatar from '@/components/base/base-avatar.vue'
 import HardwareInformation from '@/components/modules/hardware/hardware-information.vue'
+import HardwareFormUpdate from '@/components/modules/hardware/hardware-form-update.vue'
 
 export default defineComponent({
   name: 'hardware-show-view',
-  components: { HardwareInformation, BaseAvatar, BaseButton, TheMainContent },
+  components: { HardwareFormUpdate, HardwareInformation, BaseAvatar, BaseButton, TheMainContent },
   props: {},
   setup: () => {
     const route = useRoute()
@@ -164,7 +189,7 @@ export default defineComponent({
               break
 
             case 'Adapter':
-              avatar.value = 'fa-solid fa-timeline'
+              avatar.value = 'fa-solid fa-shuffle'
               break
 
             case 'TV':
@@ -194,10 +219,39 @@ export default defineComponent({
 
     const activeTab = ref<string>('information')
 
+    const updateHardwareDialogVisible = ref<boolean>(false)
+
+    const closeUpdateDialog = () => {
+      ElMessageBox.confirm('Your edit will not be saved. Continue?', 'Warning', {
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'Cancel',
+        type: 'warning'
+      })
+        .then(() => {
+          updateHardwareDialogVisible.value = false
+        })
+        .catch(() => {})
+    }
+
+    const handleHardwareUpdated = () => {
+      updateHardwareDialogVisible.value = false
+      loadHardware()
+    }
+
     if (hardwareId) {
       loadHardware()
     }
-    return { hardware, avatar, loading, error, activeTab }
+    return {
+      hardware,
+      hardwareId,
+      avatar,
+      loading,
+      error,
+      activeTab,
+      updateHardwareDialogVisible,
+      closeUpdateDialog,
+      handleHardwareUpdated
+    }
   }
 })
 </script>

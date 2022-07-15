@@ -226,7 +226,7 @@
           </el-form-item>
           <el-form-item
             v-if="['Desktop', 'Laptop', 'Others'].includes(form.data.type)"
-            label="Memory"
+            label="Memory (GB)"
             prop="spec_memory"
           >
             <el-input-number
@@ -237,7 +237,7 @@
           </el-form-item>
           <el-form-item
             v-if="['Desktop', 'Laptop', 'Others'].includes(form.data.type)"
-            label="Storage"
+            label="Storage (GB)"
             prop="spec_storage"
           >
             <el-input-number
@@ -248,7 +248,7 @@
           </el-form-item>
           <el-form-item
             v-if="['Desktop', 'Laptop', 'Others', 'TV', 'Monitor'].includes(form.data.type)"
-            label="Screen Size"
+            label="Screen Size (inch)"
             prop="spec_screen_size"
           >
             <el-input-number
@@ -326,7 +326,7 @@
               icon-class="fa-solid fa-ban"
               type="info"
               :disabled="form.submitting"
-              @click="handleCancel"
+              @click="$emit('cancel')"
             >
               Cancel
             </base-button>
@@ -341,7 +341,7 @@
 import { defineComponent, reactive, ref } from 'vue'
 import { User } from '@/types/store/user.module.type'
 import useHardware from '@/hooks/useHardware'
-import { ElMessage, ElMessageBox, FormInstance } from 'element-plus/es'
+import { ElMessage, FormInstance } from 'element-plus/es'
 import useUser from '@/hooks/useUser'
 import { Hardware } from '@/types/store/hardware.module.type'
 import BaseIconText from '@/components/base/base-icon-text.vue'
@@ -439,19 +439,6 @@ export default defineComponent({
       })
     }
 
-    const handleCancel = () => {
-      ElMessageBox.confirm('Your edit will not be saved. Continue?', 'Warning', {
-        confirmButtonText: 'Yes',
-        cancelButtonText: 'Cancel',
-        type: 'warning'
-      })
-        .then(() => {
-          formRef.value?.resetFields()
-          emit('cancel')
-        })
-        .catch(() => {})
-    }
-
     getHardwareById(props.hardwareId)
       .then((hardware) => {
         form.data = { ...hardware }
@@ -478,7 +465,7 @@ export default defineComponent({
         emit('cancel')
       })
 
-    return { formRef, form, loadingHardware, hardwareError, loadingUser, userError, handleUpdate, handleCancel }
+    return { formRef, form, loadingHardware, hardwareError, loadingUser, userError, handleUpdate }
   }
 })
 </script>
