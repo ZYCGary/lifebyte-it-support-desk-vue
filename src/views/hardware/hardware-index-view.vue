@@ -75,9 +75,6 @@
   <el-dialog
     v-model="newHardwareDialogVisible"
     title="New User"
-    :close-on-click-modal="false"
-    :close-on-press-escape="false"
-    :show-close="false"
     :destroy-on-close="true"
   >
     new hardware

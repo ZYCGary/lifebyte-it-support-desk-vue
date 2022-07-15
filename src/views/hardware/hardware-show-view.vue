@@ -1,30 +1,3 @@
-<!--<template>-->
-<!--  <the-content-header>-->
-<!--    <hardware-show-header-->
-<!--      v-if="hardware"-->
-<!--      :hardware="hardware"-->
-<!--    ></hardware-show-header>-->
-<!--  </the-content-header>-->
-<!--  <el-container-->
-<!--    v-loading="loading"-->
-<!--    class="relative"-->
-<!--  >-->
-<!--    <template v-if="!error && hardware">-->
-<!--      <el-main>-->
-<!--        <hardware-information v-model:hardware="hardware"></hardware-information>-->
-<!--      </el-main>-->
-<!--    </template>-->
-
-<!--    <template v-else>-->
-<!--      <el-main-->
-<!--        v-if="!loading"-->
-<!--        class="text-center"-->
-<!--      >-->
-<!--        {{ error }}-->
-<!--      </el-main>-->
-<!--    </template>-->
-<!--  </el-container>-->
-<!--</template>-->
 <template>
   <the-main-content>
     <template #header>
