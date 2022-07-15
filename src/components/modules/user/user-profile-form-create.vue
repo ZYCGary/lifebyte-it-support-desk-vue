@@ -158,20 +158,17 @@
         <div class="col-span-2 flex flex-row flex-nowrap justify-end mt-4">
           <el-form-item>
             <base-button
-              icon-class="fa-solid fa-check"
+              :disabled="form.submitting"
+              @click="$emit('cancel')"
+            >
+              Cancel
+            </base-button>
+            <base-button
               type="success"
               :loading="form.submitting"
               @click="handleCreate(formRef)"
             >
               Save
-            </base-button>
-            <base-button
-              icon-class="fa-solid fa-ban"
-              type="info"
-              :disabled="form.submitting"
-              @click="handleCancel"
-            >
-              Cancel
             </base-button>
           </el-form-item>
         </div>
@@ -191,7 +188,7 @@ import BaseButton from '@/components/base/base-button.vue'
 import { FormInstance } from 'element-plus'
 
 export default defineComponent({
-  name: 'user-profile-create-form',
+  name: 'user-profile-form-create',
   components: { BaseButton },
   props: {},
   emits: ['cancel', 'created'],

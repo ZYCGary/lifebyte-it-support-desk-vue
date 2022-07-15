@@ -35,6 +35,7 @@ const handleError = async (response: AxiosResponse) => {
 const instance = axios.create({
   headers: {
     'Access-Control-Allow-Origin-Type': '*',
+    'Access-Control-Allow-Credentials': true,
     'Project-Name': configs.app.name
   },
   timeout: 1000 * 30,

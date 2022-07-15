@@ -158,20 +158,17 @@
         <div class="col-span-2 flex flex-row flex-nowrap justify-end mt-4">
           <el-form-item>
             <base-button
-              icon-class="fa-solid fa-check"
-              type="success"
+              :disabled="form.submitting"
+              @click="$emit('cancel')"
+            >
+              Cancel
+            </base-button>
+            <base-button
+              type="primary"
               :loading="form.submitting"
               @click="handleUpdate(formRef)"
             >
               Update
-            </base-button>
-            <base-button
-              icon-class="fa-solid fa-ban"
-              type="info"
-              :disabled="form.submitting"
-              @click="handleCancel"
-            >
-              Cancel
             </base-button>
           </el-form-item>
         </div>
@@ -183,14 +180,14 @@
 
 <script lang="ts">
 import { defineComponent, reactive, ref } from 'vue'
-import { ElMessage, ElMessageBox, FormInstance } from 'element-plus/es'
+import { ElMessage, FormInstance } from 'element-plus/es'
 import useUser from '@/hooks/useUser'
 import useLocation from '@/hooks/useLocation'
 import { Location } from '@/types/store/location.module.type'
 import BaseButton from '@/components/base/base-button.vue'
 
 export default defineComponent({
-  name: 'user-profile-update-form',
+  name: 'user-profile-form-update',
   components: { BaseButton },
   props: {
     userId: {
@@ -314,20 +311,7 @@ export default defineComponent({
       })
     }
 
-    const handleCancel = () => {
-      ElMessageBox.confirm('Your edit will not be saved. Continue?', 'Warning', {
-        confirmButtonText: 'Yes',
-        cancelButtonText: 'Cancel',
-        type: 'warning'
-      })
-        .then(() => {
-          formRef.value?.resetFields()
-          emit('cancel')
-        })
-        .catch(() => {})
-    }
-
-    return { formRef, form, loadingUser, userError, loadingLocation, locationError, handleUpdate, handleCancel }
+    return { formRef, form, loadingUser, userError, loadingLocation, locationError, handleUpdate }
   }
 })
 </script>

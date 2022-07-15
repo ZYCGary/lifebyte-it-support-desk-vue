@@ -35,6 +35,7 @@ export interface UserFilter {
   desk?: string
   state?: number | string
   permission_level?: number | string
+  paginate?: boolean
 }
 
 export interface UserState {}

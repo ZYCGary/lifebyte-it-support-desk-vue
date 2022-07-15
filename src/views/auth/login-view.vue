@@ -33,7 +33,7 @@
             @click="login(formRef)"
             :loading="form.submitting"
           >
-            {{ form.submitting ? 'Logging In' : 'Log In' }}
+            Login
           </el-button>
         </el-form-item>
       </el-form>

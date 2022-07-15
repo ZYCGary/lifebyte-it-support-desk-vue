@@ -1,17 +1,32 @@
 <template>
-  <div class="w-9 h-9 rounded-full bg-green-600/70 leading-9 font-bold text-center text-xl text-white">
-    {{ initial }}
+  <div class="w-10 h-10 rounded-full bg-green-600/70 leading-10 font-bold text-center text-xl text-white">
+    <template v-if="type === 'name'">
+      {{ initial }}
+    </template>
+
+    <template v-if="type === 'icon'">
+      <i :class="iconClass"></i>
+    </template>
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue'
+import { computed, defineComponent, PropType } from 'vue'
 
 export default defineComponent({
   name: 'base-avatar',
   props: {
+    type: {
+      required: false,
+      type: String as PropType<'name' | 'icon' | 'image'>,
+      default: 'name'
+    },
     name: {
-      require: true,
+      require: false,
+      type: String
+    },
+    icon: {
+      required: false,
       type: String
     }
   },
@@ -20,7 +35,9 @@ export default defineComponent({
       return props.name ? props.name[0].toUpperCase() : '?'
     })
 
-    return { initial }
+    const iconClass = props?.icon ? props?.icon : 'fa-solid fa-d'
+
+    return { initial, iconClass }
   }
 })
 </script>

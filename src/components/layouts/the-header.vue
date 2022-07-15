@@ -22,7 +22,7 @@
                 :loading="status.logging_out"
                 @click="logout"
               >
-                {{ status.logging_out ? 'Logging Out' : 'Logout' }}
+                Logout
               </el-button>
             </el-dropdown-item>
           </el-dropdown-menu>

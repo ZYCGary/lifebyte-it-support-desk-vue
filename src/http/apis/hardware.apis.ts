@@ -2,7 +2,7 @@ import requests from '@/http/requests'
 import { HardwareFilter } from '@/types/store/hardware.module.type'
 
 const hardwareApis = {
-  getHardwareCollection: async (filter?: HardwareFilter) => {
+  index: async (filter?: HardwareFilter) => {
     // Remove empty filter keys.
     if (filter) {
       for (const [key, value] of Object.entries(filter)) {
@@ -14,12 +14,12 @@ const hardwareApis = {
 
     return response.data
   },
-  getHardware: async (hardwareId: number) => {
+  show: async (hardwareId: number) => {
     const response = await requests.get(`/api/v1/hardware/${hardwareId}`)
 
     return response.data
   },
-  updateHardware: async (id: number, payload: any) => {
+  update: async (id: number, payload: any) => {
     await requests.put(`/api/v1/hardware/${id}`, payload)
   }
 }
