@@ -21,6 +21,9 @@ const hardwareApis = {
   },
   update: async (id: number, payload: any) => {
     await requests.put(`/api/v1/hardware/${id}`, payload)
+  },
+  store: async (payload: object) => {
+    await requests.post('/api/v1/hardware', payload)
   }
 }
 

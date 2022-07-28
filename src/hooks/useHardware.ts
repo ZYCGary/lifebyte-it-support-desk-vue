@@ -7,13 +7,15 @@ const useHardware = () => {
   const loading = reactive({
     collection: false,
     show: false,
-    update: false
+    update: false,
+    store: false
   })
 
   const error = reactive({
     collection: false,
     show: false,
-    update: false
+    update: false,
+    store: false
   })
 
   const getHardwareCollection = async (
@@ -82,7 +84,24 @@ const useHardware = () => {
     }
   }
 
-  return { loading, error, getHardwareCollection, getHardwareById, updateHardware }
+  const createHardware = async (payload: object): Promise<void> => {
+    try {
+      loading.store = true
+      error.store = false
+
+      await apis.hardware.store(payload)
+
+      loading.store = false
+      error.store = false
+    } catch (err) {
+      loading.store = false
+      error.store = true
+
+      throw err
+    }
+  }
+
+  return { loading, error, getHardwareCollection, getHardwareById, updateHardware, createHardware }
 }
 
 export default useHardware

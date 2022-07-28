@@ -79,10 +79,14 @@
   <!-- New hardware dialog -->
   <el-dialog
     v-model="newHardwareDialogVisible"
-    title="New User"
+    title="New Hardware"
     :destroy-on-close="true"
+    :before-close="closeNewHardwareDialog"
   >
-    new hardware
+    <hardware-form-create
+      @cancel="closeNewHardwareDialog"
+      @created="handleHardwareCreated"
+    ></hardware-form-create>
   </el-dialog>
   <!-- New hardware dialog -->
 </template>
@@ -100,9 +104,12 @@ import useHardware from '@/hooks/useHardware'
 import BaseIconText from '@/components/base/base-icon-text.vue'
 import HardwareListFilter from '@/components/modules/hardware/hardware-list-filter.vue'
 import { UserFilter } from '@/types/store/user.module.type'
+import { ElMessageBox } from 'element-plus/es'
+import HardwareFormCreate from '@/components/modules/hardware/hardware-form-create.vue'
 
 export default defineComponent({
   components: {
+    HardwareFormCreate,
     HardwareListFilter,
     BaseIconText,
     TheMainContent,
@@ -184,6 +191,23 @@ export default defineComponent({
 
     const newHardwareDialogVisible = ref<boolean>(false)
 
+    const closeNewHardwareDialog = () => {
+      ElMessageBox.confirm('Your edit will not be saved. Continue?', 'Warning', {
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'Cancel',
+        type: 'warning'
+      })
+        .then(() => {
+          newHardwareDialogVisible.value = false
+        })
+        .catch(() => {})
+    }
+
+    const handleHardwareCreated = () => {
+      newHardwareDialogVisible.value = false
+      loadTable()
+    }
+
     const handleImportClick = () => {}
 
     const handleExportClick = () => {}
@@ -195,7 +219,9 @@ export default defineComponent({
       search,
       handlePageChange,
       handleHardwareUpdated,
+      handleHardwareCreated,
       newHardwareDialogVisible,
+      closeNewHardwareDialog,
       handleImportClick,
       handleExportClick,
       handleFilter
