@@ -66,7 +66,12 @@
           </div>
         </el-main>
 
-        <the-right-aside> Filter </the-right-aside>
+        <the-right-aside>
+          <hardware-list-filter
+            :filter="table.filter"
+            @filter="handleFilter"
+          ></hardware-list-filter>
+        </the-right-aside>
       </el-container>
     </template>
   </the-main-content>
@@ -93,9 +98,12 @@ import BasePagination from '@/components/base/base-pagination.vue'
 import TheMainContent from '@/components/layouts/the-main-content.vue'
 import useHardware from '@/hooks/useHardware'
 import BaseIconText from '@/components/base/base-icon-text.vue'
+import HardwareListFilter from '@/components/modules/hardware/hardware-list-filter.vue'
+import { UserFilter } from '@/types/store/user.module.type'
 
 export default defineComponent({
   components: {
+    HardwareListFilter,
     BaseIconText,
     TheMainContent,
     BasePagination,
@@ -137,6 +145,7 @@ export default defineComponent({
         spec_os: '',
         spec_cpu: '',
         spec_memory: '',
+        spec_storage: '',
         spec_screen_size: ''
       })
     })
@@ -168,6 +177,11 @@ export default defineComponent({
       loadTable(table.filter)
     }
 
+    const handleFilter = (filter: UserFilter) => {
+      table.filter = filter
+      loadTable(filter)
+    }
+
     const newHardwareDialogVisible = ref<boolean>(false)
 
     const handleImportClick = () => {}
@@ -183,7 +197,8 @@ export default defineComponent({
       handleHardwareUpdated,
       newHardwareDialogVisible,
       handleImportClick,
-      handleExportClick
+      handleExportClick,
+      handleFilter
     }
   }
 })

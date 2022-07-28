@@ -102,7 +102,7 @@
               class="w-full"
             >
               <el-option
-                v-for="(item, index) in form.typeOptions"
+                v-for="(item, index) in form.type_options"
                 :key="index"
                 :value="item"
               />
@@ -361,7 +361,7 @@ export default defineComponent({
       submitting: false,
       data: null as Hardware | null,
       userOptions: [] as User[],
-      typeOptions: [
+      type_options: [
         'Desktop',
         'Laptop',
         'Mouse',
