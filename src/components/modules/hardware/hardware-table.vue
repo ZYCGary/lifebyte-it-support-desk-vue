@@ -37,17 +37,17 @@
     <el-table-column
       property="serial_number"
       label="Serial Number"
-      width="300"
+      min-width="300"
     ></el-table-column>
     <el-table-column
       property="tag"
       label="Tag"
-      width="200"
+      min-width="200"
     ></el-table-column>
     <el-table-column
       label="User"
       property="user"
-      width="250"
+      min-width="250"
     >
       <template #default="scope">
         <el-popover
@@ -89,7 +89,7 @@
       fixed="right"
       label="Operations"
       property="operations"
-      width="120"
+      min-width="150"
     >
       <template #default="scope">
         <div class="flex flex-row flex-nowrap gap-x-2">
@@ -103,6 +103,21 @@
               type="primary"
               :text="false"
               @click="showUpdateDialog(scope.row.id)"
+            >
+            </base-button>
+          </el-tooltip>
+
+          <el-tooltip
+            v-if="scope.row.user.type !== 'Storage'"
+            content="Return"
+            placement="top"
+            :show-after="500"
+          >
+            <base-button
+              icon-class="fa-solid fa-rotate-left"
+              type="warning"
+              :text="false"
+              @click="showReturnDialog(scope.row.id)"
             >
             </base-button>
           </el-tooltip>
@@ -129,6 +144,18 @@
     ></hardware-form-update>
   </el-dialog>
   <!-- Hardware update dialog end -->
+
+  <el-dialog
+    v-model="hardwareReturnDialogVisibility"
+    title="Return Hardware"
+    :destroy-on-close="true"
+  >
+    <hardware-form-return
+      :hardware-id="clickedHardwareId"
+      @cancel="hardwareReturnDialogVisibility = false"
+      @returned="handleHardwareReturned"
+    ></hardware-form-return>
+  </el-dialog>
 </template>
 
 <script lang="ts">
@@ -139,10 +166,11 @@ import { useRouter } from 'vue-router'
 import { TableColumnCtx } from 'element-plus/es/components/table/src/table-column/defaults'
 import HardwareFormUpdate from '@/components/modules/hardware/hardware-form-update.vue'
 import { ElMessageBox } from 'element-plus/es'
+import HardwareFormReturn from '@/components/modules/hardware/hardware-form-return.vue'
 
 export default defineComponent({
   name: 'hardware-table',
-  components: { HardwareFormUpdate, BaseButton },
+  components: { HardwareFormReturn, HardwareFormUpdate, BaseButton },
   props: {
     data: {
       required: true,
@@ -157,7 +185,7 @@ export default defineComponent({
       type: Boolean
     }
   },
-  emits: ['hardwareUpdated'],
+  emits: ['hardwareUpdated', 'hardwareReturned'],
   setup: (props, { emit }) => {
     const updateHardwareDialogVisible = ref<boolean>(false)
     const clickedHardwareId = ref<number>(0)
@@ -191,13 +219,28 @@ export default defineComponent({
       emit('hardwareUpdated')
     }
 
+    const hardwareReturnDialogVisibility = ref<boolean>(false)
+
+    const showReturnDialog = (hardwareId: number) => {
+      clickedHardwareId.value = hardwareId
+      hardwareReturnDialogVisibility.value = true
+    }
+
+    const handleHardwareReturned = () => {
+      hardwareReturnDialogVisibility.value = false
+      emit('hardwareReturned')
+    }
+
     return {
       updateHardwareDialogVisible,
       clickedHardwareId,
       handleRowClick,
       showUpdateDialog,
       closeUpdateDialog,
-      handleHardwareUpdated
+      handleHardwareUpdated,
+      hardwareReturnDialogVisibility,
+      showReturnDialog,
+      handleHardwareReturned
     }
   }
 })

@@ -62,6 +62,7 @@
               :loading="loading.collection"
               :data="table.data"
               @hardware-updated="handleHardwareUpdated"
+              @hardware-returned="handleHardwareReturned"
             ></hardware-table>
           </div>
         </el-main>
@@ -151,9 +152,9 @@ export default defineComponent({
         tag: '',
         spec_os: '',
         spec_cpu: '',
-        spec_memory: '',
-        spec_storage: '',
-        spec_screen_size: ''
+        spec_memory: 0,
+        spec_storage: 0,
+        spec_screen_size: 0
       })
     })
 
@@ -208,6 +209,10 @@ export default defineComponent({
       loadTable()
     }
 
+    const handleHardwareReturned = () => {
+      loadTable(table.filter)
+    }
+
     const handleImportClick = () => {}
 
     const handleExportClick = () => {}
@@ -220,6 +225,7 @@ export default defineComponent({
       handlePageChange,
       handleHardwareUpdated,
       handleHardwareCreated,
+      handleHardwareReturned,
       newHardwareDialogVisible,
       closeNewHardwareDialog,
       handleImportClick,

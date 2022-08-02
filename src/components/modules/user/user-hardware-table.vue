@@ -36,7 +36,7 @@
     <el-table-column
       fixed="right"
       label="Operations"
-      width="140"
+      min-width="140"
     >
       <template #default="scope">
         <router-link :to="{ name: 'hardware.show', params: { id: scope.row.id } }">
