@@ -5,8 +5,10 @@
         <h1>Hardware Detail</h1>
         <div class="flex flex-1 justify-end">
           <base-button
+            v-if="hardware?.user.type !== 'Storage'"
             icon-class="fa-solid fa-rotate-left"
             type="warning"
+            @click="hardwareReturnDialogVisibility = true"
           >
             Return
           </base-button>
@@ -109,6 +111,18 @@
     ></hardware-form-update>
   </el-dialog>
   <!-- Hardware update dialog end -->
+
+  <el-dialog
+    v-model="hardwareReturnDialogVisibility"
+    title="Return Hardware"
+    destroy-on-close
+  >
+    <hardware-form-return
+      :hardware-id="hardwareId"
+      @cancel="hardwareReturnDialogVisibility = false"
+      @returned="handleHardwareReturned"
+    ></hardware-form-return>
+  </el-dialog>
 </template>
 
 <script lang="ts">
@@ -122,10 +136,11 @@ import { ElMessage, ElMessageBox } from 'element-plus/es'
 import BaseAvatar from '@/components/base/base-avatar.vue'
 import HardwareInformation from '@/components/modules/hardware/hardware-information.vue'
 import HardwareFormUpdate from '@/components/modules/hardware/hardware-form-update.vue'
+import HardwareFormReturn from '@/components/modules/hardware/hardware-form-return.vue'
 
 export default defineComponent({
   name: 'hardware-show-view',
-  components: { HardwareFormUpdate, HardwareInformation, BaseAvatar, BaseButton, TheMainContent },
+  components: { HardwareFormReturn, HardwareFormUpdate, HardwareInformation, BaseAvatar, BaseButton, TheMainContent },
   props: {},
   setup: () => {
     const route = useRoute()
@@ -211,6 +226,13 @@ export default defineComponent({
       loadHardware()
     }
 
+    const hardwareReturnDialogVisibility = ref<boolean>(false)
+
+    const handleHardwareReturned = () => {
+      hardwareReturnDialogVisibility.value = false
+      loadHardware()
+    }
+
     if (hardwareId) {
       loadHardware()
     }
@@ -223,7 +245,9 @@ export default defineComponent({
       activeTab,
       updateHardwareDialogVisible,
       closeUpdateDialog,
-      handleHardwareUpdated
+      handleHardwareUpdated,
+      hardwareReturnDialogVisibility,
+      handleHardwareReturned
     }
   }
 })
