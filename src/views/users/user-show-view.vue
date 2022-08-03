@@ -207,21 +207,28 @@ export default defineComponent({
         type: 'warning'
       })
         .then(() => {
-          dismissUser(userId)
-            .then(() => {
-              ElMessage({
-                type: 'success',
-                message: 'Dismissed user successfully.'
-              })
+          if (user.value && user.value.hardware && user.value.hardware.length === 0) {
+            dismissUser(userId)
+              .then(() => {
+                ElMessage({
+                  type: 'success',
+                  message: 'Dismissed user successfully.'
+                })
 
-              loadUser()
-            })
-            .catch(() => {
-              ElMessage({
-                type: 'error',
-                message: 'Failed to dismiss user.'
+                loadUser()
               })
+              .catch(() => {
+                ElMessage({
+                  type: 'error',
+                  message: 'Failed to dismiss user.'
+                })
+              })
+          } else {
+            ElMessage({
+              type: 'warning',
+              message: "Please return this user's hardware first."
             })
+          }
         })
         .catch(() => {})
     }
