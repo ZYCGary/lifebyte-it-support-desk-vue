@@ -4,30 +4,29 @@
       <div class="flex flex-row flex-nowrap items-center">
         <h1>User List</h1>
         <div class="flex flex-1 justify-end">
-          <el-button
+          <base-button
             type="success"
+            icon-class="fa-solid fa-plus"
             class="mr-4"
             @click="newUserDialogVisible = true"
           >
-            <base-icon-text
-              icon-class="fa-solid fa-plus"
-              text="New"
-            ></base-icon-text>
-          </el-button>
+            New
+          </base-button>
 
           <el-button-group>
-            <el-button @click="handleImportClick">
-              <base-icon-text
-                icon-class="fa-solid fa-file-import"
-                text="import"
-              ></base-icon-text>
-            </el-button>
-            <el-button @click="handleExportClick">
-              <base-icon-text
-                icon-class="fa-solid fa-file-export"
-                text="Export"
-              ></base-icon-text>
-            </el-button>
+            <base-button
+              icon-class="fa-solid fa-file-import"
+              @click="handleImportClick"
+            >
+              Import
+            </base-button>
+            <base-button
+              icon-class="fa-solid fa-file-export"
+              @click="handleExportClick"
+              :loading="loading.export"
+            >
+              Export
+            </base-button>
           </el-button-group>
         </div>
       </div>
@@ -101,15 +100,15 @@ import BasePagination from '@/components/base/base-pagination.vue'
 import { User, UserFilter } from '@/types/store/user.module.type'
 import UserListFilter from '@/components/modules/user/user-list-filter.vue'
 import useUser from '@/hooks/useUser'
-import BaseIconText from '@/components/base/base-icon-text.vue'
 import UserProfileFormCreate from '@/components/modules/user/user-profile-form-create.vue'
 import { useRouter } from 'vue-router'
-import { ElMessageBox } from 'element-plus/es'
+import { ElMessage, ElMessageBox } from 'element-plus/es'
+import BaseButton from '@/components/base/base-button.vue'
 
 export default defineComponent({
   components: {
+    BaseButton,
     UserProfileFormCreate,
-    BaseIconText,
     UserListFilter,
     BasePagination,
     BaseSearchBar,
@@ -120,7 +119,7 @@ export default defineComponent({
   name: 'user-index-view',
   props: {},
   setup() {
-    const { loading, error, getUserCollection } = useUser()
+    const { loading, error, getUserCollection, exportUsers } = useUser()
 
     const table = reactive({
       data: [] as User[],
@@ -214,8 +213,14 @@ export default defineComponent({
     }
 
     const handleExportClick = () => {
-      // TODO: user export
-      console.log('export')
+      exportUsers()
+        .then()
+        .catch(() => {
+          ElMessage({
+            type: 'error',
+            message: 'Failed to export users.'
+          })
+        })
     }
 
     return {

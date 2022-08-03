@@ -24,6 +24,11 @@ const hardwareApis = {
   },
   store: async (payload: object) => {
     await requests.post('/api/v1/hardware', payload)
+  },
+  export: async () => {
+    const response = await requests.get('/api/v1/hardware/export', {}, { responseType: 'blob' })
+
+    return response?.data
   }
 }
 

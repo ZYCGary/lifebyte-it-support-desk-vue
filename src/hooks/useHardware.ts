@@ -3,20 +3,23 @@ import { Hardware, HardwareFilter } from '@/types/store/hardware.module.type'
 import { BasePaginationProps } from '@/types/components.type'
 import apis from '@/http/apis'
 import { User } from '@/types/store/user.module.type'
+import downloadFile from '@/utils/download-file'
 
 const useHardware = () => {
   const loading = reactive({
     collection: false,
     show: false,
     update: false,
-    store: false
+    store: false,
+    export: false
   })
 
   const error = reactive({
     collection: false,
     show: false,
     update: false,
-    store: false
+    store: false,
+    export: false
   })
 
   const getHardwareCollection = async (
@@ -119,7 +122,34 @@ const useHardware = () => {
     }
   }
 
-  return { loading, error, getHardwareCollection, getHardwareById, updateHardware, createHardware, returnHardware }
+  const exportHardware = async () => {
+    try {
+      loading.export = true
+      error.export = false
+
+      const file = await apis.hardware.export()
+      downloadFile(file, 'hardware.xlsx')
+
+      loading.export = false
+      error.export = false
+    } catch (err) {
+      loading.export = false
+      error.export = true
+
+      throw err
+    }
+  }
+
+  return {
+    loading,
+    error,
+    getHardwareCollection,
+    getHardwareById,
+    updateHardware,
+    createHardware,
+    returnHardware,
+    exportHardware
+  }
 }
 
 export default useHardware

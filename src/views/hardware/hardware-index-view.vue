@@ -4,30 +4,29 @@
       <div class="flex flex-row flex-nowrap items-center">
         <h1>Hardware List</h1>
         <div class="flex flex-1 justify-end">
-          <el-button
+          <base-button
+            icon-class="fa-solid fa-plus"
             type="success"
             class="mr-4"
             @click="newHardwareDialogVisible = true"
           >
-            <base-icon-text
-              icon-class="fa-solid fa-plus"
-              text="New"
-            ></base-icon-text>
-          </el-button>
+            New
+          </base-button>
 
           <el-button-group>
-            <el-button @click="handleImportClick">
-              <base-icon-text
-                icon-class="fa-solid fa-file-import"
-                text="import"
-              ></base-icon-text>
-            </el-button>
-            <el-button @click="handleExportClick">
-              <base-icon-text
-                icon-class="fa-solid fa-file-export"
-                text="Export"
-              ></base-icon-text>
-            </el-button>
+            <base-button
+              icon-class="fa-solid fa-file-import"
+              @click="handleImportClick"
+            >
+              Import
+            </base-button>
+            <base-button
+              icon-class="fa-solid fa-file-export"
+              :loading="loading.export"
+              @click="handleExportClick"
+            >
+              Export
+            </base-button>
           </el-button-group>
         </div>
       </div>
@@ -102,17 +101,17 @@ import BaseSearchBar from '@/components/base/base-search-bar.vue'
 import BasePagination from '@/components/base/base-pagination.vue'
 import TheMainContent from '@/components/layouts/the-main-content.vue'
 import useHardware from '@/hooks/useHardware'
-import BaseIconText from '@/components/base/base-icon-text.vue'
 import HardwareListFilter from '@/components/modules/hardware/hardware-list-filter.vue'
 import { UserFilter } from '@/types/store/user.module.type'
-import { ElMessageBox } from 'element-plus/es'
+import { ElMessage, ElMessageBox } from 'element-plus/es'
 import HardwareFormCreate from '@/components/modules/hardware/hardware-form-create.vue'
+import BaseButton from '@/components/base/base-button.vue'
 
 export default defineComponent({
   components: {
+    BaseButton,
     HardwareFormCreate,
     HardwareListFilter,
-    BaseIconText,
     TheMainContent,
     BasePagination,
     BaseSearchBar,
@@ -121,7 +120,7 @@ export default defineComponent({
   },
   props: {},
   setup() {
-    const { loading, error, getHardwareCollection } = useHardware()
+    const { loading, error, getHardwareCollection, exportHardware } = useHardware()
 
     const table = reactive({
       data: [] as Hardware[],
@@ -215,7 +214,16 @@ export default defineComponent({
 
     const handleImportClick = () => {}
 
-    const handleExportClick = () => {}
+    const handleExportClick = () => {
+      exportHardware()
+        .then()
+        .catch(() => {
+          ElMessage({
+            type: 'error',
+            message: 'Failed to export hardware.'
+          })
+        })
+    }
 
     return {
       loading,

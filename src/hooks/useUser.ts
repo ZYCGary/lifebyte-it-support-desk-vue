@@ -2,6 +2,7 @@ import { reactive } from 'vue'
 import { User, UserFilter } from '@/types/store/user.module.type'
 import apis from '@/http/apis'
 import { BasePaginationProps } from '@/types/components.type'
+import downloadFile from '@/utils/download-file'
 
 const useUser = () => {
   const loading = reactive({
@@ -9,14 +10,16 @@ const useUser = () => {
     show: false,
     store: false,
     update: false,
-    dismiss: false
+    dismiss: false,
+    export: false
   })
   const error = reactive({
     collection: false,
     show: false,
     store: false,
     update: false,
-    dismiss: false
+    dismiss: false,
+    export: false
   })
 
   const getUserCollection = async (
@@ -121,7 +124,25 @@ const useUser = () => {
     }
   }
 
-  return { loading, error, getUserCollection, getUserById, updateUser, createUser, dismissUser }
+  const exportUsers = async () => {
+    try {
+      loading.export = true
+      error.export = false
+
+      const file = await apis.user.export()
+      downloadFile(file, 'users.xlsx')
+
+      loading.export = false
+      error.export = false
+    } catch (err) {
+      loading.export = false
+      error.export = true
+
+      throw err
+    }
+  }
+
+  return { loading, error, getUserCollection, getUserById, updateUser, createUser, dismissUser, exportUsers }
 }
 
 export default useUser
