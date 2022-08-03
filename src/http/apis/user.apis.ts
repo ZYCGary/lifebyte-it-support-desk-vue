@@ -11,7 +11,7 @@ const userApis = {
 
     return response?.data
   },
-  store: async (payload: any) => {
+  store: async (payload: object) => {
     const response = await requests.post('/api/v1/users', payload)
 
     return response?.data?.data

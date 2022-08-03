@@ -2,18 +2,21 @@ import { reactive } from 'vue'
 import { Hardware, HardwareFilter } from '@/types/store/hardware.module.type'
 import { BasePaginationProps } from '@/types/components.type'
 import apis from '@/http/apis'
+import { User } from '@/types/store/user.module.type'
 
 const useHardware = () => {
   const loading = reactive({
     collection: false,
     show: false,
-    update: false
+    update: false,
+    store: false
   })
 
   const error = reactive({
     collection: false,
     show: false,
-    update: false
+    update: false,
+    store: false
   })
 
   const getHardwareCollection = async (
@@ -82,7 +85,41 @@ const useHardware = () => {
     }
   }
 
-  return { loading, error, getHardwareCollection, getHardwareById, updateHardware }
+  const createHardware = async (payload: object): Promise<void> => {
+    try {
+      loading.store = true
+      error.store = false
+
+      await apis.hardware.store(payload)
+
+      loading.store = false
+      error.store = false
+    } catch (err) {
+      loading.store = false
+      error.store = true
+
+      throw err
+    }
+  }
+
+  const returnHardware = async (hardwareId: number, returnTo: User): Promise<void> => {
+    try {
+      loading.update = true
+      error.update = false
+
+      await apis.hardware.update(hardwareId, { user: returnTo })
+
+      loading.update = false
+      error.update = false
+    } catch (err) {
+      loading.update = false
+      error.update = true
+
+      throw err
+    }
+  }
+
+  return { loading, error, getHardwareCollection, getHardwareById, updateHardware, createHardware, returnHardware }
 }
 
 export default useHardware

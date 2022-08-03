@@ -99,7 +99,14 @@
                   :label="`Hardware (${user.hardware.length})`"
                   name="hardware"
                 >
-                  <user-hardware-table :data="user.hardware"></user-hardware-table>
+                  <hardware-table
+                    :data="user.hardware"
+                    :error="error.show"
+                    :loading="loading.show"
+                    :show-optional-columns="false"
+                    @hardware-updated="handleHardwareUpdated"
+                    @hardware-returned="handleHardwareReturned"
+                  ></hardware-table>
                 </el-tab-pane>
               </el-tabs>
             </template>
@@ -139,10 +146,10 @@ import useUser from '@/hooks/useUser'
 import { ElMessage, ElMessageBox } from 'element-plus/es'
 import { User } from '@/types/store/user.module.type'
 import UserProfileFormUpdate from '@/components/modules/user/user-profile-form-update.vue'
-import UserHardwareTable from '@/components/modules/user/user-hardware-table.vue'
+import HardwareTable from '@/components/modules/hardware/hardware-table.vue'
 
 export default defineComponent({
-  components: { UserHardwareTable, UserProfileFormUpdate, BaseButton, BaseAvatar, TheMainContent },
+  components: { HardwareTable, UserProfileFormUpdate, BaseButton, BaseAvatar, TheMainContent },
   name: 'user-show-view',
   props: {},
   setup() {
@@ -185,6 +192,14 @@ export default defineComponent({
       loadUser()
     }
 
+    const handleHardwareUpdated = () => {
+      loadUser()
+    }
+
+    const handleHardwareReturned = () => {
+      loadUser()
+    }
+
     const dismiss = () => {
       ElMessageBox.confirm('Are you sure you want to dismiss this user?', 'Warning', {
         confirmButtonText: 'Yes',
@@ -222,7 +237,9 @@ export default defineComponent({
       updateUserDialogVisible,
       closeUpdateDialog,
       handleUserUpdated,
-      dismiss
+      dismiss,
+      handleHardwareUpdated,
+      handleHardwareReturned
     }
   }
 })

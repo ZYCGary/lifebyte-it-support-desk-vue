@@ -1,6 +1,6 @@
 <template>
   <!-- Skeleton -->
-  <template v-if="loadingHardware.show || loadingUser.collection">
+  <template v-if="loadingUser.collection">
     <el-skeleton
       :count="8"
       class="grid grid-cols-2 gap-4"
@@ -22,11 +22,11 @@
   <!-- Skeleton end -->
 
   <template v-else>
-    <template v-if="hardwareError.show || userError.collection">
+    <template v-if="userError.collection">
       <div class="text-center">Hardware not found</div>
     </template>
 
-    <!-- Hardware update form -->
+    <!-- Hardware create form -->
     <template v-else>
       <el-form
         v-if="form.data"
@@ -45,24 +45,50 @@
               text="IDs"
             ></base-icon-text>
           </h1>
-          <el-form-item
-            label="Serial Number"
-            prop="serial_number"
+          <template
+            v-for="(id, index) in form.data.ids"
+            :key="index"
           >
-            <el-input
-              v-model="form.data.serial_number"
-              clearable
-            />
-          </el-form-item>
-          <el-form-item
-            label="Tag"
-            prop="tag"
-          >
-            <el-input
-              v-model="form.data.tag"
-              clearable
-            />
-          </el-form-item>
+            <el-form-item
+              :label="`Item ${index + 1} - Serial Number`"
+              :prop="`ids.${index}.serial_number`"
+              :rules="{
+                required: true,
+                message: 'Please input serial number'
+              }"
+            >
+              <el-input
+                v-model="id.serial_number"
+                clearable
+              />
+            </el-form-item>
+            <el-form-item
+              :label="`Item ${index + 1} - Tag`"
+              :prop="`ids.${index}.tag`"
+              :rules="{
+                required: true,
+                message: 'Please input tag'
+              }"
+            >
+              <el-input
+                v-model="id.tag"
+                clearable
+              />
+            </el-form-item>
+          </template>
+
+          <el-button-group>
+            <base-button
+              :text="false"
+              icon-class="fa-solid fa-plus"
+              @click="addId"
+            ></base-button>
+            <base-button
+              :text="false"
+              icon-class="fa-solid fa-minus"
+              @click="removeId"
+            ></base-button>
+          </el-button-group>
         </div>
         <!-- Ids -->
 
@@ -143,6 +169,7 @@
               filterable
               placeholder="Select a User"
               class="w-full"
+              default-first-option
             >
               <el-option
                 v-for="user in form.userOptions"
@@ -323,9 +350,9 @@
             <base-button
               type="primary"
               :loading="form.submitting"
-              @click="handleUpdate(formRef)"
+              @click="handleCreate(formRef)"
             >
-              Update
+              Save
             </base-button>
           </el-form-item>
         </div>
@@ -340,26 +367,36 @@ import { User } from '@/types/store/user.module.type'
 import useHardware from '@/hooks/useHardware'
 import { ElMessage, FormInstance } from 'element-plus/es'
 import useUser from '@/hooks/useUser'
-import { Hardware } from '@/types/store/hardware.module.type'
 import BaseIconText from '@/components/base/base-icon-text.vue'
 import BaseButton from '@/components/base/base-button.vue'
 
 export default defineComponent({
-  name: 'hardware-form-update',
+  name: 'hardware-form-create',
   components: { BaseButton, BaseIconText },
-  props: {
-    hardwareId: {
-      required: true,
-      type: Number
-    }
-  },
-  emits: ['cancel', 'updated'],
+  props: {},
+  emits: ['cancel', 'created'],
   setup: (props, { emit }) => {
     const formRef = ref()
 
     const form = reactive({
       submitting: false,
-      data: null as Hardware | null,
+      data: {
+        ids: [{ serial_number: '', tag: '' }],
+        name: '',
+        description: '',
+        type: '',
+        brand: '',
+        model: '',
+        user: {} as User,
+        spec_os: '',
+        spec_cpu: '',
+        spec_memory: null,
+        spec_storage: null,
+        spec_screen_size: null,
+        bundle_with: [],
+        spec_others: '',
+        note: ''
+      },
       userOptions: [] as User[],
       type_options: [
         'Desktop',
@@ -397,59 +434,64 @@ export default defineComponent({
         type: [{ required: true, message: `Please select hardware type` }],
         brand: [{ required: true, message: `Please select/input hardware brand` }],
         model: [{ required: true, message: `Please input hardware model` }],
-        serial_number: [{ required: true, message: `Please input hardware serial number` }],
-        tag: [{ required: true, message: `Please input hardware tag` }],
         user: [{ required: true, message: `Please select a user` }]
       }
     })
 
-    const { loading: loadingHardware, error: hardwareError, getHardwareById, updateHardware } = useHardware()
+    const { loading: loadingHardware, error: hardwareError, createHardware } = useHardware()
     const { loading: loadingUser, error: userError, getUserCollection } = useUser()
 
-    const handleUpdate = (formEl: FormInstance | undefined) => {
+    const handleCreate = (formEl: FormInstance | undefined) => {
       if (!formEl) return
 
       formEl.validate((valid) => {
         if (valid && form.data) {
           form.submitting = true
 
-          updateHardware(props.hardwareId, form.data)
+          createHardware(form.data)
             .then(() => {
               form.submitting = false
 
               ElMessage({
                 type: 'success',
-                message: 'Update user profile successfully.'
+                message: 'Create hardware successfully.'
               })
 
-              emit('updated')
+              emit('created')
             })
-            .catch(() => {
+            .catch((err) => {
               form.submitting = false
+
+              const response = err.response
+              let message = 'Failed to create hardware.'
+
+              if (response.status === 422) {
+                // Get error message of serial numbers or tags.
+                if (typeof Object.values(response.data.errors)[0] === 'object') {
+                  message = (Object.values(response.data.errors)[0] as Array<String>)[0][0] as string
+                } else {
+                  message = response.dat.message
+                }
+              }
 
               ElMessage({
                 type: 'error',
-                message: 'Failed to update user profile.'
+                message: message
               })
             })
         }
       })
     }
 
-    getHardwareById(props.hardwareId)
-      .then((hardware) => {
-        form.data = { ...hardware }
-      })
-      .catch(() => {
-        ElMessage({
-          type: 'error',
-          message: 'Hardware not found.'
-        })
+    const addId = () => {
+      form.data.ids.push({ serial_number: '', tag: '' })
+    }
 
-        emit('cancel')
-      })
+    const removeId = () => {
+      form.data.ids.pop()
+    }
 
-    getUserCollection({ paginate: false })
+    getUserCollection({ type: 'Storage', paginate: false })
       .then((users) => {
         form.userOptions = users.data
       })
@@ -462,7 +504,7 @@ export default defineComponent({
         emit('cancel')
       })
 
-    return { formRef, form, loadingHardware, hardwareError, loadingUser, userError, handleUpdate }
+    return { formRef, form, loadingHardware, hardwareError, loadingUser, userError, handleCreate, addId, removeId }
   }
 })
 </script>

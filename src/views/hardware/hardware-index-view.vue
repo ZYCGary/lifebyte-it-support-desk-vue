@@ -62,11 +62,17 @@
               :loading="loading.collection"
               :data="table.data"
               @hardware-updated="handleHardwareUpdated"
+              @hardware-returned="handleHardwareReturned"
             ></hardware-table>
           </div>
         </el-main>
 
-        <the-right-aside> Filter </the-right-aside>
+        <the-right-aside>
+          <hardware-list-filter
+            :filter="table.filter"
+            @filter="handleFilter"
+          ></hardware-list-filter>
+        </the-right-aside>
       </el-container>
     </template>
   </the-main-content>
@@ -74,10 +80,14 @@
   <!-- New hardware dialog -->
   <el-dialog
     v-model="newHardwareDialogVisible"
-    title="New User"
+    title="New Hardware"
     :destroy-on-close="true"
+    :before-close="closeNewHardwareDialog"
   >
-    new hardware
+    <hardware-form-create
+      @cancel="closeNewHardwareDialog"
+      @created="handleHardwareCreated"
+    ></hardware-form-create>
   </el-dialog>
   <!-- New hardware dialog -->
 </template>
@@ -93,9 +103,15 @@ import BasePagination from '@/components/base/base-pagination.vue'
 import TheMainContent from '@/components/layouts/the-main-content.vue'
 import useHardware from '@/hooks/useHardware'
 import BaseIconText from '@/components/base/base-icon-text.vue'
+import HardwareListFilter from '@/components/modules/hardware/hardware-list-filter.vue'
+import { UserFilter } from '@/types/store/user.module.type'
+import { ElMessageBox } from 'element-plus/es'
+import HardwareFormCreate from '@/components/modules/hardware/hardware-form-create.vue'
 
 export default defineComponent({
   components: {
+    HardwareFormCreate,
+    HardwareListFilter,
     BaseIconText,
     TheMainContent,
     BasePagination,
@@ -136,8 +152,9 @@ export default defineComponent({
         tag: '',
         spec_os: '',
         spec_cpu: '',
-        spec_memory: '',
-        spec_screen_size: ''
+        spec_memory: 0,
+        spec_storage: 0,
+        spec_screen_size: 0
       })
     })
 
@@ -168,7 +185,33 @@ export default defineComponent({
       loadTable(table.filter)
     }
 
+    const handleFilter = (filter: UserFilter) => {
+      table.filter = filter
+      loadTable(filter)
+    }
+
     const newHardwareDialogVisible = ref<boolean>(false)
+
+    const closeNewHardwareDialog = () => {
+      ElMessageBox.confirm('Your edit will not be saved. Continue?', 'Warning', {
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'Cancel',
+        type: 'warning'
+      })
+        .then(() => {
+          newHardwareDialogVisible.value = false
+        })
+        .catch(() => {})
+    }
+
+    const handleHardwareCreated = () => {
+      newHardwareDialogVisible.value = false
+      loadTable()
+    }
+
+    const handleHardwareReturned = () => {
+      loadTable(table.filter)
+    }
 
     const handleImportClick = () => {}
 
@@ -181,9 +224,13 @@ export default defineComponent({
       search,
       handlePageChange,
       handleHardwareUpdated,
+      handleHardwareCreated,
+      handleHardwareReturned,
       newHardwareDialogVisible,
+      closeNewHardwareDialog,
       handleImportClick,
-      handleExportClick
+      handleExportClick,
+      handleFilter
     }
   }
 })

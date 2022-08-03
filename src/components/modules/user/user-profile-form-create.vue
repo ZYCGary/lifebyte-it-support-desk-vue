@@ -114,7 +114,7 @@
             class="w-full"
           >
             <el-option
-              v-for="item in form.typeOptions"
+              v-for="item in form.type_options"
               :key="item.value"
               :label="item.label"
               :value="item.value"
@@ -214,7 +214,7 @@ export default defineComponent({
         { label: 'TMGM', value: 'TMGM' }
       ],
       locationOptions: [] as Location[],
-      typeOptions: [
+      type_options: [
         { label: 'Employee', value: 'Employee' },
         { label: 'Storage', value: 'Storage' },
         { label: 'Meeting Room', value: 'Meeting Room' },
