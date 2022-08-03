@@ -30,6 +30,7 @@
       width="200"
     ></el-table-column>
     <el-table-column
+      v-if="showOptionalColumns"
       property="user.location.name"
       label="Location"
       width="200"
@@ -45,6 +46,7 @@
       min-width="200"
     ></el-table-column>
     <el-table-column
+      v-if="showOptionalColumns"
       label="User"
       property="user"
       min-width="250"
@@ -72,6 +74,7 @@
       </template>
     </el-table-column>
     <el-table-column
+      v-if="showOptionalColumns"
       fixed="right"
       label="Availability"
       width="120"
@@ -108,7 +111,7 @@
           </el-tooltip>
 
           <el-tooltip
-            v-if="scope.row.user.type !== 'Storage'"
+            v-if="scope.row?.user?.type !== 'Storage'"
             content="Return"
             placement="top"
             :show-after="500"
@@ -183,6 +186,11 @@ export default defineComponent({
     error: {
       required: true,
       type: Boolean
+    },
+    showOptionalColumns: {
+      required: false,
+      type: Boolean,
+      default: true
     }
   },
   emits: ['hardwareUpdated', 'hardwareReturned'],
