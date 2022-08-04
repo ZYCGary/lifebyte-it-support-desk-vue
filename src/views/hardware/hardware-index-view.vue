@@ -93,10 +93,14 @@
   <!-- Import hardware dialog -->
   <el-dialog
     v-model="importHardwareDialogVisible"
-    title="Import User"
+    title="Import Hardware"
     :destroy-on-close="true"
   >
-    <base-upload url="/api/v1/hardware/import"></base-upload>
+    <base-upload
+      url="/api/v1/hardware/import"
+      @success="handleHardwareImported"
+      @error="handleHardwareImportError"
+    ></base-upload>
   </el-dialog>
   <!-- Import hardware dialog end -->
 </template>
@@ -239,6 +243,24 @@ export default defineComponent({
 
     const importHardwareDialogVisible = ref<boolean>(false)
 
+    const handleHardwareImported = () => {
+      importHardwareDialogVisible.value = false
+
+      ElMessage({
+        type: 'success',
+        message: 'Import hardware successfully.'
+      })
+
+      loadTable()
+    }
+
+    const handleHardwareImportError = () => {
+      ElMessage({
+        type: 'error',
+        message: 'Failed to import hardware.'
+      })
+    }
+
     return {
       loading,
       error,
@@ -253,7 +275,9 @@ export default defineComponent({
       handleImportClick,
       handleExportClick,
       handleFilter,
-      importHardwareDialogVisible
+      importHardwareDialogVisible,
+      handleHardwareImported,
+      handleHardwareImportError
     }
   }
 })
