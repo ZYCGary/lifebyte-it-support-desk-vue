@@ -4,18 +4,21 @@
       <el-tab-pane
         label="Users"
         name="users"
+        lazy
       >
         <user-dashboard></user-dashboard>
       </el-tab-pane>
       <el-tab-pane
         label="Hardware"
         name="hardware"
+        lazy
       >
         <hardware-dashboard></hardware-dashboard>
       </el-tab-pane>
       <el-tab-pane
         label="Software"
         name="software"
+        lazy
         >Software</el-tab-pane
       >
     </el-tabs>
@@ -32,7 +35,7 @@ export default defineComponent({
   components: { HardwareDashboard, UserDashboard },
   props: {},
   setup() {
-    const activeTab = ref<string>('users')
+    const activeTab = ref<string>('hardware')
 
     return { activeTab }
   }
