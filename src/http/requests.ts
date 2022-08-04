@@ -25,7 +25,16 @@ export default {
     try {
       return await http.put(url, data, { ...config })
     } catch (error) {
-      console.error('[TMGM] POST request error:\n', error)
+      console.error('[TMGM] PUT request error:\n', error)
+      throw error
+    }
+  },
+
+  delete: async (url: string, config?: AxiosRequestConfig) => {
+    try {
+      return await http.delete(url, { ...config })
+    } catch (error) {
+      console.error('[TMGM] DELETE request error:\n', error)
       throw error
     }
   }

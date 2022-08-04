@@ -29,6 +29,9 @@ const hardwareApis = {
     const response = await requests.get('/api/v1/hardware/export', {}, { responseType: 'blob' })
 
     return response?.data
+  },
+  destroy: async (hardwareId: number) => {
+    await requests.delete(`/api/v1/hardware/${hardwareId}`)
   }
 }
 

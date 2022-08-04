@@ -15,6 +15,8 @@
           <base-button
             icon-class="fa-solid fa-trash-can"
             type="danger"
+            :loading="loading.destroy"
+            @click="handleHardwareDelete"
           >
             Delete
           </base-button>
@@ -127,7 +129,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import TheMainContent from '@/components/layouts/the-main-content.vue'
 import BaseButton from '@/components/base/base-button.vue'
 import { Hardware } from '@/types/store/hardware.module.type'
@@ -144,12 +146,13 @@ export default defineComponent({
   props: {},
   setup: () => {
     const route = useRoute()
+    const router = useRouter()
     const hardwareId = parseInt(route.params.id as string)
 
     const hardware = ref<Hardware | null>(null)
     const avatar = ref<string>('')
 
-    const { loading, error, getHardwareById } = useHardware()
+    const { loading, error, getHardwareById, deleteHardware } = useHardware()
     const loadHardware = () => {
       getHardwareById(hardwareId)
         .then((res) => {
@@ -233,9 +236,36 @@ export default defineComponent({
       loadHardware()
     }
 
+    const handleHardwareDelete = () => {
+      ElMessageBox.confirm('The hardware will be removed permanently. Continue?', 'Warning', {
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'Cancel',
+        type: 'warning'
+      })
+        .then(() => {
+          deleteHardware(hardwareId)
+            .then(() => {
+              ElMessage({
+                type: 'success',
+                message: 'Delete the hardware successfully.'
+              })
+
+              router.push({ name: 'hardware.index' })
+            })
+            .catch(() => {
+              ElMessage({
+                type: 'error',
+                message: 'Failed to delete the hardware.'
+              })
+            })
+        })
+        .catch(() => {})
+    }
+
     if (hardwareId) {
       loadHardware()
     }
+
     return {
       hardware,
       hardwareId,
@@ -247,7 +277,8 @@ export default defineComponent({
       closeUpdateDialog,
       handleHardwareUpdated,
       hardwareReturnDialogVisibility,
-      handleHardwareReturned
+      handleHardwareReturned,
+      handleHardwareDelete
     }
   }
 })
