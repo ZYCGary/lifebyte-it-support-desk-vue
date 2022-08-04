@@ -1,17 +1,40 @@
 <template>
   <el-main>
-    <h1>Dashboard Charts</h1>
+    <el-tabs v-model="activeTab">
+      <el-tab-pane
+        label="Users"
+        name="users"
+      >
+        <user-dashboard></user-dashboard>
+      </el-tab-pane>
+      <el-tab-pane
+        label="Hardware"
+        name="hardware"
+      >
+        <hardware-dashboard></hardware-dashboard>
+      </el-tab-pane>
+      <el-tab-pane
+        label="Software"
+        name="software"
+        >Software</el-tab-pane
+      >
+    </el-tabs>
   </el-main>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
+import UserDashboard from '@/components/modules/user/user-dashboard.vue'
+import HardwareDashboard from '@/components/modules/hardware/hardware-dashboard.vue'
 
 export default defineComponent({
   name: 'dashboard-view',
+  components: { HardwareDashboard, UserDashboard },
   props: {},
   setup() {
-    return {}
+    const activeTab = ref<string>('users')
+
+    return { activeTab }
   }
 })
 </script>
