@@ -16,7 +16,7 @@
           <el-button-group>
             <base-button
               icon-class="fa-solid fa-file-import"
-              @click="handleImportClick"
+              @click="importHardwareDialogVisible = true"
             >
               Import
             </base-button>
@@ -88,7 +88,17 @@
       @created="handleHardwareCreated"
     ></hardware-form-create>
   </el-dialog>
-  <!-- New hardware dialog -->
+  <!-- New hardware dialog end -->
+
+  <!-- Import hardware dialog -->
+  <el-dialog
+    v-model="importHardwareDialogVisible"
+    title="Import User"
+    :destroy-on-close="true"
+  >
+    <base-upload url="/api/v1/hardware/import"></base-upload>
+  </el-dialog>
+  <!-- Import hardware dialog end -->
 </template>
 
 <script lang="ts">
@@ -106,9 +116,11 @@ import { UserFilter } from '@/types/store/user.module.type'
 import { ElMessage, ElMessageBox } from 'element-plus/es'
 import HardwareFormCreate from '@/components/modules/hardware/hardware-form-create.vue'
 import BaseButton from '@/components/base/base-button.vue'
+import BaseUpload from '@/components/base/base-upload.vue'
 
 export default defineComponent({
   components: {
+    BaseUpload,
     BaseButton,
     HardwareFormCreate,
     HardwareListFilter,
@@ -225,6 +237,8 @@ export default defineComponent({
         })
     }
 
+    const importHardwareDialogVisible = ref<boolean>(false)
+
     return {
       loading,
       error,
@@ -238,7 +252,8 @@ export default defineComponent({
       closeNewHardwareDialog,
       handleImportClick,
       handleExportClick,
-      handleFilter
+      handleFilter,
+      importHardwareDialogVisible
     }
   }
 })

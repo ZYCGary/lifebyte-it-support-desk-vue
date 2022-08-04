@@ -16,7 +16,7 @@
           <el-button-group>
             <base-button
               icon-class="fa-solid fa-file-import"
-              @click="handleImportClick"
+              @click="importUserDialogVisible = true"
             >
               Import
             </base-button>
@@ -87,6 +87,20 @@
     ></user-profile-form-create>
   </el-dialog>
   <!-- New user dialog end -->
+
+  <!-- Import user dialog -->
+  <el-dialog
+    v-model="importUserDialogVisible"
+    title="Import User"
+    :destroy-on-close="true"
+  >
+    <base-upload
+      url="/api/v1/users/import"
+      @success="handleUserImported"
+      @error="handleUserImportError"
+    ></base-upload>
+  </el-dialog>
+  <!-- Import user dialog end -->
 </template>
 
 <script lang="ts">
@@ -104,9 +118,11 @@ import UserProfileFormCreate from '@/components/modules/user/user-profile-form-c
 import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus/es'
 import BaseButton from '@/components/base/base-button.vue'
+import BaseUpload from '@/components/base/base-upload.vue'
 
 export default defineComponent({
   components: {
+    BaseUpload,
     BaseButton,
     UserProfileFormCreate,
     UserListFilter,
@@ -223,6 +239,26 @@ export default defineComponent({
         })
     }
 
+    const importUserDialogVisible = ref<boolean>(false)
+
+    const handleUserImported = () => {
+      importUserDialogVisible.value = false
+
+      ElMessage({
+        type: 'success',
+        message: 'Import users successfully.'
+      })
+
+      loadTable()
+    }
+
+    const handleUserImportError = () => {
+      ElMessage({
+        type: 'error',
+        message: 'Failed to import users.'
+      })
+    }
+
     return {
       loading,
       error,
@@ -235,7 +271,10 @@ export default defineComponent({
       newUserDialogVisible,
       closeNewUserDialog,
       handleImportClick,
-      handleExportClick
+      handleExportClick,
+      importUserDialogVisible,
+      handleUserImported,
+      handleUserImportError
     }
   }
 })
