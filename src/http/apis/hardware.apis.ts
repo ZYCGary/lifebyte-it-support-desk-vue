@@ -32,6 +32,11 @@ const hardwareApis = {
   },
   destroy: async (hardwareId: number) => {
     await requests.delete(`/api/v1/hardware/${hardwareId}`)
+  },
+  statistics: async () => {
+    const response = await requests.get('/api/v1/hardware/statistics')
+
+    return response.data
   }
 }
 

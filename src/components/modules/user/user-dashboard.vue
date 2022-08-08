@@ -67,7 +67,7 @@ export default defineComponent({
       .catch(() => {
         ElMessage({
           type: 'error',
-          message: 'Failed to get user statistic data.'
+          message: 'Failed to load user statistic data.'
         })
       })
 

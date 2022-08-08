@@ -12,7 +12,8 @@ const useHardware = () => {
     update: false,
     store: false,
     export: false,
-    destroy: false
+    destroy: false,
+    statistics: false
   })
 
   const error = reactive({
@@ -21,7 +22,8 @@ const useHardware = () => {
     update: false,
     store: false,
     export: false,
-    destroy: false
+    destroy: false,
+    statistics: false
   })
 
   const getHardwareCollection = async (
@@ -159,6 +161,28 @@ const useHardware = () => {
     }
   }
 
+  const getHardwareStatistics = async () => {
+    try {
+      loading.statistics = true
+      error.statistics = false
+
+      const data = await apis.hardware.statistics()
+
+      loading.statistics = false
+      error.statistics = false
+
+      return {
+        totalHardware: data.hardware_total,
+        hardwareByTypeAndDepartment: data.hardware_by_type_and_department
+      }
+    } catch (err) {
+      loading.statistics = false
+      error.statistics = true
+
+      throw err
+    }
+  }
+
   return {
     loading,
     error,
@@ -168,7 +192,8 @@ const useHardware = () => {
     createHardware,
     returnHardware,
     exportHardware,
-    deleteHardware
+    deleteHardware,
+    getHardwareStatistics
   }
 }
 
