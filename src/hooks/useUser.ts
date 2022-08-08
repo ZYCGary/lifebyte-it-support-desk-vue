@@ -11,7 +11,8 @@ const useUser = () => {
     store: false,
     update: false,
     dismiss: false,
-    export: false
+    export: false,
+    statistics: false
   })
   const error = reactive({
     collection: false,
@@ -19,7 +20,8 @@ const useUser = () => {
     store: false,
     update: false,
     dismiss: false,
-    export: false
+    export: false,
+    statistics: false
   })
 
   const getUserCollection = async (
@@ -142,7 +144,39 @@ const useUser = () => {
     }
   }
 
-  return { loading, error, getUserCollection, getUserById, updateUser, createUser, dismissUser, exportUsers }
+  const getUserStatistics = async () => {
+    try {
+      loading.statistics = true
+      error.statistics = false
+
+      const data = await apis.user.statistics()
+
+      loading.statistics = false
+      error.statistics = false
+
+      return {
+        totalUsers: data.users_total,
+        usersByDepartment: data.users_by_department
+      }
+    } catch (err) {
+      loading.statistics = false
+      error.statistics = true
+
+      throw err
+    }
+  }
+
+  return {
+    loading,
+    error,
+    getUserCollection,
+    getUserById,
+    updateUser,
+    createUser,
+    dismissUser,
+    exportUsers,
+    getUserStatistics
+  }
 }
 
 export default useUser

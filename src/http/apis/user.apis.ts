@@ -4,17 +4,17 @@ const userApis = {
   index: async (params?: Object) => {
     const response = await requests.get('/api/v1/users', params)
 
-    return response?.data
+    return response.data
   },
   show: async (userId: number) => {
     const response = await requests.get(`/api/v1/users/${userId}`)
 
-    return response?.data
+    return response.data
   },
   store: async (payload: object) => {
     const response = await requests.post('/api/v1/users', payload)
 
-    return response?.data?.data
+    return response.data?.data
   },
   update: async (id: number, payload: any) => {
     await requests.put(`/api/v1/users/${id}`, payload)
@@ -22,7 +22,12 @@ const userApis = {
   export: async () => {
     const response = await requests.get('/api/v1/users/export', {}, { responseType: 'blob' })
 
-    return response?.data
+    return response.data
+  },
+  statistics: async () => {
+    const response = await requests.get('/api/v1/users/statistics')
+
+    return response.data
   }
 }
 

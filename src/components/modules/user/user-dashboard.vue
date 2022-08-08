@@ -1,22 +1,15 @@
 <template>
-  <div class="grid grid-cols-3 gap-4 mb-4">
+  <div class="grid grid-cols-4 gap-4">
     <el-card
-      header="Total"
+      header="Total Users"
       shadow="hover"
     >
-      123
+      {{ statistics.total_users }}
     </el-card>
-    <el-card
-      header="Departments"
-      shadow="hover"
-    >
-      15
-    </el-card>
-  </div>
-  <div class="grid gap-4">
     <el-card
       header="Users By Department"
       shadow="hover"
+      class="col-span-4"
     >
       <bar-chart v-bind="barChartProps"></bar-chart>
     </el-card>
@@ -24,10 +17,12 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue'
-import { Chart, ChartData, ChartOptions, registerables } from 'chart.js'
+import { computed, defineComponent, reactive } from 'vue'
+import { Chart, ChartData, registerables } from 'chart.js'
 import { useBarChart } from 'vue-chart-3'
 import { BarChart } from 'vue-chart-3'
+import useUser from '@/hooks/useUser'
+import { ElMessage } from 'element-plus/es'
 
 Chart.register(...registerables)
 
@@ -35,74 +30,48 @@ export default defineComponent({
   name: 'user-dashboard',
   components: { BarChart },
   setup: () => {
+    const statistics = reactive({
+      total_users: 0,
+      users_by_department: {
+        labels: [] as string[],
+        data: [] as number[]
+      }
+    })
+
     const chartData = computed<ChartData<'bar'>>(() => ({
-      labels: [
-        'January',
-        'February',
-        'March',
-        'April',
-        'May',
-        'June',
-        'July',
-        'August',
-        'September',
-        'October',
-        'November',
-        'December'
-      ],
+      labels: statistics.users_by_department.labels,
       datasets: [
         {
-          label: 'Data One',
-          backgroundColor: '#f87979',
-          data: [40, 20, 12, 39, 10, 40, 39, 80, 40, 20, 12, 11]
-        },
-        {
-          label: '2',
-          backgroundColor: '#127111',
-          data: [40, 20, 12, 39, 10, 40, 39, 80, 40, 20, 12, 11]
-        },
-        {
-          label: '3',
-          backgroundColor: '#976435',
-          data: [40, 20, 12, 39, 10, 40, 39, 80, 40, 20, 12, 11]
-        },
-        {
-          label: '4',
-          backgroundColor: '#f82343',
-          data: [40, 20, 12, 39, 10, 40, 39, 80, 40, 20, 12, 11]
-        },
-        {
-          label: '5',
-          backgroundColor: '#345463',
-          data: [40, 20, 12, 39, 10, 40, 39, 80, 40, 20, 12, 11]
-        },
-        {
-          label: '6',
-          backgroundColor: '#134564',
-          data: [40, 20, 12, 39, 10, 40, 39, 80, 40, 20, 12, 11]
-        },
-        {
-          label: '7',
-          backgroundColor: '#896753',
-          data: [40, 20, 12, 39, 10, 40, 39, 80, 40, 20, 12, 11]
+          label: 'Users',
+          backgroundColor: '#66b1ff',
+          data: statistics.users_by_department.data
         }
       ]
     }))
 
-    const options = computed<ChartOptions<'bar'>>(() => ({
-      scales: {
-        x: {
-          stacked: true
-        },
-        y: {
-          stacked: true
+    const { barChartProps, barChartRef } = useBarChart({ chartData })
+
+    const { getUserStatistics } = useUser()
+
+    getUserStatistics()
+      .then((data) => {
+        const { totalUsers, usersByDepartment } = data
+
+        statistics.total_users = totalUsers
+
+        if (usersByDepartment as object) {
+          statistics.users_by_department.labels = Object.keys(usersByDepartment)
+          statistics.users_by_department.data = Object.values(usersByDepartment)
         }
-      }
-    }))
+      })
+      .catch(() => {
+        ElMessage({
+          type: 'error',
+          message: 'Failed to get user statistic data.'
+        })
+      })
 
-    const { barChartProps, barChartRef } = useBarChart({ chartData, options })
-
-    return { barChartProps, barChartRef }
+    return { statistics, barChartProps, barChartRef }
   }
 })
 </script>

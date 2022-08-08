@@ -35,7 +35,7 @@ export default defineComponent({
   components: { HardwareDashboard, UserDashboard },
   props: {},
   setup() {
-    const activeTab = ref<string>('hardware')
+    const activeTab = ref<string>('users')
 
     return { activeTab }
   }
